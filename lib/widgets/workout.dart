@@ -11,13 +11,22 @@ class Workout extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       contentPadding: EdgeInsets.symmetric(vertical: 0),
-      leading: Icon(Icons.accessibility_new),
+      leading: Icon(
+        Icons.accessibility_new,
+        size: 30.0,
+        color: Colors.white,
+      ),
       title: Text(
         name,
         style: kRoutineWorkoutStyle,
       ),
+      subtitle: Text('$setNumber sets / 4 reps',
+          style: TextStyle(
+            color: Colors.grey[400],
+            fontFamily: 'NotoSans',
+          )),
       trailing: Text(
-        '${setNumber} set',
+        '$setNumber sets / 4 reps',
         style: kRoutineWorkoutStyle,
       ),
     );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/widgets/routine.dart';
 import 'package:hr_app/widgets/workout.dart';
+import 'routine_create.dart';
 
 class RoutinePage extends StatelessWidget {
   final List<Workout> workoutList = [
@@ -30,16 +31,19 @@ class RoutinePage extends StatelessWidget {
                     Text(
                       'Routine List',
                       style: TextStyle(
-                        fontSize: 30.0,
+                        fontSize: 28.0,
+                        fontFamily: 'NotoSans',
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),
                     ),
                     IconButton(
                       icon: Icon(Icons.add_circle_outline),
-                      iconSize: 50.0,
-                      onPressed: () => {},
-                    )
+                      iconSize: 40.0,
+                      onPressed: () {
+                        Navigator.pushNamed(context, 'Routine_create_page');
+                      },
+                    ),
                   ],
                 ),
                 SizedBox(
@@ -48,24 +52,38 @@ class RoutinePage extends StatelessWidget {
                 Text(
                   '생성된 루틴',
                   style: TextStyle(
-                    fontSize: 20.0,
+                    fontSize: 16.0,
+                    fontFamily: 'NotoSans',
                     fontWeight: FontWeight.normal,
-                    color: Colors.black,
+                    color: Colors.grey,
                   ),
                 ),
                 SizedBox(
                   height: 15,
                 ),
-                Routine(
-                  name: '상체 운동',
-                  workoutList: workoutList,
-                  color: Colors.lightGreenAccent,
-                ),
-                SizedBox(height: 16.0),
-                Routine(
-                  name: '하체 운동',
-                  workoutList: workoutList1,
-                  color: Colors.lightBlueAccent,
+                Expanded(
+                  child: ListView(
+                    children: [
+                      Routine(
+                        name: '상체 운동',
+                        workoutList: workoutList,
+                        color: Color(0xFF4939ff),
+                      ),
+                      SizedBox(height: 16.0),
+                      Routine(
+                        name: '하체 운동',
+                        workoutList: workoutList1,
+                        color: Colors.lightBlueAccent,
+                      ),
+                      SizedBox(height: 16.0),
+                      Routine(
+                        name: '월요일 루틴🏋️‍♀️',
+                        workoutList: workoutList1,
+                        color: Color(0xFFffdaff),
+                      ),
+                      SizedBox(height: 16.0),
+                    ],
+                  ),
                 ),
               ],
             ),

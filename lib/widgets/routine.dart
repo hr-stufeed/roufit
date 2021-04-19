@@ -15,7 +15,7 @@ class Routine extends StatelessWidget {
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.all(
-          Radius.circular(10.0),
+          Radius.circular(20.0),
         ),
       ),
       child: Column(
@@ -30,6 +30,8 @@ class Routine extends StatelessWidget {
               ),
               Icon(
                 Icons.play_arrow,
+                size: 30.0,
+                color: Colors.white,
               ),
             ],
           ),
