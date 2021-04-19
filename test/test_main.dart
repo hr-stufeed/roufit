@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hr_app/scenes/home_page.dart';
 import 'package:hr_app/scenes/routine_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -25,7 +26,7 @@ class PagesScreen extends StatelessWidget {
           body: SafeArea(
             child: TabBarView(
               children: [
-                Text('홈 스크린'),
+                HomePage(),
                 RoutinePage(),
                 Text('운동 스크린'),
                 Text('마이 스크린'),
