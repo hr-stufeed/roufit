@@ -27,15 +27,7 @@ class RoutineCreatePage extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      '루틴 이름',
-                      style: TextStyle(
-                        fontSize: 28.0,
-                        fontFamily: 'NotoSans',
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
+                    Text('루틴 이름', style: kPageTitleStyle),
                     OutlinedButton(
                       child: Text(
                         '완료',
@@ -43,35 +35,31 @@ class RoutineCreatePage extends StatelessWidget {
                       ),
                       style: OutlinedButton.styleFrom(
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18.0),
+                          borderRadius: kBorderRadius,
                         ),
                       ),
                       onPressed: () => Navigator.pop(context),
-                    )
+                    ),
                   ],
                 ),
                 SizedBox(
-                  height: 20,
+                  height: 16,
                 ),
-                TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                      borderSide: BorderSide(style: BorderStyle.none),
-                    ),
-                    labelText: '운동,태그...',
-                    labelStyle: TextStyle(
-                      color: Colors.white,
-                    ),
-                    fillColor: Colors.grey[300],
-                    filled: true,
+
+                kTextField, // 검색창
+                SizedBox(
+                  height: 16,
+                ),
+                Text(
+                  '결합하기',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.grey,
                   ),
                 ),
                 SizedBox(
-                  height: 15,
+                  height: 20,
                 ),
                 Expanded(
                   child: ListView(
@@ -94,6 +82,39 @@ class RoutineCreatePage extends StatelessWidget {
                         color: Color(0xFFffdaff),
                       ),
                       SizedBox(height: 16.0),
+                      IconButton(
+                        icon: Icon(Icons.add_circle_outline),
+                        iconSize: 40.0,
+                        onPressed: () =>
+                            Navigator.pushNamed(context, 'Workout_add_page'),
+                      ),
+                      Text(
+                        '운동 부위',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      SizedBox(height: 16.0),
+                      Container(
+                        child: GridView.builder(
+                          shrinkWrap: true,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            childAspectRatio: 3 / 2,
+                            mainAxisSpacing: 10,
+                            crossAxisSpacing: 10,
+                          ),
+                          itemCount: 6,
+                          itemBuilder: (context, index) => Workout(
+                            name: 'hello',
+                            setNumber: index,
+                            color: Colors.amber[300],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -105,3 +126,7 @@ class RoutineCreatePage extends StatelessWidget {
     );
   }
 }
+// Workout(
+//                             name: 'hello',
+//                             setNumber: index,
+//                           ),
