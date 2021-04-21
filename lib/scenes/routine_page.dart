@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
+import 'package:hr_app/scenes/workout_page.dart';
 import 'package:hr_app/widgets/routine.dart';
 import 'package:hr_app/widgets/workout.dart';
 import 'routine_create_page.dart';
@@ -15,7 +16,6 @@ class RoutinePage extends StatelessWidget {
     Workout(name: '스쿼트', setNumber: 2),
     Workout(name: '런지', setNumber: 3),
   ];
-  final List<int> nn = [0, 1, 2];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,6 +82,11 @@ class RoutinePage extends StatelessWidget {
                     iconSize: 40.0,
                     onPressed: () =>
                         Navigator.pushNamed(context, 'Workout_page'),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.settings),
+                    iconSize: 40.0,
+                    onPressed: () => Navigator.pushNamed(context, 'MyPage'),
                   ),
                 ],
               ),

@@ -6,6 +6,11 @@ const kPageTitleStyle = TextStyle(
   fontWeight: FontWeight.bold,
   color: Colors.black,
 );
+const kPageSubTitleStyle = TextStyle(
+  fontSize: 16.0,
+  fontWeight: FontWeight.normal,
+  color: Colors.grey,
+);
 const kRoutineTitleStyle = TextStyle(
   fontSize: 25.0,
   fontWeight: FontWeight.bold,
@@ -20,6 +25,9 @@ const kOutlinedButtonStyle = TextStyle(
   fontSize: 15.0,
   fontWeight: FontWeight.normal,
   color: Colors.blueAccent,
+);
+const kSizedBoxBetweenItems = SizedBox(
+  height: 20,
 );
 final kBorderRadius = BorderRadius.circular(20.0);
 final kTextField = TextField(

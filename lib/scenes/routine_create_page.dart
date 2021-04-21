@@ -29,38 +29,20 @@ class RoutineCreatePage extends StatelessWidget {
                   children: [
                     Text('루틴 이름', style: kPageTitleStyle),
                     OutlinedButton(
-                      child: Text(
-                        '완료',
-                        style: kOutlinedButtonStyle,
-                      ),
+                      child: Text('완료', style: kOutlinedButtonStyle),
                       style: OutlinedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: kBorderRadius,
-                        ),
+                        shape:
+                            RoundedRectangleBorder(borderRadius: kBorderRadius),
                       ),
                       onPressed: () => Navigator.pop(context),
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: 16,
-                ),
-
+                kSizedBoxBetweenItems,
                 kTextField, // 검색창
-                SizedBox(
-                  height: 16,
-                ),
-                Text(
-                  '결합하기',
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.normal,
-                    color: Colors.grey,
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
+                kSizedBoxBetweenItems,
+                Text('결합하기', style: kPageSubTitleStyle),
+                kSizedBoxBetweenItems,
                 Expanded(
                   child: ListView(
                     children: [
@@ -69,34 +51,27 @@ class RoutineCreatePage extends StatelessWidget {
                         workoutList: workoutList,
                         color: Color(0xFF4939ff),
                       ),
-                      SizedBox(height: 16.0),
+                      kSizedBoxBetweenItems,
                       Routine(
                         name: '하체 운동',
                         workoutList: workoutList1,
                         color: Colors.lightBlueAccent,
                       ),
-                      SizedBox(height: 16.0),
+                      kSizedBoxBetweenItems,
                       Routine(
                         name: '월요일 루틴🏋️‍♀️',
                         workoutList: workoutList1,
                         color: Color(0xFFffdaff),
                       ),
-                      SizedBox(height: 16.0),
+                      kSizedBoxBetweenItems,
                       IconButton(
                         icon: Icon(Icons.add_circle_outline),
                         iconSize: 40.0,
                         onPressed: () =>
-                            Navigator.pushNamed(context, 'Workout_add_page'),
+                            Navigator.pushNamed(context, 'Workout_create_page'),
                       ),
-                      Text(
-                        '운동 부위',
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.normal,
-                          color: Colors.grey,
-                        ),
-                      ),
-                      SizedBox(height: 16.0),
+                      Text('운동 부위', style: kPageSubTitleStyle),
+                      kSizedBoxBetweenItems,
                       Container(
                         child: GridView.builder(
                           shrinkWrap: true,

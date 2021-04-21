@@ -3,7 +3,7 @@ import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/widgets/routine.dart';
 import 'package:hr_app/widgets/workout.dart';
 
-class WorkoutAddPage extends StatelessWidget {
+class WorkoutCreatePage extends StatelessWidget {
   final List<Workout> workoutList = [
     Workout(name: '팔굽혀펴기', setNumber: 4),
     Workout(name: '밀리터리 프레스', setNumber: 4),
@@ -27,7 +27,7 @@ class WorkoutAddPage extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('추가하기', style: kPageTitleStyle),
+                    Text('운동 이름', style: kPageTitleStyle),
                     OutlinedButton(
                       child: Text(
                         '완료',
@@ -42,21 +42,12 @@ class WorkoutAddPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: 16,
-                ),
-
+                kSizedBoxBetweenItems,
                 kTextField, // 검색창
-                SizedBox(
-                  height: 16,
-                ),
+                kSizedBoxBetweenItems,
                 Text(
                   '운동 부위',
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.normal,
-                    color: Colors.grey,
-                  ),
+                  style: kPageSubTitleStyle,
                 ),
                 SizedBox(height: 16.0),
                 Container(

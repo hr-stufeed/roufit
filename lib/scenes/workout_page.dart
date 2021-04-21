@@ -32,7 +32,7 @@ class WorkoutPage extends StatelessWidget {
                       icon: Icon(Icons.add_circle_outline),
                       iconSize: 40.0,
                       onPressed: () {
-                        Navigator.pushNamed(context, 'Routine_create_page');
+                        Navigator.pushNamed(context, 'Workout_create_page');
                       },
                     ),
                   ],
