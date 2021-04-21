@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hr_app/scenes/home_page.dart';
+import 'package:hr_app/scenes/routine_create_page.dart';
 import 'package:hr_app/scenes/routine_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hr_app/scenes/routine_start_page.dart';
+import 'package:hr_app/scenes/workout_page.dart';
 
 void main() {
   runApp(PagesScreen());
@@ -11,6 +14,12 @@ class PagesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      routes: {
+        'Routine_page': (context) => RoutinePage(),
+        'Routine_create_page': (context) => RoutineCreatePage(),
+        'Workout_add_page': (context) => WorkoutPage(),
+        'Workout_page': (context) => WorkoutPage(),
+      },
       theme: ThemeData(
         textTheme: TextTheme(
           bodyText1: TextStyle(
@@ -26,9 +35,9 @@ class PagesScreen extends StatelessWidget {
           body: SafeArea(
             child: TabBarView(
               children: [
-                HomePage(),
+                RoutineStartPage(),
                 RoutinePage(),
-                Text('운동 스크린'),
+                WorkoutPage(),
                 Text('마이 스크린'),
               ],
             ),
@@ -38,7 +47,6 @@ class PagesScreen extends StatelessWidget {
               color: Colors.white,
               boxShadow: [
                 BoxShadow(
-                  offset: Offset(0, -5),
                   blurRadius: 10,
                   color: Colors.grey
                 ),
