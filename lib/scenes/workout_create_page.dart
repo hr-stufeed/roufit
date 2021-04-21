@@ -20,7 +20,7 @@ class WorkoutCreatePage extends StatelessWidget {
       home: SafeArea(
         child: Material(
           child: Padding(
-            padding: kPageHorizontalPadding,
+            padding: kPagePadding,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

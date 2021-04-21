@@ -44,32 +44,28 @@ class HomePage extends StatelessWidget {
   final List<RoutineModel> routineList = [];
 
   void init() {
-    routineList.add(
-      RoutineModel(
-        id: DateTime.now().toString(),
-        name: '하체 루틴',
-        workoutList: [
-          {'workout' : workoutList[0].name,'set' : 4},
-          {'workout' : workoutList[1].name,'set' : 4},
-        ],
-        dateTime: DateTime.now(),
-      )
-    );
-    routineList.add(
-        RoutineModel(
-          id: DateTime.now().toString(),
-          name: '상체 루틴',
-          workoutList: [
-            {'workout' : workoutList[2].name,'set' : 4},
-            {'workout' : workoutList[3].name,'set' : 4},
-            {'workout' : workoutList[4].name,'set' : 4},
-          ],
-          dateTime: DateTime.now(),
-        )
-    );
-    for(var data in routineList){
+    routineList.add(RoutineModel(
+      id: DateTime.now().toString(),
+      name: '하체 루틴',
+      workoutList: [
+        {'workout': workoutList[0].name, 'set': 4},
+        {'workout': workoutList[1].name, 'set': 4},
+      ],
+      dateTime: DateTime.now(),
+    ));
+    routineList.add(RoutineModel(
+      id: DateTime.now().toString(),
+      name: '상체 루틴',
+      workoutList: [
+        {'workout': workoutList[2].name, 'set': 4},
+        {'workout': workoutList[3].name, 'set': 4},
+        {'workout': workoutList[4].name, 'set': 4},
+      ],
+      dateTime: DateTime.now(),
+    ));
+    for (var data in routineList) {
       print('${data.name},  ${data.workoutList}, ${data.dateTime} ');
-      for(var workout in data.workoutList){
+      for (var workout in data.workoutList) {
         print('${workout}');
       }
     }
@@ -79,7 +75,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     init();
     return Padding(
-      padding: kPageHorizontalPadding,
+      padding: kPagePadding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -96,7 +92,9 @@ class HomePage extends StatelessWidget {
           SizedBox(
             height: 20,
           ),
-          RoutineList(routineList: routineList,)
+          RoutineList(
+            routineList: routineList,
+          )
         ],
       ),
     );

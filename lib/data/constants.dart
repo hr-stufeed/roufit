@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const kPageHorizontalPadding = EdgeInsets.fromLTRB(16.0, 32.0, 16.0, 0.0);
+const kPagePadding = EdgeInsets.fromLTRB(16.0, 32.0, 16.0, 0.0);
 const kPageTitleStyle = TextStyle(
   fontSize: 28.0,
   fontWeight: FontWeight.bold,
