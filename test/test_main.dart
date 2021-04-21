@@ -4,7 +4,6 @@ import 'package:hr_app/scenes/routine_create_page.dart';
 import 'package:hr_app/scenes/routine_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hr_app/scenes/routine_start_page.dart';
-import 'package:hr_app/scenes/workout_add_page.dart';
 import 'package:hr_app/scenes/workout_page.dart';
 
 void main() {
@@ -18,7 +17,7 @@ class PagesScreen extends StatelessWidget {
       routes: {
         'Routine_page': (context) => RoutinePage(),
         'Routine_create_page': (context) => RoutineCreatePage(),
-        'Workout_add_page': (context) => WorkoutAddPage(),
+        'Workout_add_page': (context) => WorkoutPage(),
         'Workout_page': (context) => WorkoutPage(),
       },
       theme: ThemeData(
@@ -36,7 +35,7 @@ class PagesScreen extends StatelessWidget {
           body: SafeArea(
             child: TabBarView(
               children: [
-                HomePage(),
+                RoutineStartPage(),
                 RoutinePage(),
                 WorkoutPage(),
                 Text('마이 스크린'),
