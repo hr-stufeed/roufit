@@ -4,61 +4,49 @@ import 'package:hr_app/widgets/workout.dart';
 
 class Routine extends StatelessWidget {
   final String name;
-  final List<Workout> workoutList;
   final Color color;
-  Routine({this.name, this.workoutList, this.color = Colors.white70});
+
+  Routine({this.name = '루틴 이름', this.color = Colors.lightBlueAccent});
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: kBorderRadius,
-      child: Theme(
-        data: ThemeData(
-          accentColor: color,
+    return Container(
+      padding: EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors:[Colors.white,Colors.blue],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+
         ),
-        child: ExpansionTile(
-          leading: Icon(
-            Icons.directions_run,
-            size: 30.0,
-            color: Colors.white,
+        borderRadius: kBorderRadius,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                name,
+                style: kRoutineTitleStyle,
+              ),
+              Icon(
+                Icons.more_horiz,
+                color: Colors.white,
+              )
+            ],
           ),
-          title: Text(
-            name,
-            style: kRoutineTitleStyle,
+          Text(
+            '상체 · 코어',
+            style: kRoutineTagStyle,
           ),
-          backgroundColor: color,
-          collapsedBackgroundColor: color,
-          tilePadding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
-          childrenPadding: EdgeInsets.symmetric(horizontal: 16.0),
-          trailing: Icon(
-            Icons.play_arrow,
-            size: 30.0,
-            color: Colors.white,
+          kSizedBoxBetweenItems,
+          Text(
+            '4 WORKOUTS',
+            style: kRoutineTagStyle,
           ),
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: workoutList.length * 54.0,
-                  child: ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return Column(
-                        children: [
-                          workoutList[index],
-                          kSizedBoxBetweenItems,
-                        ],
-                      );
-                    },
-                    itemCount: workoutList.length,
-                    itemExtent: 50.0,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
+        ],
       ),
     );
   }
