@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/widgets/routine.dart';
 import 'package:hr_app/widgets/workout.dart';
+import 'package:hr_app/widgets/search_field.dart';
 
 class WorkoutPage extends StatelessWidget {
   final List<Workout> workoutList = [
@@ -40,12 +41,12 @@ class WorkoutPage extends StatelessWidget {
                 SizedBox(
                   height: 20,
                 ),
-                kTextField,
+                SearchField(),
                 SizedBox(
                   height: 20,
                 ),
                 Text(
-                  '생성된 루틴',
+                  '생성된 운동',
                   style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.normal,
@@ -68,7 +69,6 @@ class WorkoutPage extends StatelessWidget {
                     itemBuilder: (context, index) => Workout(
                       name: 'hello',
                       setNumber: index,
-                      color: Colors.amber[300],
                     ),
                   ),
                 ),

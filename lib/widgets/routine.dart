@@ -44,7 +44,12 @@ class Routine extends StatelessWidget {
                   child: ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
-                      return workoutList[index];
+                      return Column(
+                        children: [
+                          workoutList[index],
+                          kSizedBoxBetweenItems,
+                        ],
+                      );
                     },
                     itemCount: workoutList.length,
                     itemExtent: 50.0,

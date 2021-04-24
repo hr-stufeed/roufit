@@ -24,7 +24,7 @@ class RoutineStartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: kPageHorizontalPadding,
+      padding: kPagePadding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

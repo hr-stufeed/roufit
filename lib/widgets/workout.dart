@@ -4,31 +4,42 @@ import 'package:hr_app/data/constants.dart';
 class Workout extends StatelessWidget {
   final String name;
   final int setNumber;
-  final Color color;
+  final int repNumber;
+  final int weight;
+  final int duration;
+  final String emoji;
 
-  Workout({this.name, this.setNumber = 0, this.color = Colors.transparent});
+  Workout({
+    this.name = 'Default',
+    this.emoji = '🏃‍♀️',
+    this.setNumber = 0,
+    this.duration = 0,
+    this.repNumber = 0,
+    this.weight = 0,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      tileColor: color,
-      contentPadding: EdgeInsets.symmetric(vertical: 0),
-      leading: Icon(
-        Icons.accessibility_new,
-        size: 30.0,
+    return Container(
+      decoration: BoxDecoration(
         color: Colors.white,
+        borderRadius: kBorderRadius,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey,
+          )
+        ],
       ),
-      title: Text(
-        name,
-        style: kRoutineWorkoutStyle,
-      ),
-      subtitle: Text('$setNumber sets / 4 reps',
-          style: TextStyle(
-            color: Colors.grey[400],
-          )),
-      trailing: Text(
-        '$setNumber sets / 4 reps',
-        style: kRoutineWorkoutStyle,
+      child: ListTile(
+        contentPadding: EdgeInsets.symmetric(vertical: 0),
+        leading: Text(emoji),
+        title: Text(
+          name,
+          style: kRoutineWorkoutStyle,
+        ),
+        subtitle: Text(
+          '$repNumber REPS - $setNumber SETS',
+        ),
       ),
     );
   }

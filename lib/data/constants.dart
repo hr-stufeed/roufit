@@ -19,7 +19,7 @@ const kRoutineTitleStyle = TextStyle(
 const kRoutineWorkoutStyle = TextStyle(
   fontSize: 20.0,
   fontWeight: FontWeight.normal,
-  color: Colors.white,
+  color: Colors.black,
 );
 const kOutlinedButtonStyle = TextStyle(
   fontSize: 15.0,
@@ -30,20 +30,3 @@ const kSizedBoxBetweenItems = SizedBox(
   height: 20,
 );
 final kBorderRadius = BorderRadius.circular(20.0);
-final kTextField = TextField(
-  decoration: InputDecoration(
-    border: OutlineInputBorder(
-      borderRadius: kBorderRadius,
-    ),
-    enabledBorder: OutlineInputBorder(
-      borderRadius: kBorderRadius,
-      borderSide: BorderSide(style: BorderStyle.none),
-    ),
-    labelText: '운동,태그...',
-    labelStyle: TextStyle(
-      color: Colors.white,
-    ),
-    fillColor: Colors.grey[300],
-    filled: true,
-  ),
-);

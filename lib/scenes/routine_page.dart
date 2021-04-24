@@ -77,17 +77,6 @@ class RoutinePage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  IconButton(
-                    icon: Icon(Icons.add_circle_outline),
-                    iconSize: 40.0,
-                    onPressed: () =>
-                        Navigator.pushNamed(context, 'Workout_page'),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.settings),
-                    iconSize: 40.0,
-                    onPressed: () => Navigator.pushNamed(context, 'MyPage'),
-                  ),
                 ],
               ),
             ),

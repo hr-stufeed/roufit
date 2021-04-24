@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/widgets/routine.dart';
 import 'package:hr_app/widgets/workout.dart';
+import 'package:hr_app/widgets/search_field.dart';
 
 class WorkoutCreatePage extends StatelessWidget {
   final List<Workout> workoutList = [
@@ -43,7 +44,8 @@ class WorkoutCreatePage extends StatelessWidget {
                   ],
                 ),
                 kSizedBoxBetweenItems,
-                kTextField, // 검색창
+                SearchField(), // 검색창
+
                 kSizedBoxBetweenItems,
                 Text(
                   '운동 부위',
@@ -63,7 +65,6 @@ class WorkoutCreatePage extends StatelessWidget {
                     itemBuilder: (context, index) => Workout(
                       name: 'hello',
                       setNumber: index,
-                      color: Colors.amber[300],
                     ),
                   ),
                 ),
