@@ -66,10 +66,7 @@ class MyApp extends StatelessWidget {
           ),
           bottomNavigationBar: Container(
             decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(blurRadius: 10, color: Colors.grey),
-              ],
+              color: Colors.white
             ),
             child: TabBar(
               labelColor: Colors.black,

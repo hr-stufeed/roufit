@@ -62,7 +62,6 @@ class RoutineStartPage extends StatelessWidget {
                     padding: EdgeInsets.all(10),
                     child: Routine(
                       name: '상체 운동',
-                      workoutList: workoutList,
                       color: Color(0xFF4939ff),
                     ),
                   ),
@@ -84,7 +83,6 @@ class RoutineStartPage extends StatelessWidget {
                     padding: EdgeInsets.all(10),
                     child: Routine(
                       name: '상체 운동',
-                      workoutList: workoutList,
                       color: Color(0xFF4939ff),
                     ),
                   ),
@@ -106,7 +104,6 @@ class RoutineStartPage extends StatelessWidget {
                     padding: EdgeInsets.all(10),
                     child: Routine(
                       name: '상체 운동',
-                      workoutList: workoutList,
                       color: Color(0xFF4939ff),
                     ),
                   ),

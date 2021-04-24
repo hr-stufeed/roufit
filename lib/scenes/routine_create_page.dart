@@ -49,19 +49,16 @@ class RoutineCreatePage extends StatelessWidget {
                     children: [
                       Routine(
                         name: '상체 운동',
-                        workoutList: workoutList,
                         color: Color(0xFF4939ff),
                       ),
                       kSizedBoxBetweenItems,
                       Routine(
                         name: '하체 운동',
-                        workoutList: workoutList1,
                         color: Colors.lightBlueAccent,
                       ),
                       kSizedBoxBetweenItems,
                       Routine(
                         name: '월요일 루틴🏋️‍♀️',
-                        workoutList: workoutList1,
                         color: Color(0xFFffdaff),
                       ),
                       kSizedBoxBetweenItems,

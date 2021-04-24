@@ -21,21 +21,32 @@ class Workout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.symmetric(vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: 8),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: kBorderRadius,
         boxShadow: [
           BoxShadow(
-            color: Colors.grey,
-          )
+            offset: Offset(0, 1),
+            blurRadius: 2,
+            color: Color.fromRGBO(0, 0, 0, 0.25),
+          ),
+          BoxShadow(
+            offset: Offset(0, -2),
+            color: Colors.white,
+          ),
         ],
       ),
       child: ListTile(
         contentPadding: EdgeInsets.symmetric(vertical: 0),
-        leading: Text(emoji),
+        leading: Text(
+          emoji,
+          style: TextStyle(fontSize: 30),
+        ),
         title: Text(
           name,
-          style: kRoutineWorkoutStyle,
+          style: kWorkoutNameStyle,
         ),
         subtitle: Text(
           '$repNumber REPS - $setNumber SETS',

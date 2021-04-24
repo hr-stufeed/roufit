@@ -12,13 +12,20 @@ const kPageSubTitleStyle = TextStyle(
   color: Colors.grey,
 );
 const kRoutineTitleStyle = TextStyle(
-  fontSize: 25.0,
+  fontSize: 28.0,
   fontWeight: FontWeight.bold,
   color: Colors.white,
 );
-const kRoutineWorkoutStyle = TextStyle(
+
+const kRoutineTagStyle = TextStyle(
+  fontSize: 16.0,
+  fontWeight: FontWeight.bold,
+  color: Colors.white,
+);
+
+const kWorkoutNameStyle = TextStyle(
   fontSize: 20.0,
-  fontWeight: FontWeight.normal,
+  fontWeight: FontWeight.bold,
   color: Colors.black,
 );
 const kOutlinedButtonStyle = TextStyle(

@@ -125,19 +125,16 @@ class HomePage extends StatelessWidget {
               children: [
                 Routine(
                   name: '상체 운동',
-                  workoutList: workoutList,
                   color: Color(0xFF4939ff),
                 ),
                 SizedBox(height: 16.0),
                 Routine(
                   name: '하체 운동',
-                  workoutList: workoutList1,
                   color: Colors.lightBlueAccent,
                 ),
                 SizedBox(height: 16.0),
                 Routine(
                   name: '월요일 루틴🏋️‍♀️',
-                  workoutList: workoutList1,
                   color: Color(0xFFffdaff),
                 ),
                 SizedBox(height: 16.0),
