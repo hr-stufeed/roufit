@@ -38,6 +38,7 @@ class MyApp extends StatelessWidget {
         'Home_page': (context) => HomePage(),
         'Routine_page': (context) => RoutinePage(),
         'Routine_create_page': (context) => RoutineCreatePage(),
+        'Routine_start_page': (context) => RoutineStartPage(),
         'Workout_page': (context) => WorkoutPage(),
         'Workout_create_page': (context) => WorkoutCreatePage(),
         'MyPage': (context) => MyPage(),
@@ -65,9 +66,7 @@ class MyApp extends StatelessWidget {
             ),
           ),
           bottomNavigationBar: Container(
-            decoration: BoxDecoration(
-              color: Colors.white
-            ),
+            decoration: BoxDecoration(color: Colors.white),
             child: TabBar(
               labelColor: Colors.black,
               indicatorColor: Colors.transparent,

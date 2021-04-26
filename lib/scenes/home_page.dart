@@ -19,6 +19,34 @@ class HomePage extends StatelessWidget {
     Workout(name: '스쿼트', setNumber: 2),
     Workout(name: '런지', setNumber: 3),
   ];
+  String kToday() {
+    var today = DateFormat('EEE').format(DateTime.now());
+    switch (today) {
+      case 'Mon':
+        return '월요일이에요.\n다시 시작해볼까요? 😎';
+        break;
+      case 'Tue':
+        return '화요일';
+        break;
+      case 'Wed':
+        return '수요일';
+        break;
+      case 'Thu':
+        return '목요일';
+        break;
+      case 'Fri':
+        return '금요일';
+        break;
+      case 'Sat':
+        return '토요일';
+        break;
+      case 'Sun':
+        return '안녕하세요!\n즐거운 일요일입니다. 🌞';
+        break;
+      default:
+        return '안녕하세요!';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,116 +56,40 @@ class HomePage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            DateFormat('M월 dd일').format(DateTime.now()),
-            style: TextStyle(
-              fontSize: 28.0,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
+            kToday(),
+            style: kPageTitleStyle,
           ),
-          SizedBox(height: 32),
+          kSizedBoxBetweenItems,
+          Routine(
+            name: '월요일 플랜',
+            color: Color(0xFF4939ff),
+          ),
+          kSizedBoxBetweenItems,
           Text(
-            'Daily plan',
-            style: TextStyle(fontSize: 16),
+            '운동할 준비 되셨나요?🔥',
+            style: kPageSubTitleStyle,
           ),
-          SizedBox(height: 24),
-          Container(
-            padding: EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: Colors.blue[100],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  children: [
-                    Icon(Icons.directions_run, size: 100),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Text(
-                            '월요일 스트레칭',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          SizedBox(height: 16),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                '스트레칭',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                '20min',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                '등 스트레칭',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                '15min',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                '푸시업',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                '4set',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 16),
-                Text(
-                  '운동부위 : 상체 유산소 스트레칭',
-                  style: TextStyle(fontSize: 12),
-                )
-              ],
-            ),
-          ),
-          SizedBox(height: 40),
-          Text(
-            'Extra Routine',
-            style: TextStyle(fontSize: 16),
-          ),
-          SizedBox(height: 24),
+          kSizedBoxBetweenItems,
           Expanded(
             child: ListView(
               children: [
-                Routine(
-                  name: '상체 운동',
-                  color: Color(0xFF4939ff),
+                Workout(
+                  name: '스트레칭',
+                  setNumber: 3,
+                  repNumber: 4,
+                  emoji: '🤸‍♀️',
                 ),
-                SizedBox(height: 16.0),
-                Routine(
-                  name: '하체 운동',
-                  color: Colors.lightBlueAccent,
+                Workout(
+                  name: '달리기',
+                  setNumber: 3,
+                  repNumber: 4,
                 ),
-                SizedBox(height: 16.0),
-                Routine(
-                  name: '월요일 루틴🏋️‍♀️',
-                  color: Color(0xFFffdaff),
+                Workout(
+                  name: '밀리터리 프레스',
+                  setNumber: 3,
+                  repNumber: 4,
+                  emoji: '🏋️‍♂️',
                 ),
-                SizedBox(height: 16.0),
               ],
             ),
           )

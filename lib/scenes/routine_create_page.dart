@@ -3,18 +3,9 @@ import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/widgets/routine.dart';
 import 'package:hr_app/widgets/workout.dart';
 import 'package:hr_app/widgets/search_field.dart';
+import 'package:hr_app/widgets/roundCheckbox.dart';
 
 class RoutineCreatePage extends StatelessWidget {
-  final List<Workout> workoutList = [
-    Workout(name: '팔굽혀펴기', setNumber: 4),
-    Workout(name: '밀리터리 프레스', setNumber: 4),
-    Workout(name: '풀 업', setNumber: 4),
-    Workout(name: '벤치프레스', setNumber: 4),
-  ];
-  final List<Workout> workoutList1 = [
-    Workout(name: '스쿼트', setNumber: 2),
-    Workout(name: '런지', setNumber: 3),
-  ];
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -28,67 +19,51 @@ class RoutineCreatePage extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('루틴 이름', style: kPageTitleStyle),
-                    OutlinedButton(
-                      child: Text('완료', style: kOutlinedButtonStyle),
-                      style: OutlinedButton.styleFrom(
-                        shape:
-                            RoundedRectangleBorder(borderRadius: kBorderRadius),
-                      ),
-                      onPressed: () => Navigator.pop(context),
+                    Text('루틴을 만들어 볼까요?', style: kPageTitleStyle),
+                  ],
+                ),
+                kSizedBoxBetweenItems,
+                Text('먼저 루틴 이름을 만들어주세요.', style: kPageSubTitleStyle),
+                SizedBox(height: 16.0),
+                SearchField(), // 검색창
+                kSizedBoxBetweenItems,
+                Text('요일을 설정해주세요.', style: kPageSubTitleStyle),
+                SizedBox(height: 16.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    RoundCheckbox(
+                      day: '월',
+                    ),
+                    RoundCheckbox(
+                      day: '화',
+                    ),
+                    RoundCheckbox(
+                      day: '수',
+                    ),
+                    RoundCheckbox(
+                      day: '목',
+                    ),
+                    RoundCheckbox(
+                      day: '금',
+                    ),
+                    RoundCheckbox(
+                      day: '토',
+                    ),
+                    RoundCheckbox(
+                      day: '일',
                     ),
                   ],
                 ),
                 kSizedBoxBetweenItems,
-                SearchField(), // 검색창
-                kSizedBoxBetweenItems,
-                Text('결합하기', style: kPageSubTitleStyle),
-                kSizedBoxBetweenItems,
-                Expanded(
-                  child: ListView(
-                    children: [
-                      Routine(
-                        name: '상체 운동',
-                        color: Color(0xFF4939ff),
-                      ),
-                      kSizedBoxBetweenItems,
-                      Routine(
-                        name: '하체 운동',
-                        color: Colors.lightBlueAccent,
-                      ),
-                      kSizedBoxBetweenItems,
-                      Routine(
-                        name: '월요일 루틴🏋️‍♀️',
-                        color: Color(0xFFffdaff),
-                      ),
-                      kSizedBoxBetweenItems,
-                      IconButton(
-                        icon: Icon(Icons.add_circle_outline),
-                        iconSize: 40.0,
-                        onPressed: () =>
-                            Navigator.pushNamed(context, 'Workout_create_page'),
-                      ),
-                      Text('운동 부위', style: kPageSubTitleStyle),
-                      kSizedBoxBetweenItems,
-                      Container(
-                        child: GridView.builder(
-                          shrinkWrap: true,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            childAspectRatio: 3 / 2,
-                            mainAxisSpacing: 10,
-                            crossAxisSpacing: 10,
-                          ),
-                          itemCount: 6,
-                          itemBuilder: (context, index) => Workout(
-                            name: 'hello',
-                            setNumber: index,
-                          ),
-                        ),
-                      ),
-                    ],
+                Text('표지색을 골라주세요.', style: kPageSubTitleStyle),
+                SizedBox(height: 16.0),
+                OutlinedButton(
+                  child: Text('완료', style: kOutlinedButtonStyle),
+                  style: OutlinedButton.styleFrom(
+                    shape: RoundedRectangleBorder(borderRadius: kBorderRadius),
                   ),
+                  onPressed: () => Navigator.pop(context),
                 ),
               ],
             ),
@@ -98,7 +73,3 @@ class RoutineCreatePage extends StatelessWidget {
     );
   }
 }
-// Workout(
-//                             name: 'hello',
-//                             setNumber: index,
-//                           ),

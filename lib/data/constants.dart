@@ -8,8 +8,8 @@ const kPageTitleStyle = TextStyle(
 );
 const kPageSubTitleStyle = TextStyle(
   fontSize: 16.0,
-  fontWeight: FontWeight.normal,
-  color: Colors.grey,
+  fontWeight: FontWeight.bold,
+  color: Colors.black,
 );
 const kRoutineTitleStyle = TextStyle(
   fontSize: 28.0,
@@ -34,6 +34,7 @@ const kOutlinedButtonStyle = TextStyle(
   color: Colors.blueAccent,
 );
 const kSizedBoxBetweenItems = SizedBox(
-  height: 20,
+  height: 24.0,
 );
+
 final kBorderRadius = BorderRadius.circular(20.0);

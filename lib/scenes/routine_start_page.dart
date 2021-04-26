@@ -10,108 +10,92 @@ import 'package:intl/intl.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class RoutineStartPage extends StatelessWidget {
-  final List<Workout> workoutList = [
-    Workout(name: '팔굽혀펴기', setNumber: 4),
-    Workout(name: '밀리터리 프레스', setNumber: 4),
-    Workout(name: '풀 업', setNumber: 4),
-    Workout(name: '벤치프레스', setNumber: 4),
-  ];
-  final List<Workout> workoutList1 = [
-    Workout(name: '스쿼트', setNumber: 2),
-    Workout(name: '런지', setNumber: 3),
-  ];
-
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: kPagePadding,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            'Routine Name',
-            style: TextStyle(fontSize: 16),
-          ),
-          SizedBox(height: 24),
-          Text(
-            DateFormat('hh:mm:ss').format(DateTime.now()),
-            style: TextStyle(
-              fontSize: 28.0,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          ),
-          SizedBox(height: 32),
-          Expanded(
-            child: ListView(
-              children: [
-                TimelineTile(
-                  isFirst: true,
-                  alignment: TimelineAlign.end,
-                  indicatorStyle: const IndicatorStyle(
-                    width: 30,
-                    color: Colors.blue,
-                    indicatorXY: 0,
-                    padding: EdgeInsets.all(8),
-                  ),
-                  beforeLineStyle: const LineStyle(
-                    color: Colors.black12,
-                    thickness: 3,
-                  ),
-                  startChild: Container(
-                    padding: EdgeInsets.all(10),
-                    child: Routine(
-                      name: '상체 운동',
-                      color: Color(0xFF4939ff),
+    return MaterialApp(
+      home: Material(
+        child: Padding(
+          padding: kPagePadding,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                DateFormat('hh:mm').format(DateTime.now()),
+                style: kPageTitleStyle,
+              ),
+              kSizedBoxBetweenItems,
+              Expanded(
+                child: ListView(
+                  children: [
+                    TimelineTile(
+                      isFirst: true,
+                      alignment: TimelineAlign.end,
+                      indicatorStyle: const IndicatorStyle(
+                        width: 30,
+                        color: Colors.blue,
+                        indicatorXY: 0,
+                        padding: EdgeInsets.all(8),
+                      ),
+                      beforeLineStyle: const LineStyle(
+                        color: Colors.black12,
+                        thickness: 3,
+                      ),
+                      startChild: Container(
+                        padding: EdgeInsets.all(10),
+                        child: Routine(
+                          name: '상체 운동',
+                          color: Color(0xFF4939ff),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                TimelineTile(
-                  isFirst: true,
-                  alignment: TimelineAlign.end,
-                  indicatorStyle: const IndicatorStyle(
-                    width: 30,
-                    color: Colors.black12,
-                    indicatorXY: 0,
-                    padding: EdgeInsets.all(8),
-                  ),
-                  beforeLineStyle: const LineStyle(
-                    color: Colors.black12,
-                    thickness: 3,
-                  ),
-                  startChild: Container(
-                    padding: EdgeInsets.all(10),
-                    child: Routine(
-                      name: '상체 운동',
-                      color: Color(0xFF4939ff),
+                    TimelineTile(
+                      isFirst: true,
+                      alignment: TimelineAlign.end,
+                      indicatorStyle: const IndicatorStyle(
+                        width: 30,
+                        color: Colors.black12,
+                        indicatorXY: 0,
+                        padding: EdgeInsets.all(8),
+                      ),
+                      beforeLineStyle: const LineStyle(
+                        color: Colors.black12,
+                        thickness: 3,
+                      ),
+                      startChild: Container(
+                        padding: EdgeInsets.all(10),
+                        child: Routine(
+                          name: '상체 운동',
+                          color: Color(0xFF4939ff),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                TimelineTile(
-                  isLast: true,
-                  alignment: TimelineAlign.end,
-                  indicatorStyle: const IndicatorStyle(
-                    width: 30,
-                    color: Colors.black12,
-                    indicatorXY: 0,
-                    padding: EdgeInsets.all(8),
-                  ),
-                  beforeLineStyle: const LineStyle(
-                    color: Colors.black12,
-                    thickness: 3,
-                  ),
-                  startChild: Container(
-                    padding: EdgeInsets.all(10),
-                    child: Routine(
-                      name: '상체 운동',
-                      color: Color(0xFF4939ff),
+                    TimelineTile(
+                      isLast: true,
+                      alignment: TimelineAlign.end,
+                      indicatorStyle: const IndicatorStyle(
+                        width: 30,
+                        color: Colors.black12,
+                        indicatorXY: 0,
+                        padding: EdgeInsets.all(8),
+                      ),
+                      beforeLineStyle: const LineStyle(
+                        color: Colors.black12,
+                        thickness: 3,
+                      ),
+                      startChild: Container(
+                        padding: EdgeInsets.all(10),
+                        child: Routine(
+                          name: '상체 운동',
+                          color: Color(0xFF4939ff),
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

@@ -17,6 +17,7 @@ class SearchField extends StatelessWidget {
           borderRadius: kBorderRadius,
           borderSide: BorderSide(style: BorderStyle.none),
         ),
+        prefixIcon: Icon(Icons.search),
         labelText: '운동,태그...',
         labelStyle: TextStyle(
           color: Colors.white,

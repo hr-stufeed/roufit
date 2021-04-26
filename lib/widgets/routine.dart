@@ -10,43 +10,64 @@ class Routine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors:[Colors.white,Colors.blue],
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-
+    return Material(
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: 16.0,
+          vertical: 24.0,
         ),
-        borderRadius: kBorderRadius,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                name,
-                style: kRoutineTitleStyle,
-              ),
-              Icon(
-                Icons.more_horiz,
-                color: Colors.white,
-              )
-            ],
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xff0E61DE), Color(0xff74A6F1)],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
           ),
-          Text(
-            '상체 · 코어',
-            style: kRoutineTagStyle,
-          ),
-          kSizedBoxBetweenItems,
-          Text(
-            '4 WORKOUTS',
-            style: kRoutineTagStyle,
-          ),
-        ],
+          borderRadius: kBorderRadius,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  name,
+                  style: kRoutineTitleStyle,
+                ),
+                Icon(
+                  Icons.more_horiz,
+                  color: Colors.white,
+                )
+              ],
+            ),
+            SizedBox(height: 8.0),
+            Text(
+              '#상체 · #코어',
+              style: kRoutineTagStyle,
+            ),
+            SizedBox(height: 8.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  '3 WORKOUTS',
+                  style: kRoutineTagStyle,
+                ),
+                IconButton(
+                  padding: EdgeInsets.all(0),
+                  icon: Icon(
+                    Icons.play_arrow,
+                    color: Colors.white,
+                    size: 40.0,
+                  ),
+                  onPressed: () =>
+                      Navigator.pushNamed(context, 'Routine_start_page'),
+                )
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
