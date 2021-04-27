@@ -3,7 +3,6 @@ import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/scenes/workout_page.dart';
 import 'package:hr_app/widgets/routine.dart';
 import 'package:hr_app/widgets/workout.dart';
-import 'routine_create_page.dart';
 
 class RoutinePage extends StatelessWidget {
   @override
@@ -16,7 +15,7 @@ class RoutinePage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Routine List', style: kPageTitleStyle),
+              Text('루틴을 완성해주세요.', style: kPageTitleStyle),
               IconButton(
                 icon: Icon(Icons.add_circle_outline),
                 iconSize: 40.0,

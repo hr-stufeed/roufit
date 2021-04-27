@@ -28,10 +28,15 @@ const kWorkoutNameStyle = TextStyle(
   fontWeight: FontWeight.bold,
   color: Colors.black,
 );
-const kOutlinedButtonStyle = TextStyle(
+const kOutlinedButtonTextStyle = TextStyle(
   fontSize: 15.0,
   fontWeight: FontWeight.normal,
-  color: Colors.blueAccent,
+  color: Colors.white,
+);
+const kBottomFixedButtonTextStyle = TextStyle(
+  fontSize: 15.0,
+  fontWeight: FontWeight.normal,
+  color: Colors.white,
 );
 const kSizedBoxBetweenItems = SizedBox(
   height: 24.0,

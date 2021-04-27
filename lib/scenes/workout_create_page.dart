@@ -31,7 +31,7 @@ class WorkoutCreatePage extends StatelessWidget {
                   OutlinedButton(
                     child: Text(
                       '완료',
-                      style: kOutlinedButtonStyle,
+                      style: kOutlinedButtonTextStyle,
                     ),
                     style: OutlinedButton.styleFrom(
                       shape: RoundedRectangleBorder(

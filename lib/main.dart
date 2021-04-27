@@ -5,6 +5,7 @@ import 'package:hr_app/scenes/routine_create_page.dart';
 import 'package:hr_app/scenes/workout_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hr_app/scenes/routine_start_page.dart';
+import 'package:hr_app/scenes/routine_setting_page.dart';
 
 import 'scenes/routine_page.dart';
 import 'scenes/workout_create_page.dart';
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
         'Routine_page': (context) => RoutinePage(),
         'Routine_create_page': (context) => RoutineCreatePage(),
         'Routine_start_page': (context) => RoutineStartPage(),
+        'Routine_setting_page': (context) => RoutineSettingPage(),
         'Workout_page': (context) => WorkoutPage(),
         'Workout_create_page': (context) => WorkoutCreatePage(),
         'MyPage': (context) => MyPage(),
