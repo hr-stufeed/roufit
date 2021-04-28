@@ -53,17 +53,12 @@ class _RoundCheckboxState extends State<RoundCheckbox> {
               padding: EdgeInsets.all(12.0),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: value.get(TweenProps.backgroundColor), //_isClicked
-                // ? clickedBackGroundColor
-                // : defaultBackGroundColor,
-                //border: Border.all(color: Colors.grey[400]),
+                color: value.get(TweenProps.backgroundColor),
               ),
               child: Text(
                 widget.day,
                 style: TextStyle(
-                    color: value.get(TweenProps.textColor),
-                    // color: _isClicked ? clickedTextColor : defaultTextColor,
-                    fontSize: 20.0),
+                    color: value.get(TweenProps.textColor), fontSize: 20.0),
               ),
             ),
           );

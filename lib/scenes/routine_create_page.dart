@@ -9,6 +9,7 @@ import 'package:hr_app/widgets/bottomFixedButton.dart';
 
 class RoutineCreatePage extends StatelessWidget {
   Color screenPickerColor = Colors.blue;
+  final myController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -29,7 +30,15 @@ class RoutineCreatePage extends StatelessWidget {
                   kSizedBoxBetweenItems,
                   Text('먼저 루틴 이름을 만들어주세요.', style: kPageSubTitleStyle),
                   SizedBox(height: 16.0),
-                  SearchField(), // 검색창
+                  TextField(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: kBorderRadius,
+                      ),
+                      prefixIcon: Icon(Icons.create_rounded),
+                    ),
+                    controller: myController,
+                  ),
                   kSizedBoxBetweenItems,
                   Text('요일을 설정해주세요.', style: kPageSubTitleStyle),
                   SizedBox(height: 16.0),
@@ -88,14 +97,19 @@ class RoutineCreatePage extends StatelessWidget {
               //   child: kSizedBoxBetweenItems,
               // ),
               BottomFixedButton(
-                  text: '계123속하기',
-                  tap: () =>
-                      Navigator.pushNamed(context, 'Routine_setting_page'))
-              //Navigator.pushNamed(context, 'Routine_setting_page')),
+                  text: '계속하기',
+                  tap: () => Navigator.pushNamed(
+                      context, 'Routine_setting_page',
+                      arguments: RoutineCreatePageArguments(myController.text)))
             ],
           ),
         ),
       ),
     );
   }
+}
+
+class RoutineCreatePageArguments {
+  final String routineName;
+  RoutineCreatePageArguments(this.routineName);
 }

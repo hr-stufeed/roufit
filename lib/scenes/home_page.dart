@@ -2,23 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/models/routine_model.dart';
+import 'package:hr_app/models/routine_provider.dart';
 import 'package:hr_app/models/workout_model.dart';
 import 'package:hr_app/widgets/routine.dart';
-import 'package:hr_app/widgets/routine_list.dart';
 import 'package:hr_app/widgets/workout.dart';
+import 'package:provider/provider.dart';
+
 import 'package:intl/intl.dart';
 
 class HomePage extends StatelessWidget {
-  final List<Workout> workoutList = [
-    Workout(name: '팔굽혀펴기', setNumber: 4),
-    Workout(name: '밀리터리 프레스', setNumber: 4),
-    Workout(name: '풀 업', setNumber: 4),
-    Workout(name: '벤치프레스', setNumber: 4),
-  ];
-  final List<Workout> workoutList1 = [
-    Workout(name: '스쿼트', setNumber: 2),
-    Workout(name: '런지', setNumber: 3),
-  ];
   String kToday() {
     var today = DateFormat('EEE').format(DateTime.now());
     switch (today) {
@@ -26,19 +18,19 @@ class HomePage extends StatelessWidget {
         return '월요일이에요.\n다시 시작해볼까요? 😎';
         break;
       case 'Tue':
-        return '화요일';
+        return '화요일이에요.\n힘차게 가볼까요? 😁';
         break;
       case 'Wed':
-        return '수요일';
+        return '수요일!\n벌써 중간까지 왔어요! 😊';
         break;
       case 'Thu':
-        return '목요일';
+        return '목요일이에요.\n조금만 더 버텨요! 💪';
         break;
       case 'Fri':
-        return '금요일';
+        return '불타는 금요일이에요!!!!!! 🔥';
         break;
       case 'Sat':
-        return '토요일';
+        return '어서오세요!\n기분 좋은 토요일이에요.😃';
         break;
       case 'Sun':
         return '안녕하세요!\n즐거운 일요일입니다. 🌞';
@@ -60,10 +52,7 @@ class HomePage extends StatelessWidget {
             style: kPageTitleStyle,
           ),
           kSizedBoxBetweenItems,
-          Routine(
-            name: '월요일 플랜',
-            color: Color(0xFF4939ff),
-          ),
+          Provider.of<RoutineProvider>(context).routines[0],
           kSizedBoxBetweenItems,
           Text(
             '운동할 준비 되셨나요?🔥',

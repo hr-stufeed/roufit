@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hr_app/scenes/home_page.dart';
 import 'package:hr_app/scenes/routine_create_page.dart';
-import 'package:hr_app/scenes/routine_page.dart';
+import 'package:hr_app/scenes/routine_list_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hr_app/scenes/routine_start_page.dart';
-import 'package:hr_app/scenes/workout_page.dart';
+import 'package:hr_app/scenes/workout_list_page.dart';
 
 void main() {
   runApp(PagesScreen());
@@ -15,10 +15,10 @@ class PagesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        'Routine_page': (context) => RoutinePage(),
+        'Routine_page': (context) => RoutineListPage(),
         'Routine_create_page': (context) => RoutineCreatePage(),
-        'Workout_add_page': (context) => WorkoutPage(),
-        'Workout_page': (context) => WorkoutPage(),
+        'Workout_add_page': (context) => WorkoutListPage(),
+        'Workout_page': (context) => WorkoutListPage(),
       },
       theme: ThemeData(
         textTheme: TextTheme(
@@ -36,16 +36,14 @@ class PagesScreen extends StatelessWidget {
             child: TabBarView(
               children: [
                 RoutineStartPage(),
-                RoutinePage(),
-                WorkoutPage(),
+                RoutineListPage(),
+                WorkoutListPage(),
                 Text('마이 스크린'),
               ],
             ),
           ),
           bottomNavigationBar: Container(
-            decoration: BoxDecoration(
-              color: Colors.white
-            ),
+            decoration: BoxDecoration(color: Colors.white),
             child: TabBar(
               labelColor: Colors.black,
               indicatorColor: Colors.transparent,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
-import 'package:hr_app/scenes/workout_page.dart';
+import 'package:hr_app/scenes/workout_list_page.dart';
+import 'package:hr_app/widgets/bottomFixedButton.dart';
 import 'package:hr_app/widgets/routine.dart';
 import 'package:hr_app/widgets/workout.dart';
 import 'routine_create_page.dart';
@@ -8,44 +9,47 @@ import 'routine_create_page.dart';
 class RoutineSettingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Padding(
-        padding: kPagePadding,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Routine List', style: kPageTitleStyle),
-                IconButton(
-                  icon: Icon(Icons.add_circle_outline),
-                  iconSize: 40.0,
-                  onPressed: () =>
-                      Navigator.pushNamed(context, 'Routine_create_page'),
-                ),
-              ],
-            ),
-            kSizedBoxBetweenItems,
-            Text(
-              '생성된 루틴',
-              style: kPageSubTitleStyle,
-            ),
-            kSizedBoxBetweenItems,
-            Expanded(
-              child: ListView(
+    final RoutineCreatePageArguments args =
+        ModalRoute.of(context).settings.arguments as RoutineCreatePageArguments;
+    return SafeArea(
+      child: Material(
+        child: Padding(
+          padding: kPagePadding,
+          child: Stack(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Routine(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('루틴을 완성해주세요.', style: kPageTitleStyle),
+                    ],
+                  ),
                   kSizedBoxBetweenItems,
-                  Routine(),
+                  Text(
+                    '루틴 표지',
+                    style: kPageSubTitleStyle,
+                  ),
                   kSizedBoxBetweenItems,
-                  Routine(),
+                  Routine(
+                    name: args.routineName,
+                  ),
                   kSizedBoxBetweenItems,
-                  Routine(),
+                  Text(
+                    '운동 추가하기',
+                    style: kPageSubTitleStyle,
+                  ),
+                  Workout(),
                 ],
               ),
-            ),
-          ],
+              BottomFixedButton(
+                text: '완성하기',
+                tap: () =>
+                    Navigator.popUntil(context, (route) => route.isFirst),
+              ),
+            ],
+          ),
         ),
       ),
     );
