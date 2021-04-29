@@ -19,14 +19,11 @@ class RoutineListPage extends StatelessWidget {
               children: [
                 Text('루틴 리스트', style: kPageTitleStyle),
                 IconButton(
-                    icon: Icon(Icons.add_circle_outline),
-                    iconSize: 40.0,
-                    onPressed: () {
-                      Provider.of<RoutineProvider>(context, listen: false)
-                          .setData(0, 'dd', Colors.red);
-                    } //=>
-                    //Navigator.pushNamed(context, 'Routine_create_page'),
-                    ),
+                  icon: Icon(Icons.add_circle_outline),
+                  iconSize: 40.0,
+                  onPressed: () =>
+                      Navigator.pushNamed(context, 'Routine_create_page'),
+                ),
               ],
             ),
             kSizedBoxBetweenItems,

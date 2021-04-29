@@ -42,6 +42,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Routine frontRoutine = Provider.of<RoutineProvider>(context).copy(0);
+    frontRoutine.isListUp = false;
     return Padding(
       padding: kPagePadding,
       child: Column(
@@ -52,7 +54,7 @@ class HomePage extends StatelessWidget {
             style: kPageTitleStyle,
           ),
           kSizedBoxBetweenItems,
-          Provider.of<RoutineProvider>(context).routines[0],
+          frontRoutine,
           kSizedBoxBetweenItems,
           Text(
             '운동할 준비 되셨나요?🔥',
@@ -60,26 +62,11 @@ class HomePage extends StatelessWidget {
           ),
           kSizedBoxBetweenItems,
           Expanded(
-            child: ListView(
-              children: [
-                Workout(
-                  name: '스트레칭',
-                  setNumber: 3,
-                  repNumber: 4,
-                  emoji: '🤸‍♀️',
-                ),
-                Workout(
-                  name: '달리기',
-                  setNumber: 3,
-                  repNumber: 4,
-                ),
-                Workout(
-                  name: '밀리터리 프레스',
-                  setNumber: 3,
-                  repNumber: 4,
-                  emoji: '🏋️‍♂️',
-                ),
-              ],
+            child: ListView.builder(
+              itemCount: frontRoutine.workoutList.length,
+              itemBuilder: (context, index) {
+                return frontRoutine.workoutList[index];
+              },
             ),
           )
         ],

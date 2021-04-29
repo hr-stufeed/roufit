@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
+import 'package:hr_app/models/routine_provider.dart';
 import 'package:hr_app/scenes/workout_list_page.dart';
 import 'package:hr_app/widgets/bottomFixedButton.dart';
 import 'package:hr_app/widgets/routine.dart';
 import 'package:hr_app/widgets/workout.dart';
+import 'package:provider/provider.dart';
 import 'routine_create_page.dart';
 
 class RoutineSettingPage extends StatelessWidget {
@@ -34,6 +36,7 @@ class RoutineSettingPage extends StatelessWidget {
                   kSizedBoxBetweenItems,
                   Routine(
                     name: args.routineName,
+                    color: args.color,
                   ),
                   kSizedBoxBetweenItems,
                   Text(
@@ -45,8 +48,11 @@ class RoutineSettingPage extends StatelessWidget {
               ),
               BottomFixedButton(
                 text: '완성하기',
-                tap: () =>
-                    Navigator.popUntil(context, (route) => route.isFirst),
+                tap: () {
+                  Navigator.popUntil(context, (route) => route.isFirst);
+                  Provider.of<RoutineProvider>(context, listen: false)
+                      .add(args.routineName, args.color);
+                },
               ),
             ],
           ),

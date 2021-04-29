@@ -7,8 +7,10 @@ class RoundCheckbox extends StatefulWidget {
   RoundCheckbox({
     Key key,
     @required this.day,
+    @required this.tap,
   });
   final String day;
+  Function tap;
   @override
   _RoundCheckboxState createState() => _RoundCheckboxState();
 }
@@ -19,6 +21,7 @@ class _RoundCheckboxState extends State<RoundCheckbox> {
   Color clickedTextColor = Colors.white;
   Color defaultTextColor = Colors.black;
   var control = CustomAnimationControl.stop;
+  bool _isClicked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -43,9 +46,17 @@ class _RoundCheckboxState extends State<RoundCheckbox> {
           return GestureDetector(
             onTap: () {
               setState(() {
-                control = control == CustomAnimationControl.stop
-                    ? CustomAnimationControl.play
-                    : CustomAnimationControl.playReverse;
+                if (control == CustomAnimationControl.stop &&
+                    _isClicked == false)
+                  control = CustomAnimationControl.play;
+                else if (control == CustomAnimationControl.play &&
+                    _isClicked == true)
+                  control = CustomAnimationControl.playReverse;
+                else if (control == CustomAnimationControl.playReverse &&
+                    _isClicked == false) control = CustomAnimationControl.play;
+                _isClicked = !_isClicked;
+
+                widget.tap(_isClicked, widget.day);
               });
             },
             child: Container(

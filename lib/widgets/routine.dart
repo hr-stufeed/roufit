@@ -2,23 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/widgets/workout.dart';
 
-class Routine extends StatelessWidget {
+class Routine extends StatefulWidget {
   final String name;
   final Color color;
+  List<Workout> workoutList;
+  bool isListUp;
+  Routine({
+    this.name = '루틴 이름',
+    this.color = Colors.lightBlueAccent,
+    this.isListUp = true,
+    this.workoutList,
+  });
 
-  Routine({this.name = '루틴 이름', this.color = Colors.lightBlueAccent});
+  @override
+  _RoutineState createState() => _RoutineState();
+}
 
+class _RoutineState extends State<Routine> {
   @override
   Widget build(BuildContext context) {
     return Material(
       child: Container(
+        margin: EdgeInsets.only(bottom: 16.0),
         padding: EdgeInsets.symmetric(
           horizontal: 16.0,
           vertical: 24.0,
         ),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xff0E61DE), Color(0xff74A6F1)],
+            colors: [widget.color, widget.color.withBlue(250)],
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
           ),
@@ -31,7 +43,7 @@ class Routine extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  name,
+                  widget.name,
                   style: kRoutineTitleStyle,
                 ),
                 Icon(
@@ -54,16 +66,20 @@ class Routine extends StatelessWidget {
                   '3 WORKOUTS',
                   style: kRoutineTagStyle,
                 ),
-                IconButton(
-                  padding: EdgeInsets.all(0),
-                  icon: Icon(
-                    Icons.play_arrow,
-                    color: Colors.white,
-                    size: 40.0,
-                  ),
-                  onPressed: () =>
-                      Navigator.pushNamed(context, 'Routine_start_page'),
-                )
+                widget.isListUp
+                    ? SizedBox(
+                        height: 0,
+                      )
+                    : IconButton(
+                        padding: EdgeInsets.all(0),
+                        icon: Icon(
+                          Icons.play_arrow,
+                          color: Colors.white,
+                          size: 40.0,
+                        ),
+                        onPressed: () =>
+                            Navigator.pushNamed(context, 'Routine_start_page'),
+                      )
               ],
             ),
           ],

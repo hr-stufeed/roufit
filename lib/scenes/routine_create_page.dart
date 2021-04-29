@@ -1,15 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
-import 'package:hr_app/widgets/routine.dart';
-import 'package:hr_app/widgets/workout.dart';
-import 'package:hr_app/widgets/search_field.dart';
 import 'package:hr_app/widgets/roundCheckbox.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:hr_app/widgets/bottomFixedButton.dart';
 
-class RoutineCreatePage extends StatelessWidget {
-  Color screenPickerColor = Colors.blue;
-  final myController = TextEditingController();
+class RoutineCreatePage extends StatefulWidget {
+  @override
+  _RoutineCreatePageState createState() => _RoutineCreatePageState();
+}
+
+class _RoutineCreatePageState extends State<RoutineCreatePage> {
+  Color screenPickerColor = Colors.red;
+  List<String> selectedDays = [];
+  var myController = TextEditingController();
+
+  void roundCheckboxTap(bool isClicked, String day) {
+    setState(() {
+      isClicked ? selectedDays.add(day) : selectedDays.remove(day);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -47,24 +57,31 @@ class RoutineCreatePage extends StatelessWidget {
                     children: [
                       RoundCheckbox(
                         day: '월',
+                        tap: roundCheckboxTap,
                       ),
                       RoundCheckbox(
                         day: '화',
+                        tap: roundCheckboxTap,
                       ),
                       RoundCheckbox(
                         day: '수',
+                        tap: roundCheckboxTap,
                       ),
                       RoundCheckbox(
                         day: '목',
+                        tap: roundCheckboxTap,
                       ),
                       RoundCheckbox(
                         day: '금',
+                        tap: roundCheckboxTap,
                       ),
                       RoundCheckbox(
                         day: '토',
+                        tap: roundCheckboxTap,
                       ),
                       RoundCheckbox(
                         day: '일',
+                        tap: roundCheckboxTap,
                       ),
                     ],
                   ),
@@ -73,8 +90,9 @@ class RoutineCreatePage extends StatelessWidget {
                   SizedBox(height: 16.0),
                   Center(
                     child: ColorPicker(
-                      onColorChanged: (Color color) => {},
-                      color: Colors.red,
+                      color: screenPickerColor,
+                      onColorChanged: (Color color) =>
+                          setState(() => screenPickerColor = color),
                       padding: EdgeInsets.all(0.0),
                       width: 42,
                       height: 42,
@@ -98,9 +116,12 @@ class RoutineCreatePage extends StatelessWidget {
               // ),
               BottomFixedButton(
                   text: '계속하기',
-                  tap: () => Navigator.pushNamed(
-                      context, 'Routine_setting_page',
-                      arguments: RoutineCreatePageArguments(myController.text)))
+                  tap: () =>
+                      Navigator.pushNamed(context, 'Routine_setting_page',
+                          arguments: RoutineCreatePageArguments(
+                            myController.text,
+                            screenPickerColor,
+                          )))
             ],
           ),
         ),
@@ -111,5 +132,6 @@ class RoutineCreatePage extends StatelessWidget {
 
 class RoutineCreatePageArguments {
   final String routineName;
-  RoutineCreatePageArguments(this.routineName);
+  final Color color;
+  RoutineCreatePageArguments(this.routineName, this.color);
 }
