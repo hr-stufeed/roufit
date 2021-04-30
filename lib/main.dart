@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hr_app/models/routine_provider.dart';
 import 'package:hr_app/scenes/home_page.dart';
 import 'package:hr_app/scenes/mypage.dart';
@@ -9,10 +11,13 @@ import 'package:hr_app/scenes/routine_start_page.dart';
 import 'package:hr_app/scenes/routine_setting_page.dart';
 import 'package:provider/provider.dart';
 
+import 'models/routine_model.dart';
 import 'scenes/routine_list_page.dart';
 import 'scenes/workout_create_page.dart';
 
-void main() {
+void main() async {
+  await Hive.initFlutter();
+  Hive.registerAdapter(RoutineModelAdapter());
   runApp(MyApp());
 }
 
