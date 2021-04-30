@@ -34,10 +34,14 @@ dependencies:
   simple_animations: ^3.1.1
   flex_color_picker: ^2.0.0
   provider: ^5.0.0
+  hive: ^2.0.4
+  hive_flutter: ^1.0.0
   
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  build_runner:
+  hive_generator: ^1.1.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -1,13 +1,17 @@
-import 'package:flutter/foundation.dart';
+import 'package:hive/hive.dart';
 
-class WorkoutModel {
-  final String id;
+part 'routine_model.g.dart';
+
+@HiveType(typeId: 1)
+class RoutineModel {
+  @HiveField(0)
   final String name;
-  final List<String> tag;
+  @HiveField(1)
+  final int color;
 
-  WorkoutModel({
-    @required this.id,
-    @required this.name,
-    @required this.tag,
+
+  RoutineModel({
+    this.name,
+    this.color,
   });
 }

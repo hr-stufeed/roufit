@@ -1,6 +1,8 @@
 import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:hive/hive.dart';
+import 'package:hr_app/models/routine_model.dart';
 import 'package:hr_app/widgets/routine.dart';
 import 'package:hr_app/widgets/workout.dart';
 
@@ -30,6 +32,10 @@ class RoutineProvider extends ChangeNotifier {
     ),
   ];
 
+  RoutineProvider() {
+    load();
+  }
+
   int get routineCount {
     return _routines.length;
   }
@@ -45,13 +51,40 @@ class RoutineProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void add(String text, Color color) {
+  void add(String text, Color color) async {
+    var _box = await Hive.openBox<RoutineModel>('routines');
+    _box.add(
+      RoutineModel(
+        name: text,
+        color: color.value,
+      ),
+    );
+
     final routine = Routine(
       name: text,
       color: color,
     );
     _routines.add(routine);
+
     notifyListeners();
+  }
+
+  void load() async {
+    var _box = await Hive.openBox<RoutineModel>('routines');
+    for (int index = 0; index < _box.length; index++) {
+      _routines.add(Routine(
+        name: _box.getAt(index).name,
+        color: Color(_box.getAt(index).color),
+      ));
+    }
+    print('load');
+  }
+
+  void clear() async{
+    var _box = await Hive.openBox<RoutineModel>('routines');
+    _box.clear();
+
+    print('clear ${_box.length}');
   }
 
   Routine copy(int n) {
