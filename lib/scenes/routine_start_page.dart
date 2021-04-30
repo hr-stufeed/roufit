@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hr_app/data/constants.dart';
-import 'package:hr_app/models/routine_model.dart';
-import 'package:hr_app/models/workout_model.dart';
 import 'package:hr_app/widgets/routine.dart';
-import 'package:hr_app/widgets/workout.dart';
 import 'package:intl/intl.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
