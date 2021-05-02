@@ -11,38 +11,48 @@ class RoutineListPage extends StatelessWidget {
     return Material(
       child: Padding(
         padding: kPagePadding,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Stack(
+          alignment: Alignment.bottomRight,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('루틴 리스트', style: kPageTitleStyle),
-                IconButton(
-                  icon: Icon(Icons.add_circle_outline),
-                  iconSize: 40.0,
-                  onPressed: () =>
-                      Navigator.pushNamed(context, 'Routine_create_page'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('루틴 리스트', style: kPageTitleStyle),
+                  ],
+                ),
+                kSizedBoxBetweenItems,
+                Expanded(
+                  child: Consumer<RoutineProvider>(
+                    builder: (context, routineProvider, child) {
+                      return ListView.builder(
+                        itemCount: routineProvider.routineCount,
+                        itemBuilder: (context, index) {
+                          return routineProvider.routines[index];
+                        },
+                      );
+                    },
+                  ),
                 ),
               ],
             ),
-            kSizedBoxBetweenItems,
-            Text(
-              '생성된 루틴',
-              style: kPageSubTitleStyle,
-            ),
-            kSizedBoxBetweenItems,
-            Expanded(
-              child: Consumer<RoutineProvider>(
-                builder: (context, routineProvider, child) {
-                  return ListView.builder(
-                    itemCount: routineProvider.routineCount,
-                    itemBuilder: (context, index) {
-                      return routineProvider.routines[index];
-                    },
-                  );
-                },
-              ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                FloatingActionButton(
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.black,
+                    size: 30.0,
+                  ),
+                  backgroundColor: Colors.white,
+                  onPressed: () =>
+                      Navigator.pushNamed(context, 'Routine_create_page'),
+                ),
+                kSizedBoxBetweenItems,
+              ],
             ),
           ],
         ),

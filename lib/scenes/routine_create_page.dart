@@ -3,6 +3,8 @@ import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/widgets/roundCheckbox.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:hr_app/widgets/bottomFixedButton.dart';
+import 'package:provider/provider.dart';
+import 'package:hr_app/models/routine_provider.dart';
 
 class RoutineCreatePage extends StatefulWidget {
   @override
@@ -115,13 +117,12 @@ class _RoutineCreatePageState extends State<RoutineCreatePage> {
               //   child: kSizedBoxBetweenItems,
               // ),
               BottomFixedButton(
-                  text: '계속하기',
-                  tap: () =>
-                      Navigator.pushNamed(context, 'Routine_setting_page',
-                          arguments: RoutineCreatePageArguments(
-                            myController.text,
-                            screenPickerColor,
-                          )))
+                  text: '완료',
+                  tap: () {
+                    Provider.of<RoutineProvider>(context, listen: false)
+                        .add(myController.text, screenPickerColor);
+                    Navigator.pop(context);
+                  })
             ],
           ),
         ),
@@ -135,3 +136,9 @@ class RoutineCreatePageArguments {
   final Color color;
   RoutineCreatePageArguments(this.routineName, this.color);
 }
+
+// Navigator.pushNamed(context, 'Routine_setting_page',
+//                           arguments: RoutineCreatePageArguments(
+//                             myController.text,
+//                             screenPickerColor,
+//                           ))

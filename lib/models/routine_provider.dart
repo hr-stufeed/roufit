@@ -5,31 +5,15 @@ import 'package:hive/hive.dart';
 import 'package:hr_app/models/routine_model.dart';
 import 'package:hr_app/widgets/routine.dart';
 import 'package:hr_app/widgets/workout.dart';
+import 'package:intl/intl.dart';
 
 class RoutineProvider extends ChangeNotifier {
   List<Routine> _routines = [
-    Routine(
-      name: '상체 조지기',
-      color: Colors.red,
-      workoutList: [
-        Workout(
-          name: '밀리터리 프레스',
-          setNumber: 8,
-          repNumber: 4,
-          emoji: '🏋️‍♂️',
-        ),
-        Workout(
-          name: '풀 업',
-          setNumber: 8,
-          repNumber: 4,
-          emoji: '💪',
-        )
-      ],
-    ),
-    Routine(
-      name: '화요일 플랜',
-      color: Color(0xFF4939ff),
-    ),
+    // Routine(
+    //   name: '월요일',
+    //   color: Colors.lightGreen,
+    //   isListUp: false,
+    // )
   ];
 
   RoutineProvider() {
@@ -42,6 +26,41 @@ class RoutineProvider extends ChangeNotifier {
 
   UnmodifiableListView get routines => UnmodifiableListView(_routines);
 
+  void add(String text, Color color) async {
+    var _box = await Hive.openBox<RoutineModel>('routines');
+    var key = DateFormat('yymmddss').format(DateTime.now());
+    _box.put(
+      key,
+      RoutineModel(
+        name: text,
+        color: color.value,
+      ),
+    );
+    final routine = Routine(
+      autoKey: key,
+      name: text,
+      color: color,
+    );
+    _routines.add(routine);
+
+    print('키들 : ${_box.keys}');
+
+    notifyListeners();
+  }
+
+  Routine copy(int n) {
+    try {
+      return Routine(
+        name: _routines[n].name,
+        color: _routines[n].color,
+        isListUp: false,
+        workoutList: _routines[n].workoutList,
+      );
+    } catch (e) {
+      return Routine(name: '!###LOADING###!');
+    }
+  }
+
   void modifyRoutine(int n, String text, Color color, bool isListUp) {
     _routines[n] = new Routine(
       name: text,
@@ -51,48 +70,39 @@ class RoutineProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void add(String text, Color color) async {
+  void delete(String n) async {
     var _box = await Hive.openBox<RoutineModel>('routines');
-    _box.add(
-      RoutineModel(
-        name: text,
-        color: color.value,
-      ),
-    );
+    for (int i = 0; i < _routines.length; i++) {
+      if (_routines[i].autoKey == n) _routines.removeAt(i);
+    }
+    _box.delete(n);
 
-    final routine = Routine(
-      name: text,
-      color: color,
-    );
-    _routines.add(routine);
-
+    print('delete $n');
     notifyListeners();
   }
 
   void load() async {
     var _box = await Hive.openBox<RoutineModel>('routines');
-    for (int index = 0; index < _box.length; index++) {
-      _routines.add(Routine(
-        name: _box.getAt(index).name,
-        color: Color(_box.getAt(index).color),
-      ));
-    }
-    print('load');
+    try {
+      for (int index = 0; index < _box.length; index++) {
+        _routines.add(Routine(
+          autoKey: _box.keyAt(index),
+          name: _box.getAt(index).name,
+          color: Color(_box.getAt(index).color),
+        ));
+        print('load : ${_box.getAt(index).name}');
+        print('index : $index');
+      }
+      print('박스길이:${_box.length}');
+      print(_box.keys);
+      notifyListeners();
+    } catch (e) {}
   }
 
-  void clear() async{
+  void clear() async {
     var _box = await Hive.openBox<RoutineModel>('routines');
     _box.clear();
 
     print('clear ${_box.length}');
-  }
-
-  Routine copy(int n) {
-    return Routine(
-      name: _routines[n].name,
-      color: _routines[n].color,
-      isListUp: _routines[n].isListUp,
-      workoutList: _routines[n].workoutList,
-    );
   }
 }

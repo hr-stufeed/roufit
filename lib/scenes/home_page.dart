@@ -1,8 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/models/routine_provider.dart';
 import 'package:hr_app/widgets/routine.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:hive/hive.dart';
 
 import 'package:intl/intl.dart';
 
@@ -39,7 +42,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Routine frontRoutine = Provider.of<RoutineProvider>(context).copy(0);
-    frontRoutine.isListUp = false;
+
     return Padding(
       padding: kPagePadding,
       child: Column(
@@ -50,21 +53,33 @@ class HomePage extends StatelessWidget {
             style: kPageTitleStyle,
           ),
           kSizedBoxBetweenItems,
-          frontRoutine,
-          kSizedBoxBetweenItems,
-          Text(
-            '운동할 준비 되셨나요?🔥',
-            style: kPageSubTitleStyle,
-          ),
-          kSizedBoxBetweenItems,
-          Expanded(
-            child: ListView.builder(
-              itemCount: frontRoutine.workoutList.length,
-              itemBuilder: (context, index) {
-                return frontRoutine.workoutList[index];
-              },
-            ),
-          )
+          frontRoutine.name != '!###LOADING###!'
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    frontRoutine,
+                    kSizedBoxBetweenItems,
+                    Text(
+                      '운동할 준비 되셨나요?🔥',
+                      style: kPageSubTitleStyle,
+                    ),
+                    kSizedBoxBetweenItems,
+                    // Expanded(
+                    //   child: ListView.builder(
+                    //     itemCount: frontRoutine.workoutList.length,
+                    //     itemBuilder: (context, index) {
+                    //       return frontRoutine.workoutList[index];
+                    //     },
+                    //   ),
+                    // )
+                  ],
+                )
+              : Expanded(
+                  child: SpinKitDoubleBounce(
+                    color: Colors.blue,
+                    size: 100.0,
+                  ),
+                ),
         ],
       ),
     );

@@ -17,19 +17,28 @@ class RoutineModelAdapter extends TypeAdapter<RoutineModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return RoutineModel(
-      name: fields[0] as String,
-      color: fields[1] as int,
+      key: fields[0] as String,
+      name: fields[1].toString(),
+      color: fields[2] as int,
+      isListUp: fields[3] as bool,
+      workoutList: (fields[4] as List)?.cast<Workout>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, RoutineModel obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(5)
       ..writeByte(0)
-      ..write(obj.name)
+      ..write(obj.key)
       ..writeByte(1)
-      ..write(obj.color);
+      ..write(obj.name)
+      ..writeByte(2)
+      ..write(obj.color)
+      ..writeByte(3)
+      ..write(obj.isListUp)
+      ..writeByte(4)
+      ..write(obj.workoutList);
   }
 
   @override
