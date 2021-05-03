@@ -4,6 +4,7 @@ import 'package:hr_app/widgets/routine.dart';
 import 'package:hr_app/models/routine_provider.dart';
 
 import 'package:provider/provider.dart';
+import 'package:reorderables/reorderables.dart';
 
 class RoutineListPage extends StatelessWidget {
   @override
@@ -27,11 +28,14 @@ class RoutineListPage extends StatelessWidget {
                 Expanded(
                   child: Consumer<RoutineProvider>(
                     builder: (context, routineProvider, child) {
-                      return ListView.builder(
-                        itemCount: routineProvider.routineCount,
-                        itemBuilder: (context, index) {
-                          return routineProvider.routines[index];
-                        },
+                      return ReorderableColumn(
+                        onReorder: routineProvider.reorder,
+                        children: routineProvider.routines.map((routine) {
+                          return Container(
+                            key: ValueKey(routine.key),
+                            child: routine,
+                          );
+                        }).toList(),
                       );
                     },
                   ),

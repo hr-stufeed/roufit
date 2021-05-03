@@ -105,4 +105,11 @@ class RoutineProvider extends ChangeNotifier {
 
     print('clear ${_box.length}');
   }
+
+  void reorder(int oldIndex, int newIndex) async{
+    Routine moveRoutine = _routines.removeAt(oldIndex);
+    _routines.insert(newIndex, moveRoutine);
+
+    notifyListeners();
+  }
 }
