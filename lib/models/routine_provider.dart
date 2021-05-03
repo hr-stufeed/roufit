@@ -28,7 +28,9 @@ class RoutineProvider extends ChangeNotifier {
 
   void add(String text, Color color) async {
     var _box = await Hive.openBox<RoutineModel>('routines');
-    var key = DateFormat('yymmddss').format(DateTime.now());
+    // 현재 시간에 따른 키를 생성한다.
+    var key = DateFormat('yymmddhhmmss').format(DateTime.now());
+    // 박스에 키와 함께 삽입한다.
     _box.put(
       key,
       RoutineModel(
@@ -36,6 +38,7 @@ class RoutineProvider extends ChangeNotifier {
         color: color.value,
       ),
     );
+    // 동일하게 routine list에도 키와 함께 삽입한다.
     final routine = Routine(
       autoKey: key,
       name: text,
@@ -72,9 +75,11 @@ class RoutineProvider extends ChangeNotifier {
 
   void delete(String n) async {
     var _box = await Hive.openBox<RoutineModel>('routines');
+    // 삭제 시 _routines에서는 키를 탐색하여 삭제한다.
     for (int i = 0; i < _routines.length; i++) {
       if (_routines[i].autoKey == n) _routines.removeAt(i);
     }
+    // 박스는 그냥 키를 바로 대입하여 삭제한다.
     _box.delete(n);
 
     print('delete $n');
@@ -86,7 +91,7 @@ class RoutineProvider extends ChangeNotifier {
     try {
       for (int index = 0; index < _box.length; index++) {
         _routines.add(Routine(
-          autoKey: _box.keyAt(index),
+          autoKey: _box.keyAt(index), // 로딩시에도 박스에서 키를 가져와 다시 부여한다.
           name: _box.getAt(index).name,
           color: Color(_box.getAt(index).color),
         ));
