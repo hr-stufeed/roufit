@@ -52,8 +52,11 @@ class RoutineListPage extends StatelessWidget {
                     size: 30.0,
                   ),
                   backgroundColor: Colors.white,
-                  onPressed: () =>
-                      Navigator.pushNamed(context, 'Routine_create_page'),
+                  onPressed: () => Navigator.pushNamed(
+                    context,
+                    'Routine_create_page',
+                    arguments: ModifyArgument(isModify: false),
+                  ),
                 ),
                 kSizedBoxBetweenItems,
               ],

@@ -8,9 +8,11 @@ class RoundCheckbox extends StatefulWidget {
     Key key,
     @required this.day,
     @required this.tap,
+    this.isClicked = false,
   });
   final String day;
   Function tap;
+  bool isClicked;
   @override
   _RoundCheckboxState createState() => _RoundCheckboxState();
 }
@@ -21,23 +23,28 @@ class _RoundCheckboxState extends State<RoundCheckbox> {
   Color clickedTextColor = Colors.white;
   Color defaultTextColor = Colors.black;
   var control = CustomAnimationControl.stop;
-  bool _isClicked = false;
 
   @override
   Widget build(BuildContext context) {
+    print('${widget.day} : ${widget.isClicked}');
+
     var tween = MultiTween<TweenProps>()
       ..add(
           TweenProps.backgroundColor,
-          ColorTween(
-              begin: defaultBackGroundColor, end: clickedBackGroundColor),
+          widget.isClicked
+              ? ColorTween(
+                  begin: clickedBackGroundColor, end: defaultBackGroundColor)
+              : ColorTween(
+                  begin: defaultBackGroundColor, end: clickedBackGroundColor),
           Duration(milliseconds: 400),
           Curves.easeOut)
       ..add(
           TweenProps.textColor,
-          ColorTween(begin: defaultTextColor, end: clickedTextColor),
+          widget.isClicked
+              ? ColorTween(begin: clickedTextColor, end: defaultTextColor)
+              : ColorTween(begin: defaultTextColor, end: clickedTextColor),
           Duration(milliseconds: 400),
           Curves.easeOut);
-
     return CustomAnimation<MultiTweenValues<TweenProps>>(
         control: control,
         tween: tween,
@@ -47,16 +54,17 @@ class _RoundCheckboxState extends State<RoundCheckbox> {
             onTap: () {
               setState(() {
                 if (control == CustomAnimationControl.stop &&
-                    _isClicked == false)
+                    widget.isClicked == false)
                   control = CustomAnimationControl.play;
                 else if (control == CustomAnimationControl.play &&
-                    _isClicked == true)
+                    widget.isClicked == true)
                   control = CustomAnimationControl.playReverse;
                 else if (control == CustomAnimationControl.playReverse &&
-                    _isClicked == false) control = CustomAnimationControl.play;
-                _isClicked = !_isClicked;
+                    widget.isClicked == false)
+                  control = CustomAnimationControl.play;
+                widget.isClicked = !widget.isClicked;
 
-                widget.tap(_isClicked, widget.day);
+                widget.tap(widget.isClicked, widget.day);
               });
             },
             child: Container(

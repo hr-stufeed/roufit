@@ -3,7 +3,6 @@ import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/scenes/workout_list_page.dart';
 import 'package:hr_app/widgets/routine.dart';
 import 'package:hr_app/widgets/workout.dart';
-import 'routine_create_page.dart';
 
 class MyPage extends StatelessWidget {
   @override

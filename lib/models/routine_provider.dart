@@ -26,16 +26,17 @@ class RoutineProvider extends ChangeNotifier {
 
   UnmodifiableListView get routines => UnmodifiableListView(_routines);
 
-  void add(String text, Color color) async {
+  void add(String text, Color color, List<String> days) async {
     var _box = await Hive.openBox<RoutineModel>('routines');
     // 현재 시간에 따른 키를 생성한다.
-    var key = DateFormat('yymmddhhmmss').format(DateTime.now());
+    var key = DateFormat('yyMMddhhmmss').format(DateTime.now());
     // 박스에 키와 함께 삽입한다.
     _box.put(
       key,
       RoutineModel(
         name: text,
         color: color.value,
+        days: days,
       ),
     );
     // 동일하게 routine list에도 키와 함께 삽입한다.
@@ -43,6 +44,7 @@ class RoutineProvider extends ChangeNotifier {
       autoKey: key,
       name: text,
       color: color,
+      days: days,
     );
     _routines.add(routine);
 
@@ -58,18 +60,35 @@ class RoutineProvider extends ChangeNotifier {
         color: _routines[n].color,
         isListUp: false,
         workoutList: _routines[n].workoutList,
+        days: _routines[n].days,
       );
     } catch (e) {
       return Routine(name: '!###LOADING###!');
     }
   }
 
-  void modifyRoutine(int n, String text, Color color, bool isListUp) {
-    _routines[n] = new Routine(
-      name: text,
-      color: color,
-      isListUp: isListUp,
-    );
+  void modify(
+      String autoKey, String text, Color color, List<String> days) async {
+    var _box = await Hive.openBox<RoutineModel>('routines');
+    // 루틴 표지의 수정하기를 누르면 key를 전달받고 _box의 RoutineModel에 정보를 덮어 씌운다.
+    _box.put(
+        autoKey,
+        RoutineModel(
+          name: text,
+          color: color.value,
+          days: days,
+        ));
+    // 역시 key를 기준으로 _routines의 요소도 덮어씌운다.
+    for (int i = 0; i < _routines.length; i++) {
+      if (_routines[i].autoKey == autoKey)
+        _routines[i] = Routine(
+          autoKey: autoKey,
+          name: text,
+          color: color,
+          days: days,
+        );
+      ;
+    }
     notifyListeners();
   }
 
@@ -94,11 +113,12 @@ class RoutineProvider extends ChangeNotifier {
           autoKey: _box.keyAt(index), // 로딩시에도 박스에서 키를 가져와 다시 부여한다.
           name: _box.getAt(index).name,
           color: Color(_box.getAt(index).color),
+          days: _box.getAt(index).days,
         ));
         print('load : ${_box.getAt(index).name}');
         print('index : $index');
+        print('days : ${_box.getAt(index).days}');
       }
-      print('박스길이:${_box.length}');
       print(_box.keys);
       notifyListeners();
     } catch (e) {}
@@ -111,7 +131,7 @@ class RoutineProvider extends ChangeNotifier {
     print('clear ${_box.length}');
   }
 
-  void reorder(int oldIndex, int newIndex) async{
+  void reorder(int oldIndex, int newIndex) async {
     Routine moveRoutine = _routines.removeAt(oldIndex);
     _routines.insert(newIndex, moveRoutine);
 

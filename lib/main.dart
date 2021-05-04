@@ -4,15 +4,16 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hr_app/models/routine_provider.dart';
 import 'package:hr_app/scenes/home_page.dart';
 import 'package:hr_app/scenes/mypage.dart';
-import 'package:hr_app/scenes/routine_create_page.dart';
+import 'package:hr_app/scenes/routine/routine_create_page.dart';
 import 'package:hr_app/scenes/workout_list_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:hr_app/scenes/routine_start_page.dart';
-import 'package:hr_app/scenes/routine_setting_page.dart';
+import 'package:hr_app/scenes/routine/routine_start_page.dart';
+import 'package:hr_app/scenes/routine/routine_setting_page.dart';
+import 'package:hr_app/scenes/routine/routine_modify_page.dart';
 import 'package:provider/provider.dart';
 
 import 'models/routine_model.dart';
-import 'scenes/routine_list_page.dart';
+import 'scenes/routine/routine_list_page.dart';
 import 'scenes/workout_create_page.dart';
 
 void main() async {
@@ -50,6 +51,7 @@ class MyApp extends StatelessWidget {
           'Routine_create_page': (context) => RoutineCreatePage(),
           'Routine_start_page': (context) => RoutineStartPage(),
           'Routine_setting_page': (context) => RoutineSettingPage(),
+          'Routine_modify_page': (context) => RoutineModifyPage(),
           'Workout_page': (context) => WorkoutListPage(),
           'Workout_create_page': (context) => WorkoutCreatePage(),
           'MyPage': (context) => MyPage(),
@@ -64,14 +66,13 @@ class MyApp extends StatelessWidget {
           ),
         ),
         home: DefaultTabController(
-          length: 4,
+          length: 3,
           child: Scaffold(
             body: SafeArea(
               child: TabBarView(
                 children: [
                   HomePage(),
                   RoutineListPage(),
-                  WorkoutListPage(),
                   MyPage(),
                 ],
               ),
@@ -89,10 +90,6 @@ class MyApp extends StatelessWidget {
                   Tab(
                     icon: FaIcon(FontAwesomeIcons.clipboardList),
                     text: 'Routine',
-                  ),
-                  Tab(
-                    icon: FaIcon(FontAwesomeIcons.dumbbell),
-                    text: 'Work Out',
                   ),
                   Tab(
                     icon: FaIcon(FontAwesomeIcons.userAlt),

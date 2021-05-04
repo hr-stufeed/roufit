@@ -22,13 +22,14 @@ class RoutineModelAdapter extends TypeAdapter<RoutineModel> {
       color: fields[2] as int,
       isListUp: fields[3] as bool,
       workoutList: (fields[4] as List)?.cast<Workout>(),
+      days: (fields[5] as List)?.cast<String>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, RoutineModel obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.key)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class RoutineModelAdapter extends TypeAdapter<RoutineModel> {
       ..writeByte(3)
       ..write(obj.isListUp)
       ..writeByte(4)
-      ..write(obj.workoutList);
+      ..write(obj.workoutList)
+      ..writeByte(5)
+      ..write(obj.days);
   }
 
   @override

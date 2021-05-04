@@ -14,6 +14,8 @@ class RoutineModel {
   final bool isListUp;
   @HiveField(4)
   List<Workout> workoutList;
+  @HiveField(5)
+  List<String> days;
 
   RoutineModel({
     this.key,
@@ -21,5 +23,6 @@ class RoutineModel {
     this.color,
     this.isListUp = true,
     this.workoutList,
+    this.days,
   });
 }

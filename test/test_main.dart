@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hr_app/scenes/home_page.dart';
-import 'package:hr_app/scenes/routine_create_page.dart';
-import 'package:hr_app/scenes/routine_list_page.dart';
+import 'package:hr_app/scenes/routine/routine_create_page.dart';
+import 'package:hr_app/scenes/routine/routine_list_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:hr_app/scenes/routine_start_page.dart';
+import 'package:hr_app/scenes/routine/routine_start_page.dart';
 import 'package:hr_app/scenes/workout_list_page.dart';
 
 void main() {
