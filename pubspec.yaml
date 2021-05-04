@@ -38,6 +38,7 @@ dependencies:
   hive_flutter: ^1.0.0
   flutter_spinkit: ^3.1.0
   reorderables: ^0.4.1
+  roundcheckbox: ^1.0.0+1
 
 dev_dependencies:
   flutter_test:

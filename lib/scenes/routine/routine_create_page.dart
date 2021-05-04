@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
-import 'package:hr_app/widgets/roundCheckbox.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:hr_app/widgets/bottomFixedButton.dart';
 import 'package:provider/provider.dart';
 import 'package:hr_app/models/routine_provider.dart';
 import 'package:hr_app/widgets/routine.dart';
+import 'package:hr_app/widgets/roundCheck.dart';
 
 class RoutineCreatePage extends StatefulWidget {
   Color screenPickerColor = Colors.red;
@@ -20,7 +20,7 @@ class _RoutineCreatePageState extends State<RoutineCreatePage> {
 
   var myController = TextEditingController();
 
-  void roundCheckboxTap(bool isClicked, String day) {
+  void roundCheckTap(bool isClicked, String day) {
     setState(() {
       isClicked ? selectedDays.add(day) : selectedDays.remove(day);
     });
@@ -61,12 +61,11 @@ class _RoutineCreatePageState extends State<RoutineCreatePage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: days
-                        .map(
-                          (day) => RoundCheckbox(
-                            day: '$day',
-                            tap: roundCheckboxTap,
-                          ),
-                        )
+                        .map((day) => RoundCheck(
+                              day: day,
+                              selectedDays: selectedDays,
+                              onTap: roundCheckTap,
+                            ))
                         .toList(),
                   ),
                   kSizedBoxBetweenItems,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
-import 'package:hr_app/widgets/roundCheckbox.dart';
+import 'package:hr_app/widgets/roundCheck.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:hr_app/widgets/bottomFixedButton.dart';
 import 'package:provider/provider.dart';
@@ -71,10 +71,11 @@ class _RoutineModifyPageState extends State<RoutineModifyPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: days
                         .map(
-                          (day) => RoundCheckbox(
+                          (day) => RoundCheck(
                             day: '$day',
-                            tap: roundCheckboxTap,
-                            isClicked: selectedDays.contains(day),
+                            selectedDays: selectedDays,
+                            onTap: roundCheckboxTap,
+                            isModify: selectedDays.contains(day),
                           ),
                         )
                         .toList(),
