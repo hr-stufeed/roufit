@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hr_app/models/routine_provider.dart';
+import 'package:hr_app/models/timer_provider.dart';
 import 'package:hr_app/models/workout_provider.dart';
 
 import 'package:hr_app/scenes/home_page.dart';
@@ -51,6 +52,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => RoutineProvider()),
         ChangeNotifierProvider(create: (_) => WorkoutProvider()),
+        ChangeNotifierProvider(create: (_) => TimerProvider()),
       ],
       child: MaterialApp(
         routes: {

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
+import 'package:hr_app/models/timer_provider.dart';
 import 'package:hr_app/widgets/routine.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class RoutineStartPage extends StatelessWidget {
@@ -9,83 +11,41 @@ class RoutineStartPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Material(
-        child: Padding(
-          padding: kPagePadding,
+        child: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
-                DateFormat('hh:mm').format(DateTime.now()),
-                style: kPageTitleStyle,
+              Padding(
+                padding: kPagePadding,
+                child: Text(
+                  '${Provider.of<TimerProvider>(context, listen: true).routineTimer.toString().split('.').first.padLeft(8, "0")}',
+                  style: kTimerTitleStyle,
+                  textAlign: TextAlign.center,
+                ),
               ),
               kSizedBoxBetweenItems,
               Expanded(
-                child: ListView(
-                  children: [
-                    TimelineTile(
-                      isFirst: true,
-                      alignment: TimelineAlign.end,
-                      indicatorStyle: const IndicatorStyle(
-                        width: 30,
-                        color: Colors.blue,
-                        indicatorXY: 0,
-                        padding: EdgeInsets.all(8),
+                child: Container(
+                  padding: kPagePadding,
+                  child: Column(
+                    children: [
+                      Text(
+                        'Title',
+                        style: kRoutineTitleStyle,
                       ),
-                      beforeLineStyle: const LineStyle(
-                        color: Colors.black12,
-                        thickness: 3,
-                      ),
-                      startChild: Container(
-                        padding: EdgeInsets.all(10),
-                        child: Routine(
-                          name: '상체 운동',
-                          color: Color(0xFF4939ff),
-                        ),
-                      ),
-                    ),
-                    TimelineTile(
-                      isFirst: true,
-                      alignment: TimelineAlign.end,
-                      indicatorStyle: const IndicatorStyle(
-                        width: 30,
-                        color: Colors.black12,
-                        indicatorXY: 0,
-                        padding: EdgeInsets.all(8),
-                      ),
-                      beforeLineStyle: const LineStyle(
-                        color: Colors.black12,
-                        thickness: 3,
-                      ),
-                      startChild: Container(
-                        padding: EdgeInsets.all(10),
-                        child: Routine(
-                          name: '상체 운동',
-                          color: Color(0xFF4939ff),
-                        ),
-                      ),
-                    ),
-                    TimelineTile(
-                      isLast: true,
-                      alignment: TimelineAlign.end,
-                      indicatorStyle: const IndicatorStyle(
-                        width: 30,
-                        color: Colors.black12,
-                        indicatorXY: 0,
-                        padding: EdgeInsets.all(8),
-                      ),
-                      beforeLineStyle: const LineStyle(
-                        color: Colors.black12,
-                        thickness: 3,
-                      ),
-                      startChild: Container(
-                        padding: EdgeInsets.all(10),
-                        child: Routine(
-                          name: '상체 운동',
-                          color: Color(0xFF4939ff),
-                        ),
-                      ),
-                    ),
-                  ],
+                      TextButton(
+                        child: Text('Start'),
+                        onPressed: () {
+
+                        },
+                        style: TextButton.styleFrom(
+                            primary: Colors.black,
+                            backgroundColor: Colors.white,
+                            textStyle: kOutlinedButtonTextStyle),
+                      )
+                    ],
+                  ),
+                  color: Color(0xFF05B92E4),
                 ),
               ),
             ],

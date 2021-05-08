@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
 const kPagePadding = EdgeInsets.fromLTRB(16.0, 32.0, 16.0, 0.0);
+const kTimerTitleStyle = TextStyle(
+  fontSize: 48.0,
+  fontWeight: FontWeight.bold,
+  color: Colors.black,
+);
 const kPageTitleStyle = TextStyle(
   fontSize: 32.0,
   fontWeight: FontWeight.bold,
