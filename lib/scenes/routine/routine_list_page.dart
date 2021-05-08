@@ -32,7 +32,7 @@ class RoutineListPage extends StatelessWidget {
                         onReorder: routineProvider.reorder,
                         children: routineProvider.routines.map((routine) {
                           return Container(
-                            key: ValueKey(routine.key),
+                            key: ValueKey(routine.autoKey),
                             child: routine,
                           );
                         }).toList(),

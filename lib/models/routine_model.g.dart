@@ -21,7 +21,7 @@ class RoutineModelAdapter extends TypeAdapter<RoutineModel> {
       name: fields[1] as String,
       color: fields[2] as int,
       isListUp: fields[3] as bool,
-      workoutList: (fields[4] as List)?.cast<Workout>(),
+      workoutList: (fields[4] as List)?.cast<WorkoutModel>(),
       days: (fields[5] as List)?.cast<String>(),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/models/routine_provider.dart';
+import 'package:hr_app/models/workout_model.dart';
 import 'package:hr_app/models/workout_provider.dart';
 import 'package:hr_app/widgets/bottomFixedButton.dart';
 import 'package:hr_app/widgets/workout.dart';
@@ -15,18 +16,17 @@ class WorkoutListPage extends StatefulWidget {
 
 class _WorkoutListPageState extends State<WorkoutListPage> {
   List<String> selectedWorkouts = [];
-  void addWorkout(bool isClicked, String autoKey) {
-    setState(() {
-      isClicked
-          ? selectedWorkouts.add(autoKey)
-          : selectedWorkouts.remove(autoKey);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     AddWorkoutArgument args = ModalRoute.of(context).settings.arguments;
-    List<Workout> copiedList = Provider.of<WorkoutProvider>(context).copyList();
+    List<WorkoutModel> copiedModelList =
+        Provider.of<WorkoutProvider>(context).copyList();
+    List<Workout> copiedList = copiedModelList
+        .map((e) => Workout(
+              workoutModel: e,
+            ))
+        .toList();
     return SafeArea(
       child: Material(
         child: Padding(

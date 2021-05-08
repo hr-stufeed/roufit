@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:hr_app/models/workout_model.dart';
 import 'package:provider/provider.dart';
 import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/models/workout_provider.dart';
 
 class Workout extends StatefulWidget {
-  final String autoKey;
-  final String name;
-  final String emoji;
+  String autoKey;
+  String name;
+  String emoji;
+  List<String> tags;
 
   final int setNumber;
   final int repNumber;
   final int weight;
   final int duration;
 
-  final List<String> tags;
+  WorkoutModel workoutModel;
   Function deleteWorkoutCallback;
+
   Workout({
     this.autoKey = ' ',
     this.name = 'Default',
@@ -25,6 +28,9 @@ class Workout extends StatefulWidget {
     this.weight = 0,
     this.tags,
     this.deleteWorkoutCallback,
+    // WorkoutModel을 매개변수로 삽입 시 다른 변수에 값 대입하지 말 것.
+    // initState에서 workoutModel 풀어서 필드 값에 대입함.
+    this.workoutModel,
   });
   bool isSelected = false;
   bool isRoutined = false;
@@ -57,9 +63,31 @@ class _WorkoutState extends State<Workout> {
   Color containerColor = Colors.white;
   Color titleColor = Colors.black;
   Color subTitleColor = Colors.grey;
+  // @override
+  // void initState() {
+  //   if (widget.workoutModel != Null) {
+  //     widget.autoKey = widget.workoutModel.key;
+  //     widget.name = widget.workoutModel.name;
+  //     widget.emoji = widget.workoutModel.emoji;
+  //     widget.tags = widget.workoutModel.tags;
+
+  //     setState(() {});
+
+  //     print(widget.tags);
+  //   }
+
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
+    if (widget.workoutModel != Null) {
+      widget.autoKey = widget.workoutModel.key;
+      widget.name = widget.workoutModel.name;
+      widget.emoji = widget.workoutModel.emoji;
+      widget.tags = widget.workoutModel.tags;
+    }
+
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8),
       padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),

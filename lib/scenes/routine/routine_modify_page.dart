@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
+import 'package:hr_app/models/workout_model.dart';
 import 'package:hr_app/widgets/roundCheck.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:hr_app/widgets/bottomFixedButton.dart';
@@ -16,7 +17,7 @@ class RoutineModifyPage extends StatefulWidget {
 class _RoutineModifyPageState extends State<RoutineModifyPage> {
   List<String> days = ['월', '화', '수', '목', '금', '토', '일'];
   List<String> selectedDays = [];
-  List<Workout> workoutList = [];
+  List<WorkoutModel> workoutList = [];
   Color screenPickerColor = Colors.red;
   String autoKey;
   var myController = TextEditingController();

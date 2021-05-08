@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/models/routine_provider.dart';
+import 'package:hr_app/models/workout_model.dart';
 import 'package:hr_app/widgets/workout.dart';
 import 'package:provider/provider.dart';
 
@@ -9,7 +10,7 @@ class Routine extends StatefulWidget {
   final String name;
   final Color color;
   final List<String> days;
-  List<Workout> workoutList;
+  List<WorkoutModel> workoutList;
   bool isListUp;
 
   Routine({
@@ -61,6 +62,7 @@ class Routine extends StatefulWidget {
 class _RoutineState extends State<Routine> {
   @override
   Widget build(BuildContext context) {
+    print('이 루틴의 오토키 : ${widget.autoKey}');
     return Material(
       child: InkWell(
         onTap: () => Navigator.pushNamed(context, 'Routine_workout_page',
@@ -69,6 +71,7 @@ class _RoutineState extends State<Routine> {
               name: widget.name,
               workoutList: widget.workoutList,
               days: widget.days,
+              color: widget.color,
             )),
         child: Container(
           margin: EdgeInsets.only(bottom: 16.0),
@@ -93,6 +96,7 @@ class _RoutineState extends State<Routine> {
   }
 }
 
+//루틴 리스트에 루틴이 띄워질 때 리턴 값
 class ListPageRoutine extends StatelessWidget {
   const ListPageRoutine({
     Key key,
@@ -143,6 +147,7 @@ class ListPageRoutine extends StatelessWidget {
   }
 }
 
+//홈페이지에 루틴이 띄워질 때 리턴 값
 class HomePageRoutine extends StatelessWidget {
   const HomePageRoutine({
     Key key,
@@ -194,7 +199,7 @@ class ModifyArgument {
   final String name;
   final Color color;
   final List<String> days;
-  final List<Workout> workoutList;
+  final List<WorkoutModel> workoutList;
 
   ModifyArgument({
     this.isModify,
@@ -209,7 +214,8 @@ class ModifyArgument {
 class WorkoutPageArgument {
   final String autoKey;
   final String name;
-  final List<Workout> workoutList;
+  final Color color;
+  final List<WorkoutModel> workoutList;
   final List<String> days;
 
   WorkoutPageArgument({
@@ -217,5 +223,6 @@ class WorkoutPageArgument {
     this.name = ' ',
     this.workoutList,
     this.days,
+    this.color,
   });
 }

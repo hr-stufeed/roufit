@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/models/routine_provider.dart';
+import 'package:hr_app/models/workout_model.dart';
 import 'package:hr_app/models/workout_provider.dart';
 import 'package:hr_app/widgets/bottomFixedButton.dart';
 import 'package:hr_app/widgets/routine.dart';
 import 'package:hr_app/widgets/workout.dart';
 import 'package:provider/provider.dart';
-import 'package:hr_app/models/routine_model.dart';
 
 //루틴을 눌렀을 때 루틴이 담고 있는 운동들을 보여주는 페이지
 
@@ -17,108 +17,141 @@ class RoutineWorkoutPage extends StatefulWidget {
 
 class _RoutineWorkoutPageState extends State<RoutineWorkoutPage> {
   List<Workout> workoutList = [];
+  List<WorkoutModel> workoutListModel = [];
+  //완성하기 누르지 않고 back 할 때 운동을 추가하지 않기 위해 보관용으로 만든 리스트.
+  List<WorkoutModel> backupWorkoutListModel = [];
   String name;
   String autoKey;
+  Color color;
   List<String> days;
 
+// 복수 선택한 운동들의 키를 받아오는 콜백함수
   void addWorkoutCallback(List<String> workoutKeys) {
     setState(() {
-      print(workoutKeys);
-
       workoutKeys.forEach((e) {
-        var selectedWorkout =
+        // 전역 운동 리스트에서 키를 사용해 운동 모델을 뽑아온다.
+        var selectedWorkoutModel =
             Provider.of<WorkoutProvider>(context, listen: false).find(e);
-        selectedWorkout.isRoutined = true;
-        selectedWorkout.deleteWorkoutCallback = deleteWorkoutCallback;
-        workoutList.add(selectedWorkout);
-      });
+        // 로컬 변수 운동 모델 리스트에 해당 운동 모델 저장한다.
+        workoutListModel.add(selectedWorkoutModel);
+        // 선택한 운동 모델로 운동 위젯 생성한다.
+        Workout newWorkout = Workout(workoutModel: selectedWorkoutModel);
 
-      print(workoutList);
+        // 로컬 변수 운동 위젯 리스트에 삽입한다.
+        workoutList.add(newWorkout);
+      });
     });
   }
 
-  void deleteWorkoutCallback(String autoKey) {
+  void deleteWorkoutCallback(String key) {
     setState(() {
-      workoutList.removeWhere((w) => w.autoKey == autoKey);
+      workoutList.removeWhere((w) => w.key == key);
     });
+  }
+
+  List<Workout> createWorkoutList(List<WorkoutModel> list) {
+    return list
+        .map((e) => Workout(
+              workoutModel: e,
+            ))
+        .toList();
   }
 
   @override
   void didChangeDependencies() {
     WorkoutPageArgument args = ModalRoute.of(context).settings.arguments;
-    workoutList = args.workoutList;
+    workoutListModel =
+        Provider.of<RoutineProvider>(context).find(args.autoKey).workoutList;
+    //기존 리스트를 백업한다.
+    backupWorkoutListModel = workoutListModel.toList();
+    workoutList = createWorkoutList(workoutListModel);
+    workoutList.forEach((w) {
+      w.isRoutined = true;
+      w.deleteWorkoutCallback = deleteWorkoutCallback;
+    });
     name = args.name;
     autoKey = args.autoKey;
     days = args.days;
-
+    color = args.color;
     super.didChangeDependencies();
   }
 
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Material(
-        child: Padding(
-          padding: kPagePadding,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(name, style: kPageTitleStyle),
-                ],
-              ),
-              kSizedBoxBetweenItems,
-              Row(
-                children: days
-                    .map(
-                      (day) => Text(
-                        '$day ',
-                        style: kPageSubTitleStyle,
-                      ),
-                    )
-                    .toList(),
-              ),
-              Expanded(
-                child: Stack(
-                  alignment: Alignment.bottomRight,
+    return WillPopScope(
+      onWillPop: () {
+        print('hh : $autoKey');
+
+        Provider.of<RoutineProvider>(context, listen: false)
+            .modify(autoKey, name, color, days, backupWorkoutListModel);
+        return Future(() => true);
+      },
+      child: SafeArea(
+        child: Material(
+          child: Padding(
+            padding: kPagePadding,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    workoutList.isEmpty
-                        ? Center(
-                            child: Text(
-                              '루틴에 운동을 추가해주세요!',
-                              style: kPageSubTitleStyle,
-                            ),
-                          )
-                        : ListView.builder(
-                            itemCount: workoutList.length,
-                            itemBuilder: (context, index) {
-                              return workoutList[index];
-                            }),
-                    FloatingActionButton(
-                        child: Icon(
-                          Icons.add,
-                          color: Colors.black,
-                          size: 30.0,
-                        ),
-                        backgroundColor: Colors.white,
-                        onPressed: () {
-                          Navigator.pushNamed(context, 'Workout_list_page',
-                              arguments: AddWorkoutArgument(
-                                addWorkoutFunction: addWorkoutCallback,
-                              ));
-                        }),
+                    Text(name, style: kPageTitleStyle),
                   ],
                 ),
-              ),
-              kSizedBoxBetweenItems,
-              BottomFixedButton(
-                text: '완성하기',
-                tap: () {
-                  Navigator.popUntil(context, (route) => route.isFirst);
-                },
-              ),
-            ],
+                kSizedBoxBetweenItems,
+                Row(
+                  children: days
+                      .map(
+                        (day) => Text(
+                          '$day ',
+                          style: kPageSubTitleStyle,
+                        ),
+                      )
+                      .toList(),
+                ),
+                Expanded(
+                  child: Stack(
+                    alignment: Alignment.bottomRight,
+                    children: [
+                      workoutList.isEmpty
+                          ? Center(
+                              child: Text(
+                                '루틴에 운동을 추가해주세요!',
+                                style: kPageSubTitleStyle,
+                              ),
+                            )
+                          : ListView.builder(
+                              itemCount: workoutList.length,
+                              itemBuilder: (context, index) {
+                                return workoutList[index];
+                              }),
+                      FloatingActionButton(
+                          child: Icon(
+                            Icons.add,
+                            color: Colors.black,
+                            size: 30.0,
+                          ),
+                          backgroundColor: Colors.white,
+                          onPressed: () {
+                            Navigator.pushNamed(context, 'Workout_list_page',
+                                arguments: AddWorkoutArgument(
+                                  addWorkoutFunction: addWorkoutCallback,
+                                ));
+                          }),
+                    ],
+                  ),
+                ),
+                kSizedBoxBetweenItems,
+                BottomFixedButton(
+                  text: '완성하기',
+                  tap: () {
+                    Provider.of<RoutineProvider>(context, listen: false)
+                        .saveWorkout(autoKey, workoutListModel);
+                    Navigator.popUntil(context, (route) => route.isFirst);
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

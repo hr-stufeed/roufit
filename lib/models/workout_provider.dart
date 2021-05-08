@@ -9,45 +9,45 @@ import 'package:intl/intl.dart';
 
 class WorkoutProvider with ChangeNotifier {
   //앱 전체에서 접근 가능한 전역 운동리스트
-  List<Workout> _workouts = [
-    Workout(
-      autoKey: '#1#',
+  List<WorkoutModel> _workouts = [
+    WorkoutModel(
+      key: '#1#',
       name: '밀리터리 프레스',
       emoji: '🏋️‍♀️',
       tags: ['상체', '등'],
     ),
-    Workout(
-      autoKey: '#2#',
+    WorkoutModel(
+      key: '#2#',
       name: '풀 업',
       emoji: '💪',
       tags: ['이두', '등'],
     ),
-    Workout(
-      autoKey: '#3#',
+    WorkoutModel(
+      key: '#3#',
       name: '스쿼트',
       emoji: '🧍‍♂️',
       tags: ['하체', '허벅지'],
     ),
-    Workout(
-      autoKey: '#4#',
+    WorkoutModel(
+      key: '#4#',
       name: '데드 리프트',
       emoji: '💪',
       tags: ['등'],
     ),
-    Workout(
-      autoKey: '#5#',
+    WorkoutModel(
+      key: '#5#',
       name: '푸시 업',
       emoji: '💪',
       tags: ['가슴', '팔'],
     ),
-    Workout(
-      autoKey: '#6#',
+    WorkoutModel(
+      key: '#6#',
       name: '덤벨 로우',
       emoji: '😢',
       tags: ['삼두', '등'],
     ),
-    Workout(
-      autoKey: '#7#',
+    WorkoutModel(
+      key: '#7#',
       name: '케틀벨 스윙',
       emoji: '💪',
       tags: ['상체', '팔'],
@@ -78,8 +78,8 @@ class WorkoutProvider with ChangeNotifier {
       ),
     );
     // 동일하게 workout list에도 키와 함께 삽입한다.
-    final workout = Workout(
-      autoKey: key,
+    final workout = WorkoutModel(
+      key: key,
       name: text,
       tags: tags,
     );
@@ -90,21 +90,21 @@ class WorkoutProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Workout copy(int n) {
+  WorkoutModel copy(int n) {
     try {
-      return Workout(
+      return WorkoutModel(
         name: _workouts[n].name,
       );
     } catch (e) {
-      return Workout(name: '!###LOADING###!');
+      return WorkoutModel(name: '!###LOADING###!');
     }
   }
 
-  List<Workout> copyList() {
-    List<Workout> returnValue = [];
+  List<WorkoutModel> copyList() {
+    List<WorkoutModel> returnValue = [];
     _workouts.forEach((e) {
-      returnValue.add(Workout(
-        autoKey: e.autoKey,
+      returnValue.add(WorkoutModel(
+        key: e.key,
         name: e.name,
         emoji: e.emoji,
         tags: e.tags,
@@ -114,7 +114,7 @@ class WorkoutProvider with ChangeNotifier {
   }
 
   void modify(String autoKey, String text, Color color, List<String> days,
-      List<Workout> workoutList) async {
+      List<WorkoutModel> workoutList) async {
     var _box = await Hive.openBox<WorkoutModel>('workouts');
     // 루틴 표지의 수정하기를 누르면 key를 전달받고 _box의 RoutineModel에 정보를 덮어 씌운다.
     _box.put(
@@ -124,9 +124,9 @@ class WorkoutProvider with ChangeNotifier {
         ));
     // 역시 key를 기준으로 _routines의 요소도 덮어씌운다.
     for (int i = 0; i < _workouts.length; i++) {
-      if (_workouts[i].autoKey == autoKey)
-        _workouts[i] = Workout(
-          autoKey: autoKey,
+      if (_workouts[i].key == autoKey)
+        _workouts[i] = WorkoutModel(
+          key: autoKey,
           name: text,
         );
       ;
@@ -134,15 +134,15 @@ class WorkoutProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Workout find(String autoKey) {
-    return _workouts.where((workout) => workout.autoKey == autoKey).toList()[0];
+  WorkoutModel find(String key) {
+    return _workouts.where((workout) => workout.key == key).toList()[0];
   }
 
   void delete(String autoKey) async {
     var _box = await Hive.openBox<WorkoutModel>('workouts');
     // 삭제 시 _routines에서는 키를 탐색하여 삭제한다.
     for (int i = 0; i < _workouts.length; i++) {
-      if (_workouts[i].autoKey == autoKey) _workouts.removeAt(i);
+      if (_workouts[i].key == autoKey) _workouts.removeAt(i);
     }
     // 박스는 그냥 키를 바로 대입하여 삭제한다.
     _box.delete(autoKey);
@@ -155,8 +155,8 @@ class WorkoutProvider with ChangeNotifier {
     var _box = await Hive.openBox<WorkoutModel>('workouts');
     try {
       for (int index = 0; index < _box.length; index++) {
-        _workouts.add(Workout(
-          autoKey: _box.keyAt(index), // 로딩시에도 박스에서 키를 가져와 다시 부여한다.
+        _workouts.add(WorkoutModel(
+          key: _box.keyAt(index), // 로딩시에도 박스에서 키를 가져와 다시 부여한다.
           name: _box.getAt(index).name,
           emoji: _box.getAt(index).emoji,
           tags: _box.getAt(index).tags,
@@ -176,7 +176,7 @@ class WorkoutProvider with ChangeNotifier {
   }
 
   void reorder(int oldIndex, int newIndex) async {
-    Workout moveWorkout = _workouts.removeAt(oldIndex);
+    WorkoutModel moveWorkout = _workouts.removeAt(oldIndex);
     _workouts.insert(newIndex, moveWorkout);
 
     notifyListeners();

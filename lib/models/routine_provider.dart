@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:hr_app/models/routine_model.dart';
+import 'package:hr_app/models/workout_model.dart';
 import 'package:hr_app/widgets/routine.dart';
 import 'package:hr_app/widgets/workout.dart';
 import 'package:intl/intl.dart';
@@ -53,6 +54,7 @@ class RoutineProvider with ChangeNotifier {
   Routine copy(int n) {
     try {
       return Routine(
+        autoKey: _routines[n].autoKey,
         name: _routines[n].name,
         color: _routines[n].color,
         isListUp: false,
@@ -65,7 +67,7 @@ class RoutineProvider with ChangeNotifier {
   }
 
   void modify(String autoKey, String text, Color color, List<String> days,
-      List<Workout> workoutList) async {
+      List<WorkoutModel> workoutList) async {
     var _box = await Hive.openBox<RoutineModel>('routines');
     // 루틴 표지의 수정하기를 누르면 key를 전달받고 _box의 RoutineModel에 정보를 덮어 씌운다.
     _box.put(
@@ -90,9 +92,22 @@ class RoutineProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void addWorkout(String autoKey, Workout workout) async {
+  Routine find(String autoKey) {
+    return _routines.where((routine) => routine.autoKey == autoKey).toList()[0];
+  }
+
+  void saveWorkout(String autoKey, List<WorkoutModel> workoutList) async {
     var _box = await Hive.openBox<RoutineModel>('routines');
-    _box.get(autoKey).workoutList.add(workout);
+    _box.put(
+      autoKey,
+      RoutineModel(
+        name: _box.get(autoKey).name,
+        color: _box.get(autoKey).color,
+        days: _box.get(autoKey).days,
+        workoutList: workoutList,
+      ),
+    );
+    print(_box.get(autoKey).workoutList);
     notifyListeners();
   }
 
@@ -113,16 +128,22 @@ class RoutineProvider with ChangeNotifier {
     var _box = await Hive.openBox<RoutineModel>('routines');
     try {
       for (int index = 0; index < _box.length; index++) {
+        String autoKey = _box.keyAt(index);
         _routines.add(Routine(
-          autoKey: _box.keyAt(index), // 로딩시에도 박스에서 키를 가져와 다시 부여한다.
-          name: _box.getAt(index).name,
-          color: Color(_box.getAt(index).color),
-          days: _box.getAt(index).days,
-          workoutList: _box.getAt(index).workoutList,
+          // autoKey: autoKey, // 로딩시에도 박스에서 키를 가져와 다시 부여한다.
+          // name: _box.getAt(index).name,
+          // color: Color(_box.getAt(index).color),
+          // days: _box.getAt(index).days,
+          // workoutList: _box.getAt(index).workoutList,
+          autoKey: autoKey, // 로딩시에도 박스에서 키를 가져와 다시 부여한다.
+          name: _box.get(autoKey).name,
+          color: Color(_box.get(autoKey).color),
+          days: _box.get(autoKey).days,
+          workoutList: _box.get(autoKey).workoutList,
         ));
-        print('load : ${_box.getAt(index).name}');
-        print('index : $index');
-        print('days : ${_box.getAt(index).days}');
+        print('load : ${_box.get(autoKey).name}');
+        print('autoKey : ${_routines[0].autoKey}');
+        print('workouts : ${_box.get(autoKey).workoutList}');
       }
       print(_box.keys);
       notifyListeners();
