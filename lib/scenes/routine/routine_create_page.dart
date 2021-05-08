@@ -4,7 +4,6 @@ import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:hr_app/widgets/bottomFixedButton.dart';
 import 'package:provider/provider.dart';
 import 'package:hr_app/models/routine_provider.dart';
-import 'package:hr_app/widgets/routine.dart';
 import 'package:hr_app/widgets/roundCheck.dart';
 
 class RoutineCreatePage extends StatefulWidget {
@@ -28,8 +27,6 @@ class _RoutineCreatePageState extends State<RoutineCreatePage> {
 
   @override
   Widget build(BuildContext context) {
-    final ModifyArgument args = ModalRoute.of(context).settings.arguments;
-    //수정하기 여부에 따른 이름,요일,색상 초기화
     return SafeArea(
       child: Material(
         child: Padding(

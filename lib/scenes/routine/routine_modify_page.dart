@@ -3,6 +3,7 @@ import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/widgets/roundCheck.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:hr_app/widgets/bottomFixedButton.dart';
+import 'package:hr_app/widgets/workout.dart';
 import 'package:provider/provider.dart';
 import 'package:hr_app/models/routine_provider.dart';
 import 'package:hr_app/widgets/routine.dart';
@@ -15,6 +16,7 @@ class RoutineModifyPage extends StatefulWidget {
 class _RoutineModifyPageState extends State<RoutineModifyPage> {
   List<String> days = ['월', '화', '수', '목', '금', '토', '일'];
   List<String> selectedDays = [];
+  List<Workout> workoutList = [];
   Color screenPickerColor = Colors.red;
   String autoKey;
   var myController = TextEditingController();
@@ -33,6 +35,7 @@ class _RoutineModifyPageState extends State<RoutineModifyPage> {
     screenPickerColor = args.color;
     selectedDays = args.days;
     autoKey = args.autoKey;
+    workoutList = args.workoutList;
     super.didChangeDependencies();
   }
 
@@ -112,10 +115,12 @@ class _RoutineModifyPageState extends State<RoutineModifyPage> {
                   text: '수정 완료',
                   tap: () {
                     Provider.of<RoutineProvider>(context, listen: false).modify(
-                        autoKey,
-                        myController.text,
-                        screenPickerColor,
-                        selectedDays);
+                      autoKey,
+                      myController.text,
+                      screenPickerColor,
+                      selectedDays,
+                      workoutList,
+                    );
                     Navigator.pop(context);
                   })
             ],

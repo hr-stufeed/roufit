@@ -48,6 +48,7 @@ class Routine extends StatefulWidget {
                     name: name,
                     color: color,
                     days: days,
+                    workoutList: workoutList,
                   ),
                 );
         },
@@ -62,7 +63,13 @@ class _RoutineState extends State<Routine> {
   Widget build(BuildContext context) {
     return Material(
       child: InkWell(
-        onTap: () => Navigator.pushNamed(context, 'Routine_setting_page'),
+        onTap: () => Navigator.pushNamed(context, 'Routine_workout_page',
+            arguments: WorkoutPageArgument(
+              autoKey: widget.autoKey,
+              name: widget.name,
+              workoutList: widget.workoutList,
+              days: widget.days,
+            )),
         child: Container(
           margin: EdgeInsets.only(bottom: 16.0),
           padding: EdgeInsets.symmetric(
@@ -187,11 +194,28 @@ class ModifyArgument {
   final String name;
   final Color color;
   final List<String> days;
+  final List<Workout> workoutList;
+
   ModifyArgument({
     this.isModify,
     this.autoKey = ' ',
     this.name = ' ',
     this.color = Colors.red,
+    this.days,
+    this.workoutList,
+  });
+}
+
+class WorkoutPageArgument {
+  final String autoKey;
+  final String name;
+  final List<Workout> workoutList;
+  final List<String> days;
+
+  WorkoutPageArgument({
+    this.autoKey = ' ',
+    this.name = ' ',
+    this.workoutList,
     this.days,
   });
 }

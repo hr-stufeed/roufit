@@ -7,14 +7,9 @@ import 'package:hr_app/widgets/routine.dart';
 import 'package:hr_app/widgets/workout.dart';
 import 'package:intl/intl.dart';
 
-class RoutineProvider extends ChangeNotifier {
-  List<Routine> _routines = [
-    // Routine(
-    //   name: '월요일',
-    //   color: Colors.lightGreen,
-    //   isListUp: false,
-    // )
-  ];
+class RoutineProvider with ChangeNotifier {
+  //앱 전체에서 접근 가능한 전역 루틴리스트
+  List<Routine> _routines = [];
 
   RoutineProvider() {
     load();
@@ -37,6 +32,7 @@ class RoutineProvider extends ChangeNotifier {
         name: text,
         color: color.value,
         days: days,
+        workoutList: [],
       ),
     );
     // 동일하게 routine list에도 키와 함께 삽입한다.
@@ -45,6 +41,7 @@ class RoutineProvider extends ChangeNotifier {
       name: text,
       color: color,
       days: days,
+      workoutList: [],
     );
     _routines.add(routine);
 
@@ -67,17 +64,17 @@ class RoutineProvider extends ChangeNotifier {
     }
   }
 
-  void modify(
-      String autoKey, String text, Color color, List<String> days) async {
+  void modify(String autoKey, String text, Color color, List<String> days,
+      List<Workout> workoutList) async {
     var _box = await Hive.openBox<RoutineModel>('routines');
     // 루틴 표지의 수정하기를 누르면 key를 전달받고 _box의 RoutineModel에 정보를 덮어 씌운다.
     _box.put(
         autoKey,
         RoutineModel(
-          name: text,
-          color: color.value,
-          days: days,
-        ));
+            name: text,
+            color: color.value,
+            days: days,
+            workoutList: workoutList));
     // 역시 key를 기준으로 _routines의 요소도 덮어씌운다.
     for (int i = 0; i < _routines.length; i++) {
       if (_routines[i].autoKey == autoKey)
@@ -86,9 +83,16 @@ class RoutineProvider extends ChangeNotifier {
           name: text,
           color: color,
           days: days,
+          workoutList: workoutList,
         );
       ;
     }
+    notifyListeners();
+  }
+
+  void addWorkout(String autoKey, Workout workout) async {
+    var _box = await Hive.openBox<RoutineModel>('routines');
+    _box.get(autoKey).workoutList.add(workout);
     notifyListeners();
   }
 
@@ -114,6 +118,7 @@ class RoutineProvider extends ChangeNotifier {
           name: _box.getAt(index).name,
           color: Color(_box.getAt(index).color),
           days: _box.getAt(index).days,
+          workoutList: _box.getAt(index).workoutList,
         ));
         print('load : ${_box.getAt(index).name}');
         print('index : $index');

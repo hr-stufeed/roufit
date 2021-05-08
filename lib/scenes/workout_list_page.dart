@@ -1,78 +1,89 @@
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
-import 'package:hr_app/widgets/routine.dart';
+import 'package:hr_app/models/routine_provider.dart';
+import 'package:hr_app/models/workout_provider.dart';
+import 'package:hr_app/widgets/bottomFixedButton.dart';
 import 'package:hr_app/widgets/workout.dart';
-import 'package:hr_app/widgets/search_field.dart';
+import 'package:provider/provider.dart';
+import 'package:hr_app/widgets/routine.dart';
+import 'package:hr_app/scenes/routine/routine_workout_page.dart';
 
-class WorkoutListPage extends StatelessWidget {
-  final List<Workout> workoutList = [
-    Workout(name: '팔굽혀펴기', setNumber: 4),
-    Workout(name: '밀리터리 프레스', setNumber: 4),
-    Workout(name: '풀 업', setNumber: 4),
-    Workout(name: '벤치프레스', setNumber: 4),
-  ];
-  final List<Workout> workoutList1 = [
-    Workout(name: '스쿼트', setNumber: 2),
-    Workout(name: '런지', setNumber: 3),
-  ];
+class WorkoutListPage extends StatefulWidget {
+  @override
+  _WorkoutListPageState createState() => _WorkoutListPageState();
+}
+
+class _WorkoutListPageState extends State<WorkoutListPage> {
+  List<String> selectedWorkouts = [];
+  void addWorkout(bool isClicked, String autoKey) {
+    setState(() {
+      isClicked
+          ? selectedWorkouts.add(autoKey)
+          : selectedWorkouts.remove(autoKey);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Padding(
-        padding: kPagePadding,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('운동을 추가해주세요.', style: kPageTitleStyle),
-                IconButton(
-                  icon: Icon(Icons.add_circle_outline),
-                  iconSize: 40.0,
-                  onPressed: () {
-                    Navigator.pushNamed(context, 'Workout_create_page');
-                  },
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            SearchField(),
-            SizedBox(
-              height: 20,
-            ),
-            Text(
-              '생성된 운동',
-              style: TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.normal,
-                color: Colors.grey,
+    AddWorkoutArgument args = ModalRoute.of(context).settings.arguments;
+    List<Workout> copiedList = Provider.of<WorkoutProvider>(context).copyList();
+    return SafeArea(
+      child: Material(
+        child: Padding(
+          padding: kPagePadding,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('운동을 선택해주세요.', style: kPageTitleStyle),
+              SizedBox(
+                height: 20,
               ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Expanded(
-              child: GridView.builder(
-                shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 3 / 2,
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 10,
-                ),
-                itemCount: 6,
-                itemBuilder: (context, index) => Workout(
-                  name: 'hello',
-                  setNumber: index,
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                '생성된 운동',
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.normal,
+                  color: Colors.grey,
                 ),
               ),
-            ),
-          ],
+              SizedBox(
+                height: 20,
+              ),
+              Expanded(
+                child: ListView.builder(
+                    itemCount: copiedList.length,
+                    itemBuilder: (context, index) {
+                      return copiedList[index];
+                    }),
+                // child: Consumer<WorkoutProvider>(
+                //   builder: (context, workoutProvider, child) {
+                //     return ListView.builder(
+                //         itemCount: workoutProvider.workoutsCount,
+                //         itemBuilder: (context, index) {
+                //           return workoutProvider.workouts[index];
+                //         });
+                //   },
+                // ),
+              ),
+              BottomFixedButton(
+                  text: '완료',
+                  tap: () {
+                    args.addWorkoutFunction(copiedList
+                        .where((workout) => workout.isSelected)
+                        .toList()
+                        .map((e) => e.autoKey)
+                        .toList());
+                    Navigator.pop(context);
+                  }),
+            ],
+          ),
         ),
       ),
     );
   }
 }
+// copiedList
+//                         .where((workout) => workout.isSelected ? true : false)

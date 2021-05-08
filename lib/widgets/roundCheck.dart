@@ -33,6 +33,7 @@ class _RoundCheckState extends State<RoundCheck> {
       ),
       checkedColor: Colors.blue,
       animationDuration: Duration(milliseconds: 400),
+      animationCurve: Curves.easeOut,
       onTap: (isChecked) {
         setState(
           () {

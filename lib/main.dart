@@ -2,23 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hr_app/models/routine_provider.dart';
+import 'package:hr_app/models/workout_provider.dart';
+
 import 'package:hr_app/scenes/home_page.dart';
 import 'package:hr_app/scenes/mypage.dart';
 import 'package:hr_app/scenes/routine/routine_create_page.dart';
 import 'package:hr_app/scenes/workout_list_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hr_app/scenes/routine/routine_start_page.dart';
-import 'package:hr_app/scenes/routine/routine_setting_page.dart';
+import 'package:hr_app/scenes/routine/routine_workout_page.dart';
 import 'package:hr_app/scenes/routine/routine_modify_page.dart';
 import 'package:provider/provider.dart';
 
 import 'models/routine_model.dart';
+import 'models/workout_model.dart';
+
 import 'scenes/routine/routine_list_page.dart';
 import 'scenes/workout_create_page.dart';
 
 void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(RoutineModelAdapter());
+  Hive.registerAdapter(WorkoutModelAdapter());
   runApp(MyApp());
 }
 
@@ -42,17 +47,20 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => RoutineProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => RoutineProvider()),
+        ChangeNotifierProvider(create: (_) => WorkoutProvider()),
+      ],
       child: MaterialApp(
         routes: {
           'Home_page': (context) => HomePage(),
           'Routine_page': (context) => RoutineListPage(),
           'Routine_create_page': (context) => RoutineCreatePage(),
           'Routine_start_page': (context) => RoutineStartPage(),
-          'Routine_setting_page': (context) => RoutineSettingPage(),
+          'Routine_workout_page': (context) => RoutineWorkoutPage(),
           'Routine_modify_page': (context) => RoutineModifyPage(),
-          'Workout_page': (context) => WorkoutListPage(),
+          'Workout_list_page': (context) => WorkoutListPage(),
           'Workout_create_page': (context) => WorkoutCreatePage(),
           'MyPage': (context) => MyPage(),
         },
