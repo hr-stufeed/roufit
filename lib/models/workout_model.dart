@@ -4,7 +4,7 @@ part 'workout_model.g.dart';
 @HiveType(typeId: 2)
 class WorkoutModel {
   @HiveField(0)
-  final String key;
+  final String autoKey;
   @HiveField(1)
   final String name;
   @HiveField(2)
@@ -21,9 +21,9 @@ class WorkoutModel {
   final List<String> tags;
 
   WorkoutModel({
-    this.key,
-    this.name,
-    this.emoji,
+    this.autoKey = ' ',
+    this.name = ' ',
+    this.emoji = ' ',
     this.setNumber,
     this.duration,
     this.repNumber,

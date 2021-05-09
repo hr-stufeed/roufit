@@ -17,7 +17,7 @@ class WorkoutModelAdapter extends TypeAdapter<WorkoutModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return WorkoutModel(
-      key: fields[0] as String,
+      autoKey: fields[0] as String,
       name: fields[1] as String,
       emoji: fields[2] as String,
       setNumber: fields[3] as int,
@@ -33,7 +33,7 @@ class WorkoutModelAdapter extends TypeAdapter<WorkoutModel> {
     writer
       ..writeByte(8)
       ..writeByte(0)
-      ..write(obj.key)
+      ..write(obj.autoKey)
       ..writeByte(1)
       ..write(obj.name)
       ..writeByte(2)

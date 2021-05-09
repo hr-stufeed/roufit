@@ -5,16 +5,6 @@ import 'package:hr_app/widgets/workout.dart';
 import 'package:hr_app/widgets/search_field.dart';
 
 class WorkoutCreatePage extends StatelessWidget {
-  final List<Workout> workoutList = [
-    Workout(name: '팔굽혀펴기', setNumber: 4),
-    Workout(name: '밀리터리 프레스', setNumber: 4),
-    Workout(name: '풀 업', setNumber: 4),
-    Workout(name: '벤치프레스', setNumber: 4),
-  ];
-  final List<Workout> workoutList1 = [
-    Workout(name: '스쿼트', setNumber: 2),
-    Workout(name: '런지', setNumber: 3),
-  ];
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -51,22 +41,22 @@ class WorkoutCreatePage extends StatelessWidget {
                 style: kPageSubTitleStyle,
               ),
               SizedBox(height: 16.0),
-              Container(
-                child: GridView.builder(
-                  shrinkWrap: true,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    childAspectRatio: 3 / 2,
-                    mainAxisSpacing: 10,
-                    crossAxisSpacing: 10,
-                  ),
-                  itemCount: 6,
-                  itemBuilder: (context, index) => Workout(
-                    name: 'hello',
-                    setNumber: index,
-                  ),
-                ),
-              ),
+              // Container(
+              //   child: GridView.builder(
+              //     shrinkWrap: true,
+              //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              //       crossAxisCount: 3,
+              //       childAspectRatio: 3 / 2,
+              //       mainAxisSpacing: 10,
+              //       crossAxisSpacing: 10,
+              //     ),
+              //     itemCount: 6,
+              //     itemBuilder: (context, index) => Workout(
+              //       name: 'hello',
+              //       setNumber: index,
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),

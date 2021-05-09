@@ -14,7 +14,7 @@ class RoutineModel {
   @HiveField(3)
   final bool isListUp;
   @HiveField(4)
-  List<WorkoutModel> workoutList;
+  List<WorkoutModel> workoutModelList;
   @HiveField(5)
   List<String> days;
 
@@ -23,7 +23,7 @@ class RoutineModel {
     this.name,
     this.color,
     this.isListUp = true,
-    this.workoutList,
+    this.workoutModelList,
     this.days,
   });
 }

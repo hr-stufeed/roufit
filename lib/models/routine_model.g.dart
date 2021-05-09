@@ -21,7 +21,7 @@ class RoutineModelAdapter extends TypeAdapter<RoutineModel> {
       name: fields[1] as String,
       color: fields[2] as int,
       isListUp: fields[3] as bool,
-      workoutList: (fields[4] as List)?.cast<WorkoutModel>(),
+      workoutModelList: (fields[4] as List)?.cast<WorkoutModel>(),
       days: (fields[5] as List)?.cast<String>(),
     );
   }
@@ -39,7 +39,7 @@ class RoutineModelAdapter extends TypeAdapter<RoutineModel> {
       ..writeByte(3)
       ..write(obj.isListUp)
       ..writeByte(4)
-      ..write(obj.workoutList)
+      ..write(obj.workoutModelList)
       ..writeByte(5)
       ..write(obj.days);
   }

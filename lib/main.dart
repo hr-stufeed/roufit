@@ -28,29 +28,17 @@ void main() async {
   runApp(MyApp());
 }
 
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       initialRoute: 'Routine_page',
-//       routes: {
-//         'Routine_page': (context) => RoutinePage(),
-//         'Routine_create_page': (context) => RoutineCreatePage(),
-//         'Workout_page': (context) => WorkoutPage(),
-//         'Workout_create_page': (context) => WorkoutCreatePage(),
-//         'MyPage': (context) => MyPage(),
-//       },
-//       theme: ThemeData(fontFamily: 'NotoSans'),
-//     );
-//   }
-// }
-//
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => RoutineProvider()),
+        // main.dart에서 RoutineProvider 생성 시 load 함수 호출함
+        // async라 페이지들 생성이 먼저 됨.
+        // 그래서 load가 안되고 전역 운동,루틴 리스트에 데이터가 들어가기 전에 각 페이지
+        // 에서 데이터를 받아와 에러가 뜨는 경우 있음.
+        // 이럴때는 try-catch로 에러 잡고 예외 처리 해줄 것.
         ChangeNotifierProvider(create: (_) => WorkoutProvider()),
         ChangeNotifierProvider(create: (_) => TimerProvider()),
       ],

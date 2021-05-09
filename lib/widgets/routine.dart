@@ -10,7 +10,7 @@ class Routine extends StatefulWidget {
   final String name;
   final Color color;
   final List<String> days;
-  List<WorkoutModel> workoutList;
+  List<WorkoutModel> workoutModelList;
   bool isListUp;
 
   Routine({
@@ -19,7 +19,7 @@ class Routine extends StatefulWidget {
     this.color = Colors.lightBlueAccent,
     this.isListUp = true,
     this.days,
-    this.workoutList,
+    this.workoutModelList,
   });
   Widget _popup(BuildContext context) => PopupMenuButton<int>(
         icon: Icon(
@@ -49,7 +49,7 @@ class Routine extends StatefulWidget {
                     name: name,
                     color: color,
                     days: days,
-                    workoutList: workoutList,
+                    workoutModelList: workoutModelList,
                   ),
                 );
         },
@@ -62,14 +62,13 @@ class Routine extends StatefulWidget {
 class _RoutineState extends State<Routine> {
   @override
   Widget build(BuildContext context) {
-    print('이 루틴의 오토키 : ${widget.autoKey}');
     return Material(
       child: InkWell(
         onTap: () => Navigator.pushNamed(context, 'Routine_workout_page',
             arguments: WorkoutPageArgument(
               autoKey: widget.autoKey,
               name: widget.name,
-              workoutList: widget.workoutList,
+              workoutModelList: widget.workoutModelList,
               days: widget.days,
               color: widget.color,
             )),
@@ -199,7 +198,7 @@ class ModifyArgument {
   final String name;
   final Color color;
   final List<String> days;
-  final List<WorkoutModel> workoutList;
+  final List<WorkoutModel> workoutModelList;
 
   ModifyArgument({
     this.isModify,
@@ -207,7 +206,7 @@ class ModifyArgument {
     this.name = ' ',
     this.color = Colors.red,
     this.days,
-    this.workoutList,
+    this.workoutModelList,
   });
 }
 
@@ -215,13 +214,13 @@ class WorkoutPageArgument {
   final String autoKey;
   final String name;
   final Color color;
-  final List<WorkoutModel> workoutList;
+  final List<WorkoutModel> workoutModelList;
   final List<String> days;
 
   WorkoutPageArgument({
     this.autoKey = ' ',
     this.name = ' ',
-    this.workoutList,
+    this.workoutModelList,
     this.days,
     this.color,
   });

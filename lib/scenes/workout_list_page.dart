@@ -23,8 +23,8 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
     List<WorkoutModel> copiedModelList =
         Provider.of<WorkoutProvider>(context).copyList();
     List<Workout> copiedList = copiedModelList
-        .map((e) => Workout(
-              workoutModel: e,
+        .map((workoutModel) => Workout(
+              workoutModel: workoutModel,
             ))
         .toList();
     return SafeArea(
@@ -58,15 +58,6 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
                     itemBuilder: (context, index) {
                       return copiedList[index];
                     }),
-                // child: Consumer<WorkoutProvider>(
-                //   builder: (context, workoutProvider, child) {
-                //     return ListView.builder(
-                //         itemCount: workoutProvider.workoutsCount,
-                //         itemBuilder: (context, index) {
-                //           return workoutProvider.workouts[index];
-                //         });
-                //   },
-                // ),
               ),
               BottomFixedButton(
                   text: '완료',
@@ -85,5 +76,3 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
     );
   }
 }
-// copiedList
-//                         .where((workout) => workout.isSelected ? true : false)

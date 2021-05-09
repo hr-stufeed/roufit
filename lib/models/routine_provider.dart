@@ -5,8 +5,8 @@ import 'package:hive/hive.dart';
 import 'package:hr_app/models/routine_model.dart';
 import 'package:hr_app/models/workout_model.dart';
 import 'package:hr_app/widgets/routine.dart';
-import 'package:hr_app/widgets/workout.dart';
 import 'package:intl/intl.dart';
+import 'package:hr_app/data/constants.dart';
 
 class RoutineProvider with ChangeNotifier {
   //앱 전체에서 접근 가능한 전역 루틴리스트
@@ -33,7 +33,7 @@ class RoutineProvider with ChangeNotifier {
         name: text,
         color: color.value,
         days: days,
-        workoutList: [],
+        workoutModelList: [],
       ),
     );
     // 동일하게 routine list에도 키와 함께 삽입한다.
@@ -42,7 +42,7 @@ class RoutineProvider with ChangeNotifier {
       name: text,
       color: color,
       days: days,
-      workoutList: [],
+      workoutModelList: [],
     );
     _routines.add(routine);
 
@@ -58,16 +58,17 @@ class RoutineProvider with ChangeNotifier {
         name: _routines[n].name,
         color: _routines[n].color,
         isListUp: false,
-        workoutList: _routines[n].workoutList,
+        workoutModelList: _routines[n].workoutModelList,
         days: _routines[n].days,
       );
     } catch (e) {
-      return Routine(name: '!###LOADING###!');
+      print('copy error:$e');
+      return kErrorRoutine;
     }
   }
 
   void modify(String autoKey, String text, Color color, List<String> days,
-      List<WorkoutModel> workoutList) async {
+      List<WorkoutModel> workoutModelList) async {
     var _box = await Hive.openBox<RoutineModel>('routines');
     // 루틴 표지의 수정하기를 누르면 key를 전달받고 _box의 RoutineModel에 정보를 덮어 씌운다.
     _box.put(
@@ -76,7 +77,7 @@ class RoutineProvider with ChangeNotifier {
             name: text,
             color: color.value,
             days: days,
-            workoutList: workoutList));
+            workoutModelList: workoutModelList));
     // 역시 key를 기준으로 _routines의 요소도 덮어씌운다.
     for (int i = 0; i < _routines.length; i++) {
       if (_routines[i].autoKey == autoKey)
@@ -85,7 +86,7 @@ class RoutineProvider with ChangeNotifier {
           name: text,
           color: color,
           days: days,
-          workoutList: workoutList,
+          workoutModelList: workoutModelList,
         );
       ;
     }
@@ -104,10 +105,10 @@ class RoutineProvider with ChangeNotifier {
         name: _box.get(autoKey).name,
         color: _box.get(autoKey).color,
         days: _box.get(autoKey).days,
-        workoutList: workoutList,
+        workoutModelList: workoutList,
       ),
     );
-    print(_box.get(autoKey).workoutList);
+    print(_box.get(autoKey).workoutModelList);
     notifyListeners();
   }
 
@@ -130,22 +131,17 @@ class RoutineProvider with ChangeNotifier {
       for (int index = 0; index < _box.length; index++) {
         String autoKey = _box.keyAt(index);
         _routines.add(Routine(
-          // autoKey: autoKey, // 로딩시에도 박스에서 키를 가져와 다시 부여한다.
-          // name: _box.getAt(index).name,
-          // color: Color(_box.getAt(index).color),
-          // days: _box.getAt(index).days,
-          // workoutList: _box.getAt(index).workoutList,
           autoKey: autoKey, // 로딩시에도 박스에서 키를 가져와 다시 부여한다.
           name: _box.get(autoKey).name,
           color: Color(_box.get(autoKey).color),
           days: _box.get(autoKey).days,
-          workoutList: _box.get(autoKey).workoutList,
+          workoutModelList: _box.get(autoKey).workoutModelList,
         ));
         print('load : ${_box.get(autoKey).name}');
         print('autoKey : ${_routines[0].autoKey}');
-        print('workouts : ${_box.get(autoKey).workoutList}');
+        print('workouts : ${_box.get(autoKey).workoutModelList}');
       }
-      print(_box.keys);
+
       notifyListeners();
     } catch (e) {}
   }

@@ -5,35 +5,24 @@ import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/models/workout_provider.dart';
 
 class Workout extends StatefulWidget {
+  WorkoutModel workoutModel;
+  Function deleteWorkoutCallback;
   String autoKey;
   String name;
   String emoji;
   List<String> tags;
-
-  final int setNumber;
-  final int repNumber;
-  final int weight;
-  final int duration;
-
-  WorkoutModel workoutModel;
-  Function deleteWorkoutCallback;
+  int setNumber;
+  int repNumber;
+  int weight;
+  int duration;
 
   Workout({
-    this.autoKey = ' ',
-    this.name = 'Default',
-    this.emoji = '🏃‍♀️',
-    this.setNumber = 0,
-    this.duration = 0,
-    this.repNumber = 0,
-    this.weight = 0,
-    this.tags,
+    @required this.workoutModel,
     this.deleteWorkoutCallback,
-    // WorkoutModel을 매개변수로 삽입 시 다른 변수에 값 대입하지 말 것.
-    // initState에서 workoutModel 풀어서 필드 값에 대입함.
-    this.workoutModel,
   });
   bool isSelected = false;
   bool isRoutined = false;
+  bool isOnFront = false;
 
   Widget _popup(BuildContext context) => PopupMenuButton<int>(
         icon: Icon(
@@ -63,26 +52,11 @@ class _WorkoutState extends State<Workout> {
   Color containerColor = Colors.white;
   Color titleColor = Colors.black;
   Color subTitleColor = Colors.grey;
-  // @override
-  // void initState() {
-  //   if (widget.workoutModel != Null) {
-  //     widget.autoKey = widget.workoutModel.key;
-  //     widget.name = widget.workoutModel.name;
-  //     widget.emoji = widget.workoutModel.emoji;
-  //     widget.tags = widget.workoutModel.tags;
-
-  //     setState(() {});
-
-  //     print(widget.tags);
-  //   }
-
-  //   super.initState();
-  // }
 
   @override
   Widget build(BuildContext context) {
     if (widget.workoutModel != Null) {
-      widget.autoKey = widget.workoutModel.key;
+      widget.autoKey = widget.workoutModel.autoKey;
       widget.name = widget.workoutModel.name;
       widget.emoji = widget.workoutModel.emoji;
       widget.tags = widget.workoutModel.tags;

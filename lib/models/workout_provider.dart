@@ -11,43 +11,43 @@ class WorkoutProvider with ChangeNotifier {
   //앱 전체에서 접근 가능한 전역 운동리스트
   List<WorkoutModel> _workouts = [
     WorkoutModel(
-      key: '#1#',
+      autoKey: '#1#',
       name: '밀리터리 프레스',
       emoji: '🏋️‍♀️',
       tags: ['상체', '등'],
     ),
     WorkoutModel(
-      key: '#2#',
+      autoKey: '#2#',
       name: '풀 업',
       emoji: '💪',
       tags: ['이두', '등'],
     ),
     WorkoutModel(
-      key: '#3#',
+      autoKey: '#3#',
       name: '스쿼트',
       emoji: '🧍‍♂️',
       tags: ['하체', '허벅지'],
     ),
     WorkoutModel(
-      key: '#4#',
+      autoKey: '#4#',
       name: '데드 리프트',
       emoji: '💪',
       tags: ['등'],
     ),
     WorkoutModel(
-      key: '#5#',
+      autoKey: '#5#',
       name: '푸시 업',
       emoji: '💪',
       tags: ['가슴', '팔'],
     ),
     WorkoutModel(
-      key: '#6#',
+      autoKey: '#6#',
       name: '덤벨 로우',
       emoji: '😢',
       tags: ['삼두', '등'],
     ),
     WorkoutModel(
-      key: '#7#',
+      autoKey: '#7#',
       name: '케틀벨 스윙',
       emoji: '💪',
       tags: ['상체', '팔'],
@@ -79,7 +79,7 @@ class WorkoutProvider with ChangeNotifier {
     );
     // 동일하게 workout list에도 키와 함께 삽입한다.
     final workout = WorkoutModel(
-      key: key,
+      autoKey: key,
       name: text,
       tags: tags,
     );
@@ -104,7 +104,7 @@ class WorkoutProvider with ChangeNotifier {
     List<WorkoutModel> returnValue = [];
     _workouts.forEach((e) {
       returnValue.add(WorkoutModel(
-        key: e.key,
+        autoKey: e.autoKey,
         name: e.name,
         emoji: e.emoji,
         tags: e.tags,
@@ -124,9 +124,9 @@ class WorkoutProvider with ChangeNotifier {
         ));
     // 역시 key를 기준으로 _routines의 요소도 덮어씌운다.
     for (int i = 0; i < _workouts.length; i++) {
-      if (_workouts[i].key == autoKey)
+      if (_workouts[i].autoKey == autoKey)
         _workouts[i] = WorkoutModel(
-          key: autoKey,
+          autoKey: autoKey,
           name: text,
         );
       ;
@@ -135,14 +135,14 @@ class WorkoutProvider with ChangeNotifier {
   }
 
   WorkoutModel find(String key) {
-    return _workouts.where((workout) => workout.key == key).toList()[0];
+    return _workouts.where((workout) => workout.autoKey == key).toList()[0];
   }
 
   void delete(String autoKey) async {
     var _box = await Hive.openBox<WorkoutModel>('workouts');
     // 삭제 시 _routines에서는 키를 탐색하여 삭제한다.
     for (int i = 0; i < _workouts.length; i++) {
-      if (_workouts[i].key == autoKey) _workouts.removeAt(i);
+      if (_workouts[i].autoKey == autoKey) _workouts.removeAt(i);
     }
     // 박스는 그냥 키를 바로 대입하여 삭제한다.
     _box.delete(autoKey);
@@ -156,7 +156,7 @@ class WorkoutProvider with ChangeNotifier {
     try {
       for (int index = 0; index < _box.length; index++) {
         _workouts.add(WorkoutModel(
-          key: _box.keyAt(index), // 로딩시에도 박스에서 키를 가져와 다시 부여한다.
+          autoKey: _box.keyAt(index), // 로딩시에도 박스에서 키를 가져와 다시 부여한다.
           name: _box.getAt(index).name,
           emoji: _box.getAt(index).emoji,
           tags: _box.getAt(index).tags,

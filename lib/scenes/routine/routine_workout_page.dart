@@ -17,9 +17,9 @@ class RoutineWorkoutPage extends StatefulWidget {
 
 class _RoutineWorkoutPageState extends State<RoutineWorkoutPage> {
   List<Workout> workoutList = [];
-  List<WorkoutModel> workoutListModel = [];
+  List<WorkoutModel> workoutModelList = [];
   //완성하기 누르지 않고 back 할 때 운동을 추가하지 않기 위해 보관용으로 만든 리스트.
-  List<WorkoutModel> backupWorkoutListModel = [];
+  List<WorkoutModel> backupWorkoutModelList = [];
   String name;
   String autoKey;
   Color color;
@@ -33,7 +33,7 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage> {
         var selectedWorkoutModel =
             Provider.of<WorkoutProvider>(context, listen: false).find(e);
         // 로컬 변수 운동 모델 리스트에 해당 운동 모델 저장한다.
-        workoutListModel.add(selectedWorkoutModel);
+        workoutModelList.add(selectedWorkoutModel);
         // 선택한 운동 모델로 운동 위젯 생성한다.
         Workout newWorkout = Workout(workoutModel: selectedWorkoutModel);
 
@@ -51,8 +51,8 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage> {
 
   List<Workout> createWorkoutList(List<WorkoutModel> list) {
     return list
-        .map((e) => Workout(
-              workoutModel: e,
+        .map((workoutModel) => Workout(
+              workoutModel: workoutModel,
             ))
         .toList();
   }
@@ -60,11 +60,12 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage> {
   @override
   void didChangeDependencies() {
     WorkoutPageArgument args = ModalRoute.of(context).settings.arguments;
-    workoutListModel =
-        Provider.of<RoutineProvider>(context).find(args.autoKey).workoutList;
+    workoutModelList = Provider.of<RoutineProvider>(context)
+        .find(args.autoKey)
+        .workoutModelList;
     //기존 리스트를 백업한다.
-    backupWorkoutListModel = workoutListModel.toList();
-    workoutList = createWorkoutList(workoutListModel);
+    backupWorkoutModelList = workoutModelList.toList();
+    workoutList = createWorkoutList(workoutModelList);
     workoutList.forEach((w) {
       w.isRoutined = true;
       w.deleteWorkoutCallback = deleteWorkoutCallback;
@@ -79,10 +80,9 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        print('hh : $autoKey');
-
+        // 완성하기 누르지 않고 back할 때 기존 리스트로 백업하여 운동을 추가하지 않는다
         Provider.of<RoutineProvider>(context, listen: false)
-            .modify(autoKey, name, color, days, backupWorkoutListModel);
+            .modify(autoKey, name, color, days, backupWorkoutModelList);
         return Future(() => true);
       },
       child: SafeArea(
@@ -146,7 +146,7 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage> {
                   text: '완성하기',
                   tap: () {
                     Provider.of<RoutineProvider>(context, listen: false)
-                        .saveWorkout(autoKey, workoutListModel);
+                        .saveWorkout(autoKey, workoutModelList);
                     Navigator.popUntil(context, (route) => route.isFirst);
                   },
                 ),

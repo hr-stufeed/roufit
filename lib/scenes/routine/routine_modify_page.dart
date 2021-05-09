@@ -36,7 +36,7 @@ class _RoutineModifyPageState extends State<RoutineModifyPage> {
     screenPickerColor = args.color;
     selectedDays = args.days;
     autoKey = args.autoKey;
-    workoutList = args.workoutList;
+    workoutList = args.workoutModelList;
     super.didChangeDependencies();
   }
 

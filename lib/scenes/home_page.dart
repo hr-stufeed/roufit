@@ -1,86 +1,83 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/models/routine_provider.dart';
+import 'package:hr_app/models/workout_model.dart';
 import 'package:hr_app/widgets/routine.dart';
+import 'package:hr_app/widgets/workout.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:hive/hive.dart';
 
-import 'package:intl/intl.dart';
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
 
-class HomePage extends StatelessWidget {
-  String kToday() {
-    var today = DateFormat('EEE').format(DateTime.now());
-    switch (today) {
-      case 'Mon':
-        return '월요일이에요.\n다시 시작해볼까요? 😎';
-        break;
-      case 'Tue':
-        return '화요일이에요.\n힘차게 가볼까요? 😁';
-        break;
-      case 'Wed':
-        return '수요일!\n벌써 중간까지 왔어요! 😊';
-        break;
-      case 'Thu':
-        return '목요일이에요.\n조금만 더 버텨요! 💪';
-        break;
-      case 'Fri':
-        return '불타는 금요일이에요!!!!!! 🔥';
-        break;
-      case 'Sat':
-        return '어서오세요!\n기분 좋은 토요일이에요.😃';
-        break;
-      case 'Sun':
-        return '안녕하세요!\n즐거운 일요일입니다. 🌞';
-        break;
-      default:
-        return '안녕하세요!';
+class _HomePageState extends State<HomePage> {
+  Routine frontRoutine;
+  List<Workout> frontRoutineWorkoutList;
+
+  List<Workout> createWorkoutList(List<WorkoutModel> list) {
+    return list
+        .map((workoutModel) => Workout(
+              workoutModel: workoutModel,
+            ))
+        .toList();
+  }
+
+  @override
+  void didChangeDependencies() {
+    // 추후 수정 필요 -> 요일에 따라서 루틴 나오도록.
+    try {
+      frontRoutine = Provider.of<RoutineProvider>(context).routines[0];
+      frontRoutineWorkoutList =
+          createWorkoutList(frontRoutine.workoutModelList);
+      frontRoutineWorkoutList.forEach((workout) {
+        workout.isOnFront = true;
+      });
+    } catch (e) {
+      // load되기 전에 페이지가 먼저 생성되어 빈 전역 리스트 참조하면 에러 루틴 뱉는다
+      frontRoutine = kErrorRoutine;
     }
+    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    Routine frontRoutine = Provider.of<RoutineProvider>(context).copy(0);
-
-    return Padding(
-      padding: kPagePadding,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            kToday(),
-            style: kPageTitleStyle,
-          ),
-          kSizedBoxBetweenItems,
-          frontRoutine.name != '!###LOADING###!'
-              ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    frontRoutine,
-                    kSizedBoxBetweenItems,
-                    Text(
-                      '운동할 준비 되셨나요?🔥',
-                      style: kPageSubTitleStyle,
+    return Material(
+      child: Padding(
+        padding: kPagePadding,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              kTodayMessage(),
+              style: kPageTitleStyle,
+            ),
+            kSizedBoxBetweenItems,
+            frontRoutine,
+            kSizedBoxBetweenItems,
+            Text(
+              '운동할 준비 되셨나요?🔥',
+              style: kPageSubTitleStyle,
+            ),
+            kSizedBoxBetweenItems,
+            frontRoutine == kErrorRoutine
+                ? Expanded(
+                    child: SpinKitDoubleBounce(
+                      color: Colors.blue,
+                      size: 100.0,
                     ),
-                    kSizedBoxBetweenItems,
-                    // Expanded(
-                    //   child: ListView.builder(
-                    //     itemCount: frontRoutine.workoutList.length,
-                    //     itemBuilder: (context, index) {
-                    //       return frontRoutine.workoutList[index];
-                    //     },
-                    //   ),
-                    // )
-                  ],
-                )
-              : Expanded(
-                  child: SpinKitDoubleBounce(
-                    color: Colors.blue,
-                    size: 100.0,
-                  ),
-                ),
-        ],
+                  )
+                : Expanded(
+                    child: ListView.builder(
+                      itemCount: frontRoutineWorkoutList.length,
+                      itemBuilder: (context, index) {
+                        return frontRoutineWorkoutList[index];
+                      },
+                    ),
+                  )
+          ],
+        ),
       ),
     );
   }
