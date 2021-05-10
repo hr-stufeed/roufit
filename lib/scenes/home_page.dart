@@ -28,11 +28,12 @@ class _HomePageState extends State<HomePage> {
   void didChangeDependencies() {
     // 추후 수정 필요 -> 요일에 따라서 루틴 나오도록.
     try {
-      frontRoutine = Provider.of<RoutineProvider>(context).routines[0];
+      frontRoutine = Provider.of<RoutineProvider>(context).copy(0);
+      frontRoutine.isListUp = false;
       frontRoutineWorkoutList =
           createWorkoutList(frontRoutine.workoutModelList);
       frontRoutineWorkoutList.forEach((workout) {
-        workout.isOnFront = true;
+        workout.workoutState = WorkoutState.onFront;
       });
     } catch (e) {
       // load되기 전에 페이지가 먼저 생성되어 빈 전역 리스트 참조하면 에러 루틴 뱉는다

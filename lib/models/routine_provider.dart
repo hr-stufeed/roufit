@@ -137,9 +137,11 @@ class RoutineProvider with ChangeNotifier {
           days: _box.get(autoKey).days,
           workoutModelList: _box.get(autoKey).workoutModelList,
         ));
-        print('load : ${_box.get(autoKey).name}');
+        print('name : ${_box.get(autoKey).name}');
         print('autoKey : ${_routines[0].autoKey}');
-        print('workouts : ${_box.get(autoKey).workoutModelList}');
+        _box.get(autoKey).workoutModelList.forEach((element) {
+          print('workouts : ${element.name}');
+        });
       }
 
       notifyListeners();

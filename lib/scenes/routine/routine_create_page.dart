@@ -5,6 +5,7 @@ import 'package:hr_app/widgets/bottomFixedButton.dart';
 import 'package:provider/provider.dart';
 import 'package:hr_app/models/routine_provider.dart';
 import 'package:hr_app/widgets/roundCheck.dart';
+import 'package:hr_app/widgets/topBar.dart';
 
 class RoutineCreatePage extends StatefulWidget {
   Color screenPickerColor = Colors.red;
@@ -30,15 +31,15 @@ class _RoutineCreatePageState extends State<RoutineCreatePage> {
     return SafeArea(
       child: Material(
         child: Padding(
-          padding: kPagePadding,
+          padding: kPagePaddingwithTopbar,
           child: Stack(
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [Text('루틴을 만들어 볼까요?', style: kPageTitleStyle)],
+                  TopBar(
+                    title: '루틴 생성',
+                    hasMoreButton: false,
                   ),
                   kSizedBoxBetweenItems,
                   Text('루틴 이름을 정해주세요.', style: kPageSubTitleStyle),

@@ -3,6 +3,8 @@ import 'package:hr_app/widgets/routine.dart';
 import 'package:intl/intl.dart';
 
 const kPagePadding = EdgeInsets.fromLTRB(16.0, 32.0, 16.0, 0.0);
+const kPagePaddingwithTopbar = EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0);
+
 const kTimerTitleStyle = TextStyle(
   fontSize: 48.0,
   fontWeight: FontWeight.bold,
@@ -14,6 +16,11 @@ const kPageTitleStyle = TextStyle(
   color: Colors.black,
 );
 const kPageSubTitleStyle = TextStyle(
+  fontSize: 16.0,
+  fontWeight: FontWeight.bold,
+  color: Colors.black,
+);
+const kTopBarTextStyle = TextStyle(
   fontSize: 16.0,
   fontWeight: FontWeight.bold,
   color: Colors.black,
@@ -54,6 +61,11 @@ final Routine kErrorRoutine = Routine(
   name: '!###LOADING###!',
   days: [],
 );
+enum WorkoutState {
+  onWorkoutList,
+  onFront,
+  onRoutine,
+}
 String kTodayMessage() {
   var today = DateFormat('EEE').format(DateTime.now());
   switch (today) {

@@ -109,15 +109,9 @@ class ListPageRoutine extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              widget.name,
-              style: kRoutineTitleStyle,
-            ),
-            widget._popup(context),
-          ],
+        Text(
+          widget.name,
+          style: kRoutineTitleStyle,
         ),
         SizedBox(height: 8.0),
         Text(
