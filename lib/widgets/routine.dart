@@ -71,6 +71,8 @@ class _RoutineState extends State<Routine> {
             days: widget.days,
             color: widget.color,
           )),
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
       child: Container(
         margin: EdgeInsets.only(bottom: 16.0),
         padding: EdgeInsets.symmetric(
