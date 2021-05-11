@@ -62,34 +62,32 @@ class Routine extends StatefulWidget {
 class _RoutineState extends State<Routine> {
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: InkWell(
-        onTap: () => Navigator.pushNamed(context, 'Routine_workout_page',
-            arguments: WorkoutPageArgument(
-              autoKey: widget.autoKey,
-              name: widget.name,
-              workoutModelList: widget.workoutModelList,
-              days: widget.days,
-              color: widget.color,
-            )),
-        child: Container(
-          margin: EdgeInsets.only(bottom: 16.0),
-          padding: EdgeInsets.symmetric(
-            horizontal: 16.0,
-            vertical: 24.0,
-          ),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [widget.color, widget.color.withBlue(250)],
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-            ),
-            borderRadius: kBorderRadius,
-          ),
-          child: widget.isListUp
-              ? ListPageRoutine(widget: widget)
-              : HomePageRoutine(widget: widget),
+    return InkWell(
+      onTap: () => Navigator.pushNamed(context, 'Routine_workout_page',
+          arguments: WorkoutPageArgument(
+            autoKey: widget.autoKey,
+            name: widget.name,
+            workoutModelList: widget.workoutModelList,
+            days: widget.days,
+            color: widget.color,
+          )),
+      child: Container(
+        margin: EdgeInsets.only(bottom: 16.0),
+        padding: EdgeInsets.symmetric(
+          horizontal: 16.0,
+          vertical: 24.0,
         ),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [widget.color, widget.color.withBlue(250)],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+          borderRadius: kBorderRadius,
+        ),
+        child: widget.isListUp
+            ? ListPageRoutine(widget: widget)
+            : HomePageRoutine(widget: widget),
       ),
     );
   }

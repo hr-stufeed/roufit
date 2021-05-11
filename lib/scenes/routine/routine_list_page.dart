@@ -6,9 +6,36 @@ import 'package:hr_app/models/routine_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:reorderables/reorderables.dart';
 
-class RoutineListPage extends StatelessWidget {
+class RoutineListPage extends StatefulWidget {
+  @override
+  _RoutineListPageState createState() => _RoutineListPageState();
+}
+
+class _RoutineListPageState extends State<RoutineListPage> {
+  ScrollController _scrollController;
+
+  init() {
+    setState(() {
+      _scrollController.dispose();
+      _scrollController = ScrollController();
+    });
+  }
+
+  @override
+  void initState() {
+    _scrollController = ScrollController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    init();
     return Material(
       child: Padding(
         padding: kPagePadding,
@@ -27,7 +54,7 @@ class RoutineListPage extends StatelessWidget {
                 kSizedBoxBetweenItems,
                 Expanded(
                   child: ReorderableColumn(
-                    scrollController: ScrollController(),
+                    scrollController: _scrollController,
                     enabled: true,
                     onReorder:
                         Provider.of<RoutineProvider>(context, listen: false)
@@ -61,11 +88,13 @@ class RoutineListPage extends StatelessWidget {
                     size: 30.0,
                   ),
                   backgroundColor: Colors.white,
-                  onPressed: () => Navigator.pushNamed(
-                    context,
-                    'Routine_create_page',
-                    arguments: ModifyArgument(isModify: false),
-                  ),
+                  onPressed: () {
+                    Navigator.pushNamed(
+                      context,
+                      'Routine_create_page',
+                      arguments: ModifyArgument(isModify: false),
+                    ).then((value) => init());
+                  },
                 ),
                 kSizedBoxBetweenItems,
               ],
