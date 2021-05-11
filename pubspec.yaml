@@ -37,7 +37,10 @@ dependencies:
   hive: ^2.0.4
   hive_flutter: ^1.0.0
   flutter_spinkit: ^3.1.0
-  reorderables: ^0.4.1
+  reorderables:
+    git:
+      url: git://github.com/biryang/reorderables.git
+      # git에서 필요 패키지 fork 수정한 버전
   roundcheckbox: ^1.0.0+1
 
 dev_dependencies:

@@ -26,18 +26,27 @@ class RoutineListPage extends StatelessWidget {
                 ),
                 kSizedBoxBetweenItems,
                 Expanded(
-                  child: Consumer<RoutineProvider>(
-                    builder: (context, routineProvider, child) {
-                      return ReorderableColumn(
-                        onReorder: routineProvider.reorder,
-                        children: routineProvider.routines.map((routine) {
-                          return Container(
-                            key: ValueKey(routine.autoKey),
-                            child: routine,
-                          );
-                        }).toList(),
-                      );
+                  child: ReorderableColumn(
+                    scrollController: ScrollController(),
+                    enabled: true,
+                    onReorder:
+                        Provider.of<RoutineProvider>(context, listen: false)
+                            .reorder,
+                    draggingWidgetOpacity: 0,
+                    onNoReorder: (int index) {
+                      //this callback is optional
+                      debugPrint(
+                          '${DateTime.now().toString().substring(5, 22)} reorder cancelled. index:$index');
                     },
+                    children:
+                        Provider.of<RoutineProvider>(context, listen: true)
+                            .routines
+                            .map((routine) {
+                      return Container(
+                        key: UniqueKey(),
+                        child: routine,
+                      );
+                    }).toList(),
                   ),
                 ),
               ],

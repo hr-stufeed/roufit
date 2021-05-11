@@ -28,7 +28,20 @@ void main() async {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget  {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin  {
+  TabController _tabController;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _tabController =TabController(length: 3, vsync: this);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -68,6 +81,7 @@ class MyApp extends StatelessWidget {
           child: Scaffold(
             body: SafeArea(
               child: TabBarView(
+                controller: _tabController,
                 children: [
                   HomePage(),
                   RoutineListPage(),
@@ -78,6 +92,7 @@ class MyApp extends StatelessWidget {
             bottomNavigationBar: Container(
               decoration: BoxDecoration(color: Colors.white),
               child: TabBar(
+                controller: _tabController,
                 labelColor: Colors.black,
                 indicatorColor: Colors.transparent,
                 tabs: [

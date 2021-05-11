@@ -158,7 +158,7 @@ class RoutineProvider with ChangeNotifier {
   void reorder(int oldIndex, int newIndex) async {
     Routine moveRoutine = _routines.removeAt(oldIndex);
     _routines.insert(newIndex, moveRoutine);
-
+    print(_routines[0].name);
     notifyListeners();
   }
 }
