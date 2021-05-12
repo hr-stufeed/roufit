@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:hr_app/widgets/routine.dart';
 import 'package:intl/intl.dart';
+part 'constants.g.dart';
 
 const kPagePadding = EdgeInsets.fromLTRB(16.0, 32.0, 16.0, 0.0);
 const kPagePaddingwithTopbar = EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0);
@@ -66,6 +68,19 @@ enum WorkoutState {
   onFront,
   onRoutine,
 }
+
+@HiveType(typeId: 3)
+enum WorkoutType {
+  @HiveField(0)
+  setOnly,
+  @HiveField(1)
+  durationOnly,
+  @HiveField(2)
+  setWeight,
+  @HiveField(3)
+  durationWeight,
+}
+
 String kTodayMessage() {
   var today = DateFormat('EEE').format(DateTime.now());
   switch (today) {

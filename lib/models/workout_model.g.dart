@@ -20,18 +20,16 @@ class WorkoutModelAdapter extends TypeAdapter<WorkoutModel> {
       autoKey: fields[0] as String,
       name: fields[1] as String,
       emoji: fields[2] as String,
-      setNumber: fields[3] as int,
-      duration: fields[6] as int,
-      repNumber: fields[4] as int,
-      weight: fields[5] as int,
-      tags: (fields[7] as List)?.cast<String>(),
+      setData: (fields[3] as List)?.cast<WorkoutSet>(),
+      tags: (fields[4] as List)?.cast<String>(),
+      type: fields[5] as WorkoutType,
     );
   }
 
   @override
   void write(BinaryWriter writer, WorkoutModel obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.autoKey)
       ..writeByte(1)
@@ -39,15 +37,11 @@ class WorkoutModelAdapter extends TypeAdapter<WorkoutModel> {
       ..writeByte(2)
       ..write(obj.emoji)
       ..writeByte(3)
-      ..write(obj.setNumber)
+      ..write(obj.setData)
       ..writeByte(4)
-      ..write(obj.repNumber)
+      ..write(obj.tags)
       ..writeByte(5)
-      ..write(obj.weight)
-      ..writeByte(6)
-      ..write(obj.duration)
-      ..writeByte(7)
-      ..write(obj.tags);
+      ..write(obj.type);
   }
 
   @override

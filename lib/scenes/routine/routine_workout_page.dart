@@ -180,7 +180,6 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage> {
                   tap: () {
                     Provider.of<RoutineProvider>(context, listen: false)
                         .saveWorkout(autoKey, workoutModelList);
-
                     Navigator.popUntil(context, (route) => route.isFirst);
                   },
                 ),

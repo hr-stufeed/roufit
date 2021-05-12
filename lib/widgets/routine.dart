@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
-import 'package:hr_app/models/routine_provider.dart';
 import 'package:hr_app/models/workout_model.dart';
-import 'package:hr_app/widgets/workout.dart';
-import 'package:provider/provider.dart';
 
 class Routine extends StatefulWidget {
   final String autoKey;
@@ -21,39 +18,6 @@ class Routine extends StatefulWidget {
     this.days,
     this.workoutModelList,
   });
-  Widget _popup(BuildContext context) => PopupMenuButton<int>(
-        icon: Icon(
-          Icons.more_horiz,
-          color: Colors.white,
-        ),
-        itemBuilder: (context) => [
-          PopupMenuItem(
-            value: 1,
-            child: Text("수정하기"),
-          ),
-          PopupMenuItem(
-            value: 2,
-            child: Text("삭제하기"),
-          ),
-        ],
-        onSelected: (value) {
-          value == 2
-              ? Provider.of<RoutineProvider>(context, listen: false)
-                  .delete(autoKey)
-              : Navigator.pushNamed(
-                  context,
-                  'Routine_modify_page',
-                  arguments: ModifyArgument(
-                    isModify: true,
-                    autoKey: autoKey,
-                    name: name,
-                    color: color,
-                    days: days,
-                    workoutModelList: workoutModelList,
-                  ),
-                );
-        },
-      );
 
   @override
   _RoutineState createState() => _RoutineState();

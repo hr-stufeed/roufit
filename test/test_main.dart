@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hr_app/scenes/home_page.dart';
 import 'package:hr_app/scenes/routine/routine_create_page.dart';
 import 'package:hr_app/scenes/routine/routine_list_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

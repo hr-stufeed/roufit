@@ -88,7 +88,6 @@ class RoutineProvider with ChangeNotifier {
           days: days,
           workoutModelList: workoutModelList,
         );
-      ;
     }
     notifyListeners();
   }
@@ -97,7 +96,7 @@ class RoutineProvider with ChangeNotifier {
     return _routines.where((routine) => routine.autoKey == autoKey).toList()[0];
   }
 
-  void saveWorkout(String autoKey, List<WorkoutModel> workoutList) async {
+  void saveWorkout(String autoKey, List<WorkoutModel> workoutModelList) async {
     var _box = await Hive.openBox<RoutineModel>('routines');
     _box.put(
       autoKey,
@@ -105,7 +104,7 @@ class RoutineProvider with ChangeNotifier {
         name: _box.get(autoKey).name,
         color: _box.get(autoKey).color,
         days: _box.get(autoKey).days,
-        workoutModelList: workoutList,
+        workoutModelList: workoutModelList,
       ),
     );
     print(_box.get(autoKey).workoutModelList);

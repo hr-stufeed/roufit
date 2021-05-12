@@ -2,9 +2,8 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
+import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/models/workout_model.dart';
-import 'package:hr_app/widgets/routine.dart';
-import 'package:hr_app/widgets/workout.dart';
 import 'package:intl/intl.dart';
 
 class WorkoutProvider with ChangeNotifier {
@@ -14,43 +13,57 @@ class WorkoutProvider with ChangeNotifier {
       autoKey: '#1#',
       name: '밀리터리 프레스',
       emoji: '🏋️‍♀️',
+      setData: [],
       tags: ['상체', '등'],
+      type: WorkoutType.setOnly,
     ),
     WorkoutModel(
       autoKey: '#2#',
       name: '풀 업',
       emoji: '💪',
+      setData: [],
       tags: ['이두', '등'],
+      type: WorkoutType.setOnly,
     ),
     WorkoutModel(
       autoKey: '#3#',
       name: '스쿼트',
       emoji: '🧍‍♂️',
+      setData: [],
       tags: ['하체', '허벅지'],
+      type: WorkoutType.setWeight,
     ),
     WorkoutModel(
       autoKey: '#4#',
       name: '데드 리프트',
       emoji: '💪',
+      setData: [],
       tags: ['등'],
+      type: WorkoutType.setWeight,
     ),
     WorkoutModel(
       autoKey: '#5#',
       name: '푸시 업',
       emoji: '💪',
+      setData: [],
       tags: ['가슴', '팔'],
+      type: WorkoutType.durationOnly,
     ),
     WorkoutModel(
       autoKey: '#6#',
       name: '덤벨 로우',
       emoji: '😢',
+      setData: [],
       tags: ['삼두', '등'],
+      type: WorkoutType.durationWeight,
     ),
     WorkoutModel(
       autoKey: '#7#',
       name: '케틀벨 스윙',
       emoji: '💪',
+      setData: [],
       tags: ['상체', '팔'],
+      type: WorkoutType.setOnly,
     ),
   ];
 
@@ -107,7 +120,9 @@ class WorkoutProvider with ChangeNotifier {
         autoKey: e.autoKey,
         name: e.name,
         emoji: e.emoji,
+        setData: e.setData,
         tags: e.tags,
+        type: e.type,
       ));
     });
     return returnValue;
@@ -129,7 +144,6 @@ class WorkoutProvider with ChangeNotifier {
           autoKey: autoKey,
           name: text,
         );
-      ;
     }
     notifyListeners();
   }
@@ -159,7 +173,9 @@ class WorkoutProvider with ChangeNotifier {
           autoKey: _box.keyAt(index), // 로딩시에도 박스에서 키를 가져와 다시 부여한다.
           name: _box.getAt(index).name,
           emoji: _box.getAt(index).emoji,
+          setData: _box.getAt(index).setData,
           tags: _box.getAt(index).tags,
+          type: _box.getAt(index).type,
         ));
         print('workout load : ${_box.getAt(index).name}');
         print('workout index : $index');

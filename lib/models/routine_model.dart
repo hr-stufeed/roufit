@@ -1,6 +1,5 @@
 import 'package:hive/hive.dart';
 import 'package:hr_app/models/workout_model.dart';
-import 'package:hr_app/widgets/workout.dart';
 part 'routine_model.g.dart';
 
 @HiveType(typeId: 1)

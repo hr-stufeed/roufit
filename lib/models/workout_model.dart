@@ -1,4 +1,6 @@
 import 'package:hive/hive.dart';
+import 'package:hr_app/data/constants.dart';
+import 'workout_set.dart';
 part 'workout_model.g.dart';
 
 @HiveType(typeId: 2)
@@ -10,24 +12,18 @@ class WorkoutModel {
   @HiveField(2)
   final String emoji;
   @HiveField(3)
-  final int setNumber;
+  final List<WorkoutSet> setData;
   @HiveField(4)
-  final int repNumber;
-  @HiveField(5)
-  final int weight;
-  @HiveField(6)
-  final int duration;
-  @HiveField(7)
   final List<String> tags;
+  @HiveField(5)
+  final WorkoutType type;
 
   WorkoutModel({
     this.autoKey = ' ',
     this.name = ' ',
     this.emoji = ' ',
-    this.setNumber,
-    this.duration,
-    this.repNumber,
-    this.weight,
+    this.setData,
     this.tags,
+    this.type,
   });
 }

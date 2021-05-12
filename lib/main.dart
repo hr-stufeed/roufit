@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/models/routine_provider.dart';
 import 'package:hr_app/models/timer_provider.dart';
 import 'package:hr_app/models/workout_provider.dart';
@@ -25,21 +26,23 @@ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(RoutineModelAdapter());
   Hive.registerAdapter(WorkoutModelAdapter());
+  Hive.registerAdapter(WorkoutTypeAdapter());
+
   runApp(MyApp());
 }
 
-class MyApp extends StatefulWidget  {
+class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin  {
+class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   TabController _tabController;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _tabController =TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -68,6 +71,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin  {
           'MyPage': (context) => MyPage(),
         },
         theme: ThemeData(
+          dividerColor: Colors.transparent,
           textTheme: TextTheme(
             bodyText1: TextStyle(
                 fontSize: 18,

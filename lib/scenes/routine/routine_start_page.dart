@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/models/timer_provider.dart';
-import 'package:hr_app/widgets/routine.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:timeline_tile/timeline_tile.dart';
 
 class RoutineStartPage extends StatelessWidget {
   @override
@@ -35,9 +32,7 @@ class RoutineStartPage extends StatelessWidget {
                       ),
                       TextButton(
                         child: Text('Start'),
-                        onPressed: () {
-
-                        },
+                        onPressed: () {},
                         style: TextButton.styleFrom(
                             primary: Colors.black,
                             backgroundColor: Colors.white,

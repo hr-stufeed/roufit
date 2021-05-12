@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
-import 'package:hr_app/widgets/routine.dart';
-import 'package:hr_app/widgets/workout.dart';
 import 'package:hr_app/widgets/search_field.dart';
 
 class WorkoutCreatePage extends StatelessWidget {

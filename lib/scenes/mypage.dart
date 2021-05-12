@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
-import 'package:hr_app/scenes/workout_list_page.dart';
-import 'package:hr_app/widgets/routine.dart';
-import 'package:hr_app/widgets/workout.dart';
 
 class MyPage extends StatelessWidget {
   @override

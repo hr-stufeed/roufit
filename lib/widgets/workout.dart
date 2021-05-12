@@ -1,9 +1,10 @@
+import 'dart:ui';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hr_app/models/workout_model.dart';
-import 'package:provider/provider.dart';
+import 'package:hr_app/models/workout_set.dart';
 import 'package:hr_app/data/constants.dart';
-import 'package:hr_app/models/workout_provider.dart';
 
 class Workout extends StatefulWidget {
   WorkoutModel workoutModel;
@@ -12,10 +13,8 @@ class Workout extends StatefulWidget {
   String name;
   String emoji;
   List<String> tags;
-  int setNumber;
-  int repNumber;
-  int weight;
-  int duration;
+  WorkoutType type;
+  List<WorkoutSet> setData = [];
 
   Workout({
     @required this.workoutModel,
@@ -26,7 +25,7 @@ class Workout extends StatefulWidget {
 
   Widget _popup(BuildContext context) => PopupMenuButton<int>(
         icon: Icon(
-          Icons.more_horiz,
+          Icons.more_vert,
           color: Colors.black,
         ),
         itemBuilder: (context) => [
@@ -43,6 +42,29 @@ class Workout extends StatefulWidget {
           value == 2 ? deleteWorkoutCallback(autoKey) : print('hi');
         },
       );
+  Widget workoutStateText(WorkoutType type) {
+    Color subTitleColor = Colors.grey;
+    if (type == WorkoutType.setOnly)
+      return Text(
+        '@세트',
+        style: TextStyle(color: subTitleColor),
+      );
+    else if (type == WorkoutType.durationOnly)
+      return Text(
+        '@시간',
+        style: TextStyle(color: subTitleColor),
+      );
+    else if (type == WorkoutType.setWeight)
+      return Text(
+        '@세트+무게',
+        style: TextStyle(color: subTitleColor),
+      );
+    else
+      return Text(
+        '@시간+무게',
+        style: TextStyle(color: subTitleColor),
+      );
+  }
 
   @override
   _WorkoutState createState() => _WorkoutState();
@@ -60,6 +82,8 @@ class _WorkoutState extends State<Workout> {
       widget.name = widget.workoutModel.name;
       widget.emoji = widget.workoutModel.emoji;
       widget.tags = widget.workoutModel.tags;
+      widget.type = widget.workoutModel.type;
+      widget.setData = widget.workoutModel.setData;
     }
     switch (widget.workoutState) {
       case WorkoutState.onWorkoutList:
@@ -117,6 +141,7 @@ class _WorkoutListPageWorkoutState extends State<WorkoutListPageWorkout> {
         selected: widget.widget.isSelected,
         selectedTileColor: Colors.blue,
         contentPadding: EdgeInsets.symmetric(vertical: 0),
+        isThreeLine: true,
         leading: Text(
           widget.widget.emoji,
           style: TextStyle(fontSize: 40),
@@ -129,35 +154,46 @@ class _WorkoutListPageWorkoutState extends State<WorkoutListPageWorkout> {
             color: titleColor,
           ),
         ),
-        subtitle: Row(
-            children: widget.widget.tags
-                .map((tag) => Text(
-                      '#$tag ',
-                      style: TextStyle(
-                        fontSize: 15.0,
-                        color: subTitleColor,
-                      ),
-                    ))
-                .toList()),
-        trailing: IconButton(
-          onPressed: () => setState(() {
-            widget.widget.isSelected = !widget.widget.isSelected;
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+                children: widget.widget.tags
+                    .map((tag) => Text(
+                          '#$tag ',
+                          style: TextStyle(
+                            fontSize: 15.0,
+                            color: subTitleColor,
+                          ),
+                        ))
+                    .toList()),
+            widget.widget.workoutStateText(widget.widget.type),
+          ],
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              onPressed: () => setState(() {
+                widget.widget.isSelected = !widget.widget.isSelected;
 
-            widget.widget.isSelected
-                ? {
-                    containerColor = Colors.blue,
-                    titleColor = Colors.white,
-                    subTitleColor = Colors.white,
-                  }
-                : {
-                    containerColor = Colors.white,
-                    titleColor = Colors.black,
-                    subTitleColor = Colors.grey,
-                  };
-          }),
-          icon: Icon(Icons.playlist_add_rounded),
-          color: Colors.black,
-          iconSize: 35.0,
+                widget.widget.isSelected
+                    ? {
+                        containerColor = Colors.blue,
+                        titleColor = Colors.white,
+                        subTitleColor = Colors.white,
+                      }
+                    : {
+                        containerColor = Colors.white,
+                        titleColor = Colors.black,
+                        subTitleColor = Colors.grey,
+                      };
+              }),
+              icon: Icon(Icons.playlist_add_rounded),
+              color: Colors.black,
+              iconSize: 35.0,
+            ),
+          ],
         ),
       ),
     );
@@ -181,6 +217,110 @@ class _RoutinedWorkoutState extends State<RoutinedWorkout> {
   Color containerColor = Colors.white;
   Color titleColor = Colors.black;
   Color subTitleColor = Colors.grey;
+  List<Widget> setList = [
+    Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Text('Set 1'),
+        Row(
+          children: [
+            Container(
+              width: 32,
+              child: TextField(
+                maxLength: 2,
+                selectionHeightStyle: BoxHeightStyle.tight,
+                textAlign: TextAlign.center,
+                decoration: InputDecoration(
+                  isDense: true,
+                  contentPadding: EdgeInsets.fromLTRB(0.0, 0, 0, 0.0),
+                  disabledBorder: InputBorder.none,
+                  counterText: '',
+                ),
+              ),
+            ),
+            Text('KG'),
+          ],
+        ),
+        Row(
+          children: [
+            Container(
+              width: 32,
+              child: TextField(
+                maxLength: 2,
+                selectionHeightStyle: BoxHeightStyle.tight,
+                textAlign: TextAlign.center,
+                decoration: InputDecoration(
+                  isDense: true,
+                  contentPadding: EdgeInsets.fromLTRB(0.0, 0, 0, 0.0),
+                  disabledBorder: InputBorder.none,
+                  counterText: '',
+                ),
+              ),
+            ),
+            Text('회'),
+          ],
+        ),
+      ],
+    ),
+  ];
+
+  void addSetList() {
+    setState(() {
+      setList.add(
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Text('Set ${setList.length + 1}'),
+            Row(
+              children: [
+                Container(
+                  width: 32,
+                  child: TextField(
+                    maxLength: 2,
+                    selectionHeightStyle: BoxHeightStyle.tight,
+                    textAlign: TextAlign.center,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      contentPadding: EdgeInsets.fromLTRB(0.0, 0, 0, 0.0),
+                      disabledBorder: InputBorder.none,
+                      counterText: '',
+                    ),
+                  ),
+                ),
+                Text('KG'),
+              ],
+            ),
+            Row(
+              children: [
+                Container(
+                  width: 32,
+                  child: TextField(
+                    maxLength: 2,
+                    selectionHeightStyle: BoxHeightStyle.tight,
+                    textAlign: TextAlign.center,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      contentPadding: EdgeInsets.fromLTRB(0.0, 0, 0, 0.0),
+                      disabledBorder: InputBorder.none,
+                      counterText: '',
+                    ),
+                  ),
+                ),
+                Text('회'),
+              ],
+            ),
+          ],
+        ),
+      );
+    });
+  }
+
+  void removeSetList() {
+    setState(() {
+      if (setList.isNotEmpty) setList.removeLast();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -201,8 +341,40 @@ class _RoutinedWorkoutState extends State<RoutinedWorkout> {
           ),
         ],
       ),
-      child: ListTile(
-          contentPadding: EdgeInsets.symmetric(vertical: 0),
+      child: ExpansionTile(
+          tilePadding: EdgeInsets.symmetric(vertical: 0),
+          children: [
+            Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: setList.length,
+                      itemBuilder: (context, index) {
+                        return setList[index];
+                      }),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Expanded(
+                          child: OutlinedButton(
+                              onPressed: () => removeSetList(),
+                              child: Text('제거'))),
+                      Expanded(
+                        child: ElevatedButton(
+                            onPressed: () {
+                              addSetList();
+                            },
+                            child: Text('세트 추가')),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            )
+          ],
           leading: Text(
             widget.widget.emoji,
             style: TextStyle(fontSize: 40),
@@ -215,17 +387,28 @@ class _RoutinedWorkoutState extends State<RoutinedWorkout> {
               color: titleColor,
             ),
           ),
-          subtitle: Row(
-              children: widget.widget.tags
-                  .map((tag) => Text(
-                        '#$tag ',
-                        style: TextStyle(
-                          fontSize: 15.0,
-                          color: subTitleColor,
-                        ),
-                      ))
-                  .toList()),
-          trailing: widget.widget._popup(context)),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                  children: widget.widget.tags
+                      .map((tag) => Text(
+                            '#$tag ',
+                            style: TextStyle(
+                              fontSize: 15.0,
+                              color: subTitleColor,
+                            ),
+                          ))
+                      .toList()),
+              widget.widget.workoutStateText(widget.widget.type),
+            ],
+          ),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              widget.widget._popup(context),
+            ],
+          )),
     );
   }
 }
