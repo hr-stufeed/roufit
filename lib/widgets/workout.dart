@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:hr_app/models/workout_model.dart';
 import 'package:hr_app/models/workout_set.dart';
 import 'package:hr_app/data/constants.dart';
@@ -267,50 +268,7 @@ class _RoutinedWorkoutState extends State<RoutinedWorkout> {
   void addSetList() {
     setState(() {
       setList.add(
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Text('Set ${setList.length + 1}'),
-            Row(
-              children: [
-                Container(
-                  width: 32,
-                  child: TextField(
-                    maxLength: 2,
-                    selectionHeightStyle: BoxHeightStyle.tight,
-                    textAlign: TextAlign.center,
-                    decoration: InputDecoration(
-                      isDense: true,
-                      contentPadding: EdgeInsets.fromLTRB(0.0, 0, 0, 0.0),
-                      disabledBorder: InputBorder.none,
-                      counterText: '',
-                    ),
-                  ),
-                ),
-                Text('KG'),
-              ],
-            ),
-            Row(
-              children: [
-                Container(
-                  width: 32,
-                  child: TextField(
-                    maxLength: 2,
-                    selectionHeightStyle: BoxHeightStyle.tight,
-                    textAlign: TextAlign.center,
-                    decoration: InputDecoration(
-                      isDense: true,
-                      contentPadding: EdgeInsets.fromLTRB(0.0, 0, 0, 0.0),
-                      disabledBorder: InputBorder.none,
-                      counterText: '',
-                    ),
-                  ),
-                ),
-                Text('회'),
-              ],
-            ),
-          ],
-        ),
+        SetInputField(setNumber: setList.length + 1, setList: setList),
       );
     });
   }
@@ -409,6 +367,97 @@ class _RoutinedWorkoutState extends State<RoutinedWorkout> {
               widget.widget._popup(context),
             ],
           )),
+    );
+  }
+}
+
+class SetInputField extends StatefulWidget {
+  SetInputField({
+    Key key,
+    @required this.setList,
+    @required this.setNumber,
+  }) : super(key: key);
+
+  final List<Widget> setList;
+  final int setNumber;
+  WorkoutSet workoutSetData = WorkoutSet(weight: 0);
+  @override
+  _SetInputFieldState createState() => _SetInputFieldState();
+}
+
+class _SetInputFieldState extends State<SetInputField> {
+  TextEditingController weight;
+  TextEditingController rep;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    try {
+      print(widget.workoutSetData.weight.toString());
+      weight =
+          TextEditingController(text: widget.workoutSetData.weight.toString());
+    } catch (e) {}
+    super.didChangeDependencies();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Text('Set ${widget.setNumber}'),
+        Row(
+          children: [
+            Container(
+              width: 32,
+              child: TextField(
+                controller: weight,
+                keyboardType: TextInputType.number,
+                maxLength: 2,
+                selectionHeightStyle: BoxHeightStyle.tight,
+                onChanged: (value) {
+                  try {
+                    widget.workoutSetData.weight = int.parse(value);
+                  } catch (e) {
+                    widget.workoutSetData.weight = 0;
+                  }
+                },
+                textAlign: TextAlign.center,
+                decoration: InputDecoration(
+                  isDense: true,
+                  contentPadding: EdgeInsets.fromLTRB(0.0, 0, 0, 0.0),
+                  disabledBorder: InputBorder.none,
+                  counterText: '',
+                ),
+              ),
+            ),
+            Text('KG'),
+          ],
+        ),
+        Row(
+          children: [
+            Container(
+              width: 32,
+              child: TextField(
+                maxLength: 2,
+                selectionHeightStyle: BoxHeightStyle.tight,
+                textAlign: TextAlign.center,
+                decoration: InputDecoration(
+                  isDense: true,
+                  contentPadding: EdgeInsets.fromLTRB(0.0, 0, 0, 0.0),
+                  disabledBorder: InputBorder.none,
+                  counterText: '',
+                ),
+              ),
+            ),
+            Text('회'),
+          ],
+        ),
+      ],
     );
   }
 }
