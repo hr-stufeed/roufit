@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
+import 'package:hr_app/models/timer_provider.dart';
 import 'package:hr_app/models/workout_model.dart';
+import 'package:provider/provider.dart';
 
 class Routine extends StatefulWidget {
   final String autoKey;
@@ -132,8 +134,11 @@ class HomePageRoutine extends StatelessWidget {
                 color: Colors.white,
                 size: 40.0,
               ),
-              onPressed: () =>
-                  Navigator.pushNamed(context, 'Routine_start_page'),
+              onPressed: () {
+                Navigator.pushNamed(context, 'Routine_start_page');
+                print('setTimer');
+                Provider.of<TimerProvider>(context, listen: false).timerStart();
+              }
             )
           ],
         ),

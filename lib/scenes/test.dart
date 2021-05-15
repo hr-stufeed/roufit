@@ -15,15 +15,15 @@ class _TestState extends State<Test> {
 
     _rows = List<ReorderableWidget>.generate(
         10,
-            (int index) => ReorderableWidget(
-          reorderable: true,
-          key: ValueKey(index),
-          child: Container(
-              width: double.infinity,
-              child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('This is row $index', textScaleFactor: 1.5))),
-        ));
+        (int index) => ReorderableWidget(
+              reorderable: true,
+              key: ValueKey(index),
+              child: Container(
+                  width: double.infinity,
+                  child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text('This is row $index', textScaleFactor: 1.5))),
+            ));
 
     _rows += <ReorderableWidget>[
       ReorderableWidget(
@@ -35,16 +35,16 @@ class _TestState extends State<Test> {
 
     _rows += List<ReorderableWidget>.generate(
         40,
-            (int index) => ReorderableWidget(
-          reorderable: true,
-          key: ValueKey(11 + index),
-          child: Container(
-            width: double.infinity,
-            child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text('This is row $index', textScaleFactor: 1.5)),
-          ),
-        ));
+        (int index) => ReorderableWidget(
+              reorderable: true,
+              key: ValueKey(11 + index),
+              child: Container(
+                width: double.infinity,
+                child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text('This is row $index', textScaleFactor: 1.5)),
+              ),
+            ));
   }
 
   @override
