@@ -1,26 +1,33 @@
 import 'dart:ui';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:hr_app/models/routine_provider.dart';
 import 'package:hr_app/models/workout_model.dart';
 import 'package:hr_app/models/workout_set.dart';
 import 'package:hr_app/data/constants.dart';
+import 'package:hr_app/widgets/routine.dart';
+import 'package:provider/provider.dart';
 
 class Workout extends StatefulWidget {
   WorkoutModel workoutModel;
+  Routine parentRoutine;
   Function deleteWorkoutCallback;
   String autoKey;
+  String routineAutoKey;
+
   String name;
   String emoji;
   List<String> tags;
   WorkoutType type;
   List<WorkoutSet> setData = [];
-
+  int thisWorkoutIndexInRoutine;
   Workout({
     @required this.workoutModel,
+    this.routineAutoKey,
     this.deleteWorkoutCallback,
   });
+
   bool isSelected = false;
   WorkoutState workoutState = WorkoutState.onWorkoutList;
 
@@ -67,6 +74,19 @@ class Workout extends StatefulWidget {
       );
   }
 
+  void retrieveSetDataCallback(
+      List<WorkoutSet> setDataFromAddSetPage, int index) {
+    setData = setDataFromAddSetPage;
+    print('부모 루틴의 autoKey = ${parentRoutine.autoKey}');
+    print(thisWorkoutIndexInRoutine);
+
+    parentRoutine.workoutModelList[index].setData = setData;
+    print('이 workout의 setData : ${setData[0].weight}');
+
+    print(
+        '부모루틴의 setData: ${parentRoutine.workoutModelList[0].setData[0].weight}');
+  }
+
   @override
   _WorkoutState createState() => _WorkoutState();
 }
@@ -75,6 +95,25 @@ class _WorkoutState extends State<Workout> {
   Color containerColor = Colors.white;
   Color titleColor = Colors.black;
   Color subTitleColor = Colors.grey;
+
+  @override
+  void didChangeDependencies() {
+    try {
+      widget.autoKey = widget.workoutModel.autoKey;
+
+      widget.parentRoutine =
+          Provider.of<RoutineProvider>(context, listen: false)
+              .find(widget.routineAutoKey);
+      for (int i = 0; i < widget.parentRoutine.workoutModelList.length; i++) {
+        if (widget.autoKey ==
+            widget.parentRoutine.workoutModelList[i].autoKey) {
+          widget.thisWorkoutIndexInRoutine = i;
+        }
+      }
+    } catch (e) {}
+
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -203,13 +242,12 @@ class _WorkoutListPageWorkoutState extends State<WorkoutListPageWorkout> {
 
 // 루틴에 포함된 운동 리스트에 운동을 띄울 때
 class RoutinedWorkout extends StatefulWidget {
-  const RoutinedWorkout({
+  RoutinedWorkout({
     Key key,
     @required this.widget,
   }) : super(key: key);
 
   final Workout widget;
-
   @override
   _RoutinedWorkoutState createState() => _RoutinedWorkoutState();
 }
@@ -218,252 +256,128 @@ class _RoutinedWorkoutState extends State<RoutinedWorkout> {
   Color containerColor = Colors.white;
   Color titleColor = Colors.black;
   Color subTitleColor = Colors.grey;
-  List<Widget> setList = [
-    Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Text('Set 1'),
-        Row(
-          children: [
-            Container(
-              width: 32,
-              child: TextField(
-                maxLength: 2,
-                selectionHeightStyle: BoxHeightStyle.tight,
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(
-                  isDense: true,
-                  contentPadding: EdgeInsets.fromLTRB(0.0, 0, 0, 0.0),
-                  disabledBorder: InputBorder.none,
-                  counterText: '',
-                ),
-              ),
-            ),
-            Text('KG'),
-          ],
-        ),
-        Row(
-          children: [
-            Container(
-              width: 32,
-              child: TextField(
-                maxLength: 2,
-                selectionHeightStyle: BoxHeightStyle.tight,
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(
-                  isDense: true,
-                  contentPadding: EdgeInsets.fromLTRB(0.0, 0, 0, 0.0),
-                  disabledBorder: InputBorder.none,
-                  counterText: '',
-                ),
-              ),
-            ),
-            Text('회'),
-          ],
-        ),
-      ],
-    ),
-  ];
+  List<Widget> setList = [];
 
-  void addSetList() {
-    setState(() {
-      setList.add(
-        SetInputField(setNumber: setList.length + 1, setList: setList),
-      );
-    });
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   setList = widget.setData
+  //       .map((workoutSet) => SetInputField(
+  //             setNumber: setList.length + 1,
+  //             weight: workoutSet.weight,
+  //             repCount: workoutSet.repCount,
+  //           ))
+  //       .toList();
+  //   print('zzh:$setList');
+  //   super.didChangeDependencies();
+  // }
 
-  void removeSetList() {
-    setState(() {
-      if (setList.isNotEmpty) setList.removeLast();
-    });
-  }
+  // void addSetList() {
+  //   setState(() {
+  //     setList.add(
+  //       SetInputField(
+  //         setNumber: setList.length + 1,
+  //         addSetDataCallback: widget.addSetDataCallback,
+  //       ),
+  //     );
+  //   });
+  // }
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 8),
-      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      decoration: BoxDecoration(
-        color: containerColor,
-        borderRadius: kBorderRadius,
-        boxShadow: [
-          BoxShadow(
-            offset: Offset(0, 1),
-            blurRadius: 2,
-            color: Color.fromRGBO(0, 0, 0, 0.25),
-          ),
-          BoxShadow(
-            offset: Offset(0, -2),
-            color: Colors.white,
-          ),
-        ],
-      ),
-      child: ExpansionTile(
-          tilePadding: EdgeInsets.symmetric(vertical: 0),
-          children: [
-            Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: setList.length,
-                      itemBuilder: (context, index) {
-                        return setList[index];
-                      }),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Expanded(
-                          child: OutlinedButton(
-                              onPressed: () => removeSetList(),
-                              child: Text('제거'))),
-                      Expanded(
-                        child: ElevatedButton(
-                            onPressed: () {
-                              addSetList();
-                            },
-                            child: Text('세트 추가')),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            )
-          ],
-          leading: Text(
-            widget.widget.emoji,
-            style: TextStyle(fontSize: 40),
-          ),
-          title: Text(
-            widget.widget.name,
-            style: TextStyle(
-              fontSize: 20.0,
-              fontWeight: FontWeight.bold,
-              color: titleColor,
-            ),
-          ),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                  children: widget.widget.tags
-                      .map((tag) => Text(
-                            '#$tag ',
-                            style: TextStyle(
-                              fontSize: 15.0,
-                              color: subTitleColor,
-                            ),
-                          ))
-                      .toList()),
-              widget.widget.workoutStateText(widget.widget.type),
-            ],
-          ),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              widget.widget._popup(context),
-            ],
-          )),
-    );
-  }
-}
-
-class SetInputField extends StatefulWidget {
-  SetInputField({
-    Key key,
-    @required this.setList,
-    @required this.setNumber,
-  }) : super(key: key);
-
-  final List<Widget> setList;
-  final int setNumber;
-  WorkoutSet workoutSetData = WorkoutSet(weight: 0);
-  @override
-  _SetInputFieldState createState() => _SetInputFieldState();
-}
-
-class _SetInputFieldState extends State<SetInputField> {
-  TextEditingController weight;
-  TextEditingController rep;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
+  // void removeSetList() {
+  //   setState(() {
+  //     if (setList.isNotEmpty) setList.removeLast();
+  //   });
+  // }
   @override
   void didChangeDependencies() {
-    try {
-      print(widget.workoutSetData.weight.toString());
-      weight =
-          TextEditingController(text: widget.workoutSetData.weight.toString());
-    } catch (e) {}
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Text('Set ${widget.setNumber}'),
-        Row(
-          children: [
-            Container(
-              width: 32,
-              child: TextField(
-                controller: weight,
-                keyboardType: TextInputType.number,
-                maxLength: 2,
-                selectionHeightStyle: BoxHeightStyle.tight,
-                onChanged: (value) {
-                  try {
-                    widget.workoutSetData.weight = int.parse(value);
-                  } catch (e) {
-                    widget.workoutSetData.weight = 0;
-                  }
-                },
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(
-                  isDense: true,
-                  contentPadding: EdgeInsets.fromLTRB(0.0, 0, 0, 0.0),
-                  disabledBorder: InputBorder.none,
-                  counterText: '',
-                ),
-              ),
+    return InkWell(
+      onTap: () => Navigator.pushNamed(context, 'Workout_add_set_page',
+          arguments: AddSetPageArgument(
+            autoKey: widget.widget.autoKey,
+            workoutModel: widget.widget.workoutModel,
+            setData: widget.widget.setData,
+            retrieveSetDataCallback: widget.widget.retrieveSetDataCallback,
+            thisWorkoutIndexInRoutine: widget.widget.thisWorkoutIndexInRoutine,
+          )),
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 8),
+        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        decoration: BoxDecoration(
+          color: containerColor,
+          borderRadius: kBorderRadius,
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(0, 1),
+              blurRadius: 2,
+              color: Color.fromRGBO(0, 0, 0, 0.25),
             ),
-            Text('KG'),
+            BoxShadow(
+              offset: Offset(0, -2),
+              color: Colors.white,
+            ),
           ],
         ),
-        Row(
-          children: [
-            Container(
-              width: 32,
-              child: TextField(
-                maxLength: 2,
-                selectionHeightStyle: BoxHeightStyle.tight,
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(
-                  isDense: true,
-                  contentPadding: EdgeInsets.fromLTRB(0.0, 0, 0, 0.0),
-                  disabledBorder: InputBorder.none,
-                  counterText: '',
-                ),
+        child: ListTile(
+            leading: Text(
+              widget.widget.emoji,
+              style: TextStyle(fontSize: 40),
+            ),
+            title: Text(
+              widget.widget.name,
+              style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+                color: titleColor,
               ),
             ),
-            Text('회'),
-          ],
-        ),
-      ],
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                    children: widget.widget.tags
+                        .map((tag) => Text(
+                              '#$tag ',
+                              style: TextStyle(
+                                fontSize: 15.0,
+                                color: subTitleColor,
+                              ),
+                            ))
+                        .toList()),
+                widget.widget.workoutStateText(widget.widget.type),
+              ],
+            ),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                widget.widget._popup(context),
+              ],
+            )),
+      ),
     );
   }
 }
 
-//홈페이지에 운동이 띄워질 때 리턴 값
+class AddSetPageArgument {
+  final String autoKey;
+  final WorkoutModel workoutModel;
+  final List<WorkoutSet> setData;
+  final Function retrieveSetDataCallback;
+  int thisWorkoutIndexInRoutine;
 
+  AddSetPageArgument({
+    this.autoKey = ' ',
+    this.workoutModel,
+    this.setData,
+    this.retrieveSetDataCallback,
+    this.thisWorkoutIndexInRoutine,
+  });
+}
+
+//홈페이지에 운동이 띄워질 때 리턴 값
 class HomePageWorkout extends StatefulWidget {
   const HomePageWorkout({
     Key key,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/models/workout_model.dart';
+import 'package:hr_app/models/workout_set.dart';
 
 class Routine extends StatefulWidget {
   final String autoKey;
@@ -173,12 +174,14 @@ class WorkoutPageArgument {
   final String name;
   final Color color;
   final List<WorkoutModel> workoutModelList;
+  final List<WorkoutSet> setData;
   final List<String> days;
 
   WorkoutPageArgument({
     this.autoKey = ' ',
     this.name = ' ',
     this.workoutModelList,
+    this.setData,
     this.days,
     this.color,
   });

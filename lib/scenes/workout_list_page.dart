@@ -14,17 +14,24 @@ class WorkoutListPage extends StatefulWidget {
 
 class _WorkoutListPageState extends State<WorkoutListPage> {
   List<String> selectedWorkouts = [];
-
+  List<Workout> copiedList;
+  Function addWorkoutFunction;
   @override
-  Widget build(BuildContext context) {
+  void didChangeDependencies() {
     AddWorkoutArgument args = ModalRoute.of(context).settings.arguments;
+    addWorkoutFunction = args.addWorkoutFunction;
     List<WorkoutModel> copiedModelList =
         Provider.of<WorkoutProvider>(context).copyList();
-    List<Workout> copiedList = copiedModelList
+    copiedList = copiedModelList
         .map((workoutModel) => Workout(
               workoutModel: workoutModel,
             ))
         .toList();
+    super.didChangeDependencies();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return SafeArea(
       child: Material(
         child: Padding(
@@ -61,7 +68,11 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
               BottomFixedButton(
                   text: '완료',
                   tap: () {
-                    args.addWorkoutFunction(copiedList
+                    print(
+                        'fff : ${copiedList.where((workout) => workout.isSelected).toList()}');
+                    print(
+                        'fff : ${copiedList.where((workout) => workout.isSelected).toList().map((e) => e.autoKey).toList()}');
+                    addWorkoutFunction(copiedList
                         .where((workout) => workout.isSelected)
                         .toList()
                         .map((e) => e.autoKey)

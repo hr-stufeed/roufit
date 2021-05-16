@@ -5,10 +5,12 @@ import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/models/routine_provider.dart';
 import 'package:hr_app/models/timer_provider.dart';
 import 'package:hr_app/models/workout_provider.dart';
+import 'package:hr_app/models/workout_set.dart';
 
 import 'package:hr_app/scenes/home_page.dart';
 import 'package:hr_app/scenes/mypage.dart';
 import 'package:hr_app/scenes/routine/routine_create_page.dart';
+import 'package:hr_app/scenes/workout_add_set_page.dart';
 import 'package:hr_app/scenes/workout_list_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hr_app/scenes/routine/routine_start_page.dart';
@@ -27,6 +29,7 @@ void main() async {
   Hive.registerAdapter(RoutineModelAdapter());
   Hive.registerAdapter(WorkoutModelAdapter());
   Hive.registerAdapter(WorkoutTypeAdapter());
+  Hive.registerAdapter(WorkoutSetAdapter());
 
   runApp(MyApp());
 }
@@ -68,6 +71,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
           'Routine_modify_page': (context) => RoutineModifyPage(),
           'Workout_list_page': (context) => WorkoutListPage(),
           'Workout_create_page': (context) => WorkoutCreatePage(),
+          'Workout_add_set_page': (context) => WorkoutAddSetPage(),
           'MyPage': (context) => MyPage(),
         },
         theme: ThemeData(

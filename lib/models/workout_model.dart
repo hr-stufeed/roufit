@@ -12,7 +12,7 @@ class WorkoutModel {
   @HiveField(2)
   final String emoji;
   @HiveField(3)
-  final List<WorkoutSet> setData;
+  List<WorkoutSet> setData;
   @HiveField(4)
   final List<String> tags;
   @HiveField(5)

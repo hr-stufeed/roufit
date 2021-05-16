@@ -149,6 +149,7 @@ class WorkoutProvider with ChangeNotifier {
   }
 
   WorkoutModel find(String key) {
+    print('find 시 들어오는 key : $key');
     return _workouts.where((workout) => workout.autoKey == key).toList()[0];
   }
 

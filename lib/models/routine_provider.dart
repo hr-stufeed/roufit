@@ -107,7 +107,6 @@ class RoutineProvider with ChangeNotifier {
         workoutModelList: workoutModelList,
       ),
     );
-    print(_box.get(autoKey).workoutModelList);
     notifyListeners();
   }
 

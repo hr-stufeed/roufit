@@ -68,18 +68,24 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage> {
 // 복수 선택한 운동들의 키를 받아오는 콜백함수
   void addWorkoutCallback(List<String> workoutKeys) {
     setState(() {
-      workoutKeys.forEach((e) {
-        // 전역 운동 리스트에서 키를 사용해 운동 모델을 뽑아온다.
-        var selectedWorkoutModel =
-            Provider.of<WorkoutProvider>(context, listen: false).find(e);
-        // 로컬 변수 운동 모델 리스트에 해당 운동 모델 저장한다.
-        workoutModelList.add(selectedWorkoutModel);
-        // 선택한 운동 모델로 운동 위젯 생성한다.
-        Workout newWorkout = Workout(workoutModel: selectedWorkoutModel);
-        newWorkout.workoutState = WorkoutState.onRoutine;
-        // 로컬 변수 운동 위젯 리스트에 삽입한다.
-        workoutList.add(newWorkout);
-      });
+      try {
+        workoutKeys.forEach((e) {
+          // 전역 운동 리스트에서 키를 사용해 운동 모델을 뽑아온다.
+          var selectedWorkoutModel =
+              Provider.of<WorkoutProvider>(context, listen: false).find(e);
+          // 로컬 변수 운동 모델 리스트에 해당 운동 모델 저장한다.
+          workoutModelList.add(selectedWorkoutModel);
+          // 선택한 운동 모델로 운동 위젯 생성한다.
+          Workout newWorkout = Workout(workoutModel: selectedWorkoutModel);
+          newWorkout.workoutState = WorkoutState.onRoutine;
+          newWorkout.routineAutoKey = autoKey;
+          // 로컬 변수 운동 위젯 리스트에 삽입한다.
+          workoutList.add(newWorkout);
+        });
+      } catch (e) {
+        print('addworkout error : $e');
+      }
+      ;
     });
   }
 
@@ -92,9 +98,11 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage> {
   }
 
   List<Workout> createWorkoutList(List<WorkoutModel> list) {
+    print('생성시 부여되는 루틴 키 : $autoKey');
     return list
         .map((workoutModel) => Workout(
               workoutModel: workoutModel,
+              routineAutoKey: autoKey,
             ))
         .toList();
   }
@@ -102,6 +110,11 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage> {
   @override
   void didChangeDependencies() {
     WorkoutPageArgument args = ModalRoute.of(context).settings.arguments;
+    name = args.name;
+    autoKey = args.autoKey;
+    days = args.days;
+    color = args.color;
+
     displayedRoutine = Provider.of<RoutineProvider>(context).find(args.autoKey);
     workoutModelList = Provider.of<RoutineProvider>(context)
         .find(args.autoKey)
@@ -113,10 +126,7 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage> {
       w.workoutState = WorkoutState.onRoutine;
       w.deleteWorkoutCallback = deleteWorkoutCallback;
     });
-    name = args.name;
-    autoKey = args.autoKey;
-    days = args.days;
-    color = args.color;
+
     super.didChangeDependencies();
   }
 
@@ -178,6 +188,7 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage> {
                 BottomFixedButton(
                   text: '저장하기',
                   tap: () {
+                    //print(workoutModelList[0].setData[0].weight);
                     Provider.of<RoutineProvider>(context, listen: false)
                         .saveWorkout(autoKey, workoutModelList);
                     Navigator.popUntil(context, (route) => route.isFirst);

@@ -20,6 +20,7 @@ class _HomePageState extends State<HomePage> {
     return list
         .map((workoutModel) => Workout(
               workoutModel: workoutModel,
+              routineAutoKey: frontRoutine.autoKey,
             ))
         .toList();
   }
