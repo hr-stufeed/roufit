@@ -65,7 +65,9 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text('😊', style: kRoutineTitleStyle),
-                                    SizedBox(height: 16,),
+                                    SizedBox(
+                                      height: 16,
+                                    ),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
@@ -182,8 +184,9 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
                           ),
                         ],
                       ),
-                      IconButton(onPressed: null, icon: Icon(Icons.arrow_forward_ios_rounded)
-                      )
+                      IconButton(
+                          onPressed: null,
+                          icon: Icon(Icons.arrow_forward_ios_rounded))
                     ],
                   ),
                 ),
