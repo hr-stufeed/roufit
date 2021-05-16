@@ -12,6 +12,16 @@ const kTimerTitleStyle = TextStyle(
   fontWeight: FontWeight.bold,
   color: Colors.black,
 );
+const kUndoStyle = TextStyle(
+  fontSize: 24.0,
+  fontWeight: FontWeight.bold,
+  color: Colors.black,
+);
+const kDoneStyle = TextStyle(
+  fontSize: 24.0,
+  fontWeight: FontWeight.bold,
+  color: Colors.white,
+);
 const kPageTitleStyle = TextStyle(
   fontSize: 32.0,
   fontWeight: FontWeight.bold,

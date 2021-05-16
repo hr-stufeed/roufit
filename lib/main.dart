@@ -89,6 +89,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
           child: Scaffold(
             body: SafeArea(
               child: TabBarView(
+                physics: NeverScrollableScrollPhysics(),
                 controller: _tabController,
                 children: [
                   HomePage(),

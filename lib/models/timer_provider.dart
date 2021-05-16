@@ -35,6 +35,9 @@ class TimerProvider with ChangeNotifier {
   timerStart() {
     playBtn = btnStop;
     _routineTimer = Duration(seconds: 0);
+    if(_timer.runtimeType != Null){
+      _timer.cancel();
+    }
     _timer = Timer.periodic(Duration(seconds: 1), _tick);
   }
 
@@ -43,3 +46,4 @@ class TimerProvider with ChangeNotifier {
     notifyListeners();
   }
 }
+
