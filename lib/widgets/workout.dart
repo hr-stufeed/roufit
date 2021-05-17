@@ -52,24 +52,19 @@ class Workout extends StatefulWidget {
       );
   Widget workoutStateText(WorkoutType type) {
     Color subTitleColor = Colors.grey;
-    if (type == WorkoutType.setOnly)
+    if (type == WorkoutType.setWeight)
       return Text(
         '@세트',
         style: TextStyle(color: subTitleColor),
       );
-    else if (type == WorkoutType.durationOnly)
+    else if (type == WorkoutType.durationWeight)
       return Text(
         '@시간',
         style: TextStyle(color: subTitleColor),
       );
-    else if (type == WorkoutType.setWeight)
+    else if (type == WorkoutType.none)
       return Text(
-        '@세트+무게',
-        style: TextStyle(color: subTitleColor),
-      );
-    else
-      return Text(
-        '@시간+무게',
+        '세트를 추가해주세요',
         style: TextStyle(color: subTitleColor),
       );
   }
@@ -181,7 +176,7 @@ class _WorkoutListPageWorkoutState extends State<WorkoutListPageWorkout> {
         selected: widget.widget.isSelected,
         selectedTileColor: Colors.blue,
         contentPadding: EdgeInsets.symmetric(vertical: 0),
-        isThreeLine: true,
+        isThreeLine: false,
         leading: Text(
           widget.widget.emoji,
           style: TextStyle(fontSize: 40),
@@ -207,7 +202,6 @@ class _WorkoutListPageWorkoutState extends State<WorkoutListPageWorkout> {
                           ),
                         ))
                     .toList()),
-            widget.widget.workoutStateText(widget.widget.type),
           ],
         ),
         trailing: Row(
@@ -257,36 +251,6 @@ class _RoutinedWorkoutState extends State<RoutinedWorkout> {
   Color titleColor = Colors.black;
   Color subTitleColor = Colors.grey;
   List<Widget> setList = [];
-
-  // @override
-  // void didChangeDependencies() {
-  //   setList = widget.setData
-  //       .map((workoutSet) => SetInputField(
-  //             setNumber: setList.length + 1,
-  //             weight: workoutSet.weight,
-  //             repCount: workoutSet.repCount,
-  //           ))
-  //       .toList();
-  //   print('zzh:$setList');
-  //   super.didChangeDependencies();
-  // }
-
-  // void addSetList() {
-  //   setState(() {
-  //     setList.add(
-  //       SetInputField(
-  //         setNumber: setList.length + 1,
-  //         addSetDataCallback: widget.addSetDataCallback,
-  //       ),
-  //     );
-  //   });
-  // }
-
-  // void removeSetList() {
-  //   setState(() {
-  //     if (setList.isNotEmpty) setList.removeLast();
-  //   });
-  // }
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();

@@ -33,7 +33,7 @@ const kPageSubTitleStyle = TextStyle(
   color: Colors.black,
 );
 const kTopBarTextStyle = TextStyle(
-  fontSize: 16.0,
+  fontSize: 22.0,
   fontWeight: FontWeight.bold,
   color: Colors.black,
 );
@@ -82,13 +82,11 @@ enum WorkoutState {
 @HiveType(typeId: 3)
 enum WorkoutType {
   @HiveField(0)
-  setOnly,
+  none,
   @HiveField(1)
-  durationOnly,
+  durationWeight,
   @HiveField(2)
   setWeight,
-  @HiveField(3)
-  durationWeight,
 }
 
 String kTodayMessage() {

@@ -14,32 +14,27 @@ class WorkoutTypeAdapter extends TypeAdapter<WorkoutType> {
   WorkoutType read(BinaryReader reader) {
     switch (reader.readByte()) {
       case 0:
-        return WorkoutType.setOnly;
+        return WorkoutType.none;
       case 1:
-        return WorkoutType.durationOnly;
+        return WorkoutType.durationWeight;
       case 2:
         return WorkoutType.setWeight;
-      case 3:
-        return WorkoutType.durationWeight;
       default:
-        return WorkoutType.setOnly;
+        return WorkoutType.none;
     }
   }
 
   @override
   void write(BinaryWriter writer, WorkoutType obj) {
     switch (obj) {
-      case WorkoutType.setOnly:
+      case WorkoutType.none:
         writer.writeByte(0);
         break;
-      case WorkoutType.durationOnly:
+      case WorkoutType.durationWeight:
         writer.writeByte(1);
         break;
       case WorkoutType.setWeight:
         writer.writeByte(2);
-        break;
-      case WorkoutType.durationWeight:
-        writer.writeByte(3);
         break;
     }
   }

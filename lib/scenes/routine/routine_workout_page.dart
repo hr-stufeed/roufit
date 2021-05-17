@@ -28,43 +28,6 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage> {
   List<String> days;
   Routine displayedRoutine;
 
-  Widget _popup(BuildContext context) => PopupMenuButton<int>(
-        icon: Icon(
-          Icons.more_horiz,
-          color: Colors.black,
-        ),
-        itemBuilder: (context) => [
-          PopupMenuItem(
-            value: 1,
-            child: Text("수정하기"),
-          ),
-          PopupMenuItem(
-            value: 2,
-            child: Text("삭제하기"),
-          ),
-        ],
-        onSelected: (value) {
-          value == 2
-              ? {
-                  Provider.of<RoutineProvider>(context, listen: false)
-                      .delete(autoKey),
-                  Navigator.pop(context),
-                }
-              : Navigator.pushNamed(
-                  context,
-                  'Routine_modify_page',
-                  arguments: ModifyArgument(
-                    isModify: true,
-                    autoKey: autoKey,
-                    name: name,
-                    color: color,
-                    days: days,
-                    workoutModelList: workoutModelList,
-                  ),
-                );
-        },
-      );
-
 // 복수 선택한 운동들의 키를 받아오는 콜백함수
   void addWorkoutCallback(List<String> workoutKeys) {
     setState(() {
@@ -147,8 +110,7 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage> {
               children: [
                 TopBar(
                   title: '루틴 만들기',
-                  hasMoreButton: true,
-                  popUpMenu: _popup(context),
+                  hasMoreButton: false,
                 ),
                 kSizedBoxBetweenItems,
                 displayedRoutine,
