@@ -23,7 +23,7 @@ class WorkoutProvider with ChangeNotifier {
       emoji: '💪',
       setData: [],
       tags: ['이두', '등'],
-      type: WorkoutType.setWeight,
+      type: WorkoutType.none,
     ),
     WorkoutModel(
       autoKey: '#3#',
@@ -31,7 +31,7 @@ class WorkoutProvider with ChangeNotifier {
       emoji: '🧍‍♂️',
       setData: [],
       tags: ['하체', '허벅지'],
-      type: WorkoutType.setWeight,
+      type: WorkoutType.none,
     ),
     WorkoutModel(
       autoKey: '#4#',
@@ -39,7 +39,7 @@ class WorkoutProvider with ChangeNotifier {
       emoji: '💪',
       setData: [],
       tags: ['등'],
-      type: WorkoutType.setWeight,
+      type: WorkoutType.none,
     ),
     WorkoutModel(
       autoKey: '#5#',
@@ -47,7 +47,7 @@ class WorkoutProvider with ChangeNotifier {
       emoji: '💪',
       setData: [],
       tags: ['가슴', '팔'],
-      type: WorkoutType.durationWeight,
+      type: WorkoutType.none,
     ),
     WorkoutModel(
       autoKey: '#6#',
@@ -55,7 +55,7 @@ class WorkoutProvider with ChangeNotifier {
       emoji: '😢',
       setData: [],
       tags: ['삼두', '등'],
-      type: WorkoutType.durationWeight,
+      type: WorkoutType.none,
     ),
     WorkoutModel(
       autoKey: '#7#',
@@ -63,7 +63,7 @@ class WorkoutProvider with ChangeNotifier {
       emoji: '💪',
       setData: [],
       tags: ['상체', '팔'],
-      type: WorkoutType.setWeight,
+      type: WorkoutType.none,
     ),
   ];
 

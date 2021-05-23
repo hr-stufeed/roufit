@@ -27,6 +27,7 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage> {
   Color color;
   List<String> days;
   Routine displayedRoutine;
+  bool haveAllSet = false;
 
 // 복수 선택한 운동들의 키를 받아오는 콜백함수
   void addWorkoutCallback(List<String> workoutKeys) {
@@ -70,6 +71,10 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage> {
         .toList();
   }
 
+  bool isWorkoutSet(List<WorkoutModel> list) {
+    return list.every((workoutModel) => workoutModel.type != WorkoutType.none);
+  }
+
   @override
   void didChangeDependencies() {
     WorkoutPageArgument args = ModalRoute.of(context).settings.arguments;
@@ -89,7 +94,7 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage> {
       w.workoutState = WorkoutState.onRoutine;
       w.deleteWorkoutCallback = deleteWorkoutCallback;
     });
-
+    haveAllSet = isWorkoutSet(workoutModelList);
     super.didChangeDependencies();
   }
 
@@ -147,15 +152,21 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage> {
                   ),
                 ),
                 kSizedBoxBetweenItems,
-                BottomFixedButton(
-                  text: '저장하기',
-                  tap: () {
-                    //print(workoutModelList[0].setData[0].weight);
-                    Provider.of<RoutineProvider>(context, listen: false)
-                        .saveWorkout(autoKey, workoutModelList);
-                    Navigator.popUntil(context, (route) => route.isFirst);
-                  },
-                ),
+                haveAllSet
+                    ? BottomFixedButton(
+                        text: '저장하기',
+                        tap: () {
+                          //print(workoutModelList[0].setData[0].weight);
+                          Provider.of<RoutineProvider>(context, listen: false)
+                              .saveWorkout(autoKey, workoutModelList);
+                          Navigator.popUntil(context, (route) => route.isFirst);
+                        },
+                      )
+                    : BottomFixedButton(
+                        text: '세트를 추가해주세요',
+                        backgroundColor: Colors.blue[100],
+                        tap: null,
+                      ),
               ],
             ),
           ),

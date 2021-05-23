@@ -4,10 +4,12 @@ import 'package:hr_app/data/constants.dart';
 class BottomFixedButton extends StatelessWidget {
   final String text;
   final Function tap;
+  final Color backgroundColor;
 
   BottomFixedButton({
     @required this.text,
     @required this.tap,
+    this.backgroundColor = Colors.blue,
   });
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,7 @@ class BottomFixedButton extends StatelessWidget {
           style: OutlinedButton.styleFrom(
               padding: EdgeInsets.all(16.0),
               shape: RoundedRectangleBorder(borderRadius: kBorderRadius),
-              backgroundColor: Colors.blue,
+              backgroundColor: backgroundColor,
               minimumSize: Size(double.maxFinite, 40.0)),
           onPressed: tap,
         ),
