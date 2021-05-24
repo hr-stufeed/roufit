@@ -24,13 +24,17 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
   Workout displayedWorkout;
   Function retrieveSetDataCallback;
   int thisWorkoutIndexInRoutine;
+  WorkoutType _workoutType;
+
   void addSetList() {
     setState(() {
       setList.add(
         SetInputField(
           setNumber: setList.length + 1,
+          workoutType: _workoutType,
           repCount: 0,
           weight: 0,
+          duration: 0,
           addSetDataCallback: addSetDataCallBack,
         ),
       );
@@ -51,45 +55,25 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
     AddSetPageArgument args = ModalRoute.of(context).settings.arguments;
     retrieveSetDataCallback = args.retrieveSetDataCallback;
     setData = args.setData;
+    _workoutType = args.type;
     thisWorkoutIndexInRoutine = args.thisWorkoutIndexInRoutine;
-    print('dfd:${args.thisWorkoutIndexInRoutine}');
+    print('ddd : ${_workoutType}');
 
-    setData.forEach((e) {
-      print('workout 내부의 setData weight : ${e.weight}');
-    });
-
-    // setList = setData
-    //     .map((workoutSet) => SetInputField(
-    //           setNumber: setList.length + 1,
-    //           repCount: workoutSet.repCount,
-    //           weight: workoutSet.weight,
-    //         ))
-    //     .toList();
     setList = List<SetInputField>.generate(
         setData.length,
         (index) => SetInputField(
               setNumber: index + 1,
+              workoutType: _workoutType,
               weight: setData[index].weight,
               repCount: setData[index].repCount,
+              duration: setData[index].duration,
             ));
-    // for (int i = 0; i < setData.length; i++) {
-    //   setList.add(SetInputField(
-    //     setNumber: i + 1,
-    //     repCount: setData[i].repCount,
-    //     weight: setData[i].weight,
-    //   ));
-    // }
 
     displayedWorkoutModel =
         Provider.of<WorkoutProvider>(context).find(args.autoKey);
     displayedWorkout = Workout(workoutModel: displayedWorkoutModel);
     displayedWorkout.workoutState = WorkoutState.onFront;
     super.didChangeDependencies();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   Widget build(BuildContext context) {
@@ -110,6 +94,39 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
                 ),
                 kSizedBoxBetweenItems,
                 displayedWorkout,
+                kSizedBoxBetweenItems,
+                // 운동 타입 선택하는 chip
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    ChoiceChip(
+                      label: Text('세트'),
+                      selected: _workoutType == WorkoutType.setWeight,
+                      onSelected: (bool selected) {
+                        setState(() {
+                          _workoutType = selected
+                              ? WorkoutType.setWeight
+                              : WorkoutType.none;
+                          setList.clear();
+                        });
+                      },
+                    ),
+                    SizedBox(width: 8.0),
+                    ChoiceChip(
+                      label: Text('시간'),
+                      selected: _workoutType == WorkoutType.durationWeight,
+                      onSelected: (bool selected) {
+                        setState(() {
+                          _workoutType = selected
+                              ? WorkoutType.durationWeight
+                              : WorkoutType.none;
+                          setList.clear();
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                kSizedBoxBetweenItems,
                 Expanded(
                   child: Stack(
                     alignment: Alignment.bottomRight,
@@ -145,8 +162,8 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
                     List<WorkoutSet> setData =
                         setList.map((e) => e.workoutSetData).toList();
                     print(thisWorkoutIndexInRoutine);
-
-                    retrieveSetDataCallback(setData, thisWorkoutIndexInRoutine);
+                    retrieveSetDataCallback(
+                        setData, thisWorkoutIndexInRoutine, _workoutType);
                     Navigator.pop(context);
                   },
                 ),
@@ -159,18 +176,24 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
   }
 }
 
+// 운동 내의 Set를 보여주는 위젯
+
 class SetInputField extends StatefulWidget {
   final int setNumber;
   final int weight;
   final int repCount;
+  final int duration;
   final Function addSetDataCallback;
-  WorkoutSet workoutSetData = WorkoutSet(repCount: 0, weight: 0);
+  WorkoutType workoutType;
+  WorkoutSet workoutSetData = WorkoutSet(repCount: 0, weight: 0, duration: 0);
 
   SetInputField({
     Key key,
     @required this.setNumber,
+    @required this.workoutType,
     this.weight,
     this.repCount,
+    this.duration,
     this.addSetDataCallback,
   }) : super(key: key);
 
@@ -181,9 +204,10 @@ class SetInputField extends StatefulWidget {
 class _SetInputFieldState extends State<SetInputField> {
   TextEditingController weightController;
   TextEditingController repController;
+  TextEditingController durationController;
+
   @override
   void initState() {
-    print('hello');
     super.initState();
   }
 
@@ -191,9 +215,12 @@ class _SetInputFieldState extends State<SetInputField> {
   void didChangeDependencies() {
     widget.workoutSetData.weight = widget.weight;
     widget.workoutSetData.repCount = widget.repCount;
+    widget.workoutSetData.duration = widget.duration;
 
     weightController = TextEditingController(text: widget.weight.toString());
     repController = TextEditingController(text: widget.repCount.toString());
+    durationController =
+        TextEditingController(text: widget.duration.toString());
 
     super.didChangeDependencies();
   }
@@ -202,6 +229,7 @@ class _SetInputFieldState extends State<SetInputField> {
   void dispose() {
     weightController.dispose();
     repController.dispose();
+    durationController.dispose();
     super.dispose();
   }
 
@@ -213,6 +241,69 @@ class _SetInputFieldState extends State<SetInputField> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Text('Set ${widget.setNumber}'),
+          widget.workoutType == WorkoutType.setWeight
+              ? Row(
+                  children: [
+                    Container(
+                      width: 32,
+                      child: TextField(
+                        maxLength: 2,
+                        controller: repController,
+                        selectionHeightStyle: BoxHeightStyle.tight,
+                        keyboardType: TextInputType.number,
+                        onChanged: (value) {
+                          try {
+                            widget.workoutSetData.repCount = int.parse(value);
+                            print(
+                                '전달하는 횟수값 : ${widget.workoutSetData.repCount}');
+                          } catch (e) {
+                            widget.workoutSetData.repCount = 0;
+                          }
+                        },
+                        onTap: () => repController.clear(),
+                        textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          contentPadding: EdgeInsets.fromLTRB(0.0, 0, 0, 0.0),
+                          disabledBorder: InputBorder.none,
+                          counterText: '',
+                        ),
+                      ),
+                    ),
+                    Text('회'),
+                  ],
+                )
+              : Row(
+                  children: [
+                    Container(
+                      width: 32,
+                      child: TextField(
+                        maxLength: 2,
+                        controller: durationController,
+                        selectionHeightStyle: BoxHeightStyle.tight,
+                        keyboardType: TextInputType.number,
+                        onChanged: (value) {
+                          try {
+                            widget.workoutSetData.duration = int.parse(value);
+                            print(
+                                '전달하는 횟수값 : ${widget.workoutSetData.duration}');
+                          } catch (e) {
+                            widget.workoutSetData.duration = 0;
+                          }
+                        },
+                        onTap: () => durationController.clear(),
+                        textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          contentPadding: EdgeInsets.fromLTRB(0.0, 0, 0, 0.0),
+                          disabledBorder: InputBorder.none,
+                          counterText: '',
+                        ),
+                      ),
+                    ),
+                    Text('분'),
+                  ],
+                ),
           Row(
             children: [
               Container(
@@ -241,36 +332,6 @@ class _SetInputFieldState extends State<SetInputField> {
                 ),
               ),
               Text('KG'),
-            ],
-          ),
-          Row(
-            children: [
-              Container(
-                width: 32,
-                child: TextField(
-                  maxLength: 2,
-                  controller: repController,
-                  selectionHeightStyle: BoxHeightStyle.tight,
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    try {
-                      widget.workoutSetData.repCount = int.parse(value);
-                      print('전달하는 횟수값 : ${widget.workoutSetData.repCount}');
-                    } catch (e) {
-                      widget.workoutSetData.repCount = 0;
-                    }
-                  },
-                  onTap: () => repController.clear(),
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(
-                    isDense: true,
-                    contentPadding: EdgeInsets.fromLTRB(0.0, 0, 0, 0.0),
-                    disabledBorder: InputBorder.none,
-                    counterText: '',
-                  ),
-                ),
-              ),
-              Text('회'),
             ],
           ),
         ],

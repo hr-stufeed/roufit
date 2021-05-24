@@ -31,6 +31,27 @@ class Workout extends StatefulWidget {
   bool isSelected = false;
   WorkoutState workoutState = WorkoutState.onWorkoutList;
 
+  Widget workoutStateText(WorkoutType type) {
+    Color subTitleColor = Colors.grey;
+    print('hhh:$type');
+
+    if (type == WorkoutType.setWeight)
+      return Text(
+        '@세트',
+        style: TextStyle(color: subTitleColor),
+      );
+    else if (type == WorkoutType.durationWeight)
+      return Text(
+        '@시간',
+        style: TextStyle(color: subTitleColor),
+      );
+    else if (type == WorkoutType.none)
+      return Text(
+        '세트를 추가해주세요',
+        style: TextStyle(color: subTitleColor),
+      );
+  }
+
   Widget _popup(BuildContext context) => PopupMenuButton<int>(
         icon: Icon(
           Icons.more_vert,
@@ -50,37 +71,6 @@ class Workout extends StatefulWidget {
           value == 2 ? deleteWorkoutCallback(autoKey) : print('hi');
         },
       );
-  Widget workoutStateText(WorkoutType type) {
-    Color subTitleColor = Colors.grey;
-    if (type == WorkoutType.setWeight)
-      return Text(
-        '@세트',
-        style: TextStyle(color: subTitleColor),
-      );
-    else if (type == WorkoutType.durationWeight)
-      return Text(
-        '@시간',
-        style: TextStyle(color: subTitleColor),
-      );
-    else if (type == WorkoutType.none)
-      return Text(
-        '세트를 추가해주세요',
-        style: TextStyle(color: subTitleColor),
-      );
-  }
-
-  void retrieveSetDataCallback(
-      List<WorkoutSet> setDataFromAddSetPage, int index) {
-    setData = setDataFromAddSetPage;
-    print('부모 루틴의 autoKey = ${parentRoutine.autoKey}');
-    print(thisWorkoutIndexInRoutine);
-
-    parentRoutine.workoutModelList[index].setData = setData;
-    print('이 workout의 setData : ${setData[0].weight}');
-
-    print(
-        '부모루틴의 setData: ${parentRoutine.workoutModelList[0].setData[0].weight}');
-  }
 
   @override
   _WorkoutState createState() => _WorkoutState();
@@ -95,7 +85,8 @@ class _WorkoutState extends State<Workout> {
   void didChangeDependencies() {
     try {
       widget.autoKey = widget.workoutModel.autoKey;
-
+      widget.type = widget.workoutModel.type;
+      print('이 운동의 타입 : ${widget.type}');
       widget.parentRoutine =
           Provider.of<RoutineProvider>(context, listen: false)
               .find(widget.routineAutoKey);
@@ -117,8 +108,8 @@ class _WorkoutState extends State<Workout> {
       widget.name = widget.workoutModel.name;
       widget.emoji = widget.workoutModel.emoji;
       widget.tags = widget.workoutModel.tags;
-      widget.type = widget.workoutModel.type;
       widget.setData = widget.workoutModel.setData;
+      widget.type = widget.workoutModel.type;
     }
     switch (widget.workoutState) {
       case WorkoutState.onWorkoutList:
@@ -251,6 +242,27 @@ class _RoutinedWorkoutState extends State<RoutinedWorkout> {
   Color titleColor = Colors.black;
   Color subTitleColor = Colors.grey;
   List<Widget> setList = [];
+
+  void retrieveSetDataCallback(List<WorkoutSet> setDataFromAddSetPage,
+      int index, WorkoutType typeFromAddSetPage) {
+    var parentWidget = widget.widget;
+    parentWidget.setData = setDataFromAddSetPage;
+    print('부모 루틴의 autoKey = ${parentWidget.parentRoutine.autoKey}');
+    print(parentWidget.thisWorkoutIndexInRoutine);
+
+    parentWidget.parentRoutine.workoutModelList[index].setData =
+        parentWidget.setData;
+    print('이 workout의 setData : ${parentWidget.setData[0].weight}');
+
+    print(
+        '부모루틴의 setData: ${parentWidget.parentRoutine.workoutModelList[0].setData[0].weight}');
+    setState(() {
+      parentWidget.type = typeFromAddSetPage;
+      parentWidget.parentRoutine.workoutModelList[index].type =
+          parentWidget.type;
+    });
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -264,7 +276,8 @@ class _RoutinedWorkoutState extends State<RoutinedWorkout> {
             autoKey: widget.widget.autoKey,
             workoutModel: widget.widget.workoutModel,
             setData: widget.widget.setData,
-            retrieveSetDataCallback: widget.widget.retrieveSetDataCallback,
+            type: widget.widget.type,
+            retrieveSetDataCallback: retrieveSetDataCallback,
             thisWorkoutIndexInRoutine: widget.widget.thisWorkoutIndexInRoutine,
           )),
       child: Container(
@@ -330,12 +343,14 @@ class AddSetPageArgument {
   final WorkoutModel workoutModel;
   final List<WorkoutSet> setData;
   final Function retrieveSetDataCallback;
+  final WorkoutType type;
   int thisWorkoutIndexInRoutine;
 
   AddSetPageArgument({
     this.autoKey = ' ',
     this.workoutModel,
     this.setData,
+    this.type,
     this.retrieveSetDataCallback,
     this.thisWorkoutIndexInRoutine,
   });

@@ -16,7 +16,7 @@ class WorkoutModel {
   @HiveField(4)
   final List<String> tags;
   @HiveField(5)
-  final WorkoutType type;
+  WorkoutType type;
 
   WorkoutModel({
     this.autoKey = ' ',
