@@ -12,7 +12,6 @@ import 'package:provider/provider.dart';
 class Workout extends StatefulWidget {
   WorkoutModel workoutModel;
   Routine parentRoutine;
-  Function deleteWorkoutCallback;
   String autoKey;
   String routineAutoKey;
 
@@ -22,10 +21,15 @@ class Workout extends StatefulWidget {
   WorkoutType type;
   List<WorkoutSet> setData = [];
   int thisWorkoutIndexInRoutine;
+
+  Function deleteWorkoutCallback;
+  Function checkWorkoutSetCallback;
+
   Workout({
     @required this.workoutModel,
     this.routineAutoKey,
     this.deleteWorkoutCallback,
+    this.checkWorkoutSetCallback,
   });
 
   bool isSelected = false;
@@ -33,7 +37,6 @@ class Workout extends StatefulWidget {
 
   Widget workoutStateText(WorkoutType type) {
     Color subTitleColor = Colors.grey;
-    print('hhh:$type');
 
     if (type == WorkoutType.setWeight)
       return Text(
@@ -86,7 +89,7 @@ class _WorkoutState extends State<Workout> {
     try {
       widget.autoKey = widget.workoutModel.autoKey;
       widget.type = widget.workoutModel.type;
-      print('이 운동의 타입 : ${widget.type}');
+
       widget.parentRoutine =
           Provider.of<RoutineProvider>(context, listen: false)
               .find(widget.routineAutoKey);
@@ -247,15 +250,8 @@ class _RoutinedWorkoutState extends State<RoutinedWorkout> {
       int index, WorkoutType typeFromAddSetPage) {
     var parentWidget = widget.widget;
     parentWidget.setData = setDataFromAddSetPage;
-    print('부모 루틴의 autoKey = ${parentWidget.parentRoutine.autoKey}');
-    print(parentWidget.thisWorkoutIndexInRoutine);
-
     parentWidget.parentRoutine.workoutModelList[index].setData =
         parentWidget.setData;
-    print('이 workout의 setData : ${parentWidget.setData[0].weight}');
-
-    print(
-        '부모루틴의 setData: ${parentWidget.parentRoutine.workoutModelList[0].setData[0].weight}');
     setState(() {
       parentWidget.type = typeFromAddSetPage;
       parentWidget.parentRoutine.workoutModelList[index].type =
@@ -279,7 +275,7 @@ class _RoutinedWorkoutState extends State<RoutinedWorkout> {
             type: widget.widget.type,
             retrieveSetDataCallback: retrieveSetDataCallback,
             thisWorkoutIndexInRoutine: widget.widget.thisWorkoutIndexInRoutine,
-          )),
+          )).then((value) => widget.widget.checkWorkoutSetCallback()),
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 8),
         padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),

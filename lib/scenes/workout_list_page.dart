@@ -68,10 +68,6 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
               BottomFixedButton(
                   text: '완료',
                   tap: () {
-                    print(
-                        'fff : ${copiedList.where((workout) => workout.isSelected).toList()}');
-                    print(
-                        'fff : ${copiedList.where((workout) => workout.isSelected).toList().map((e) => e.autoKey).toList()}');
                     addWorkoutFunction(copiedList
                         .where((workout) => workout.isSelected)
                         .toList()

@@ -39,22 +39,6 @@ class WorkoutCreatePage extends StatelessWidget {
                 style: kPageSubTitleStyle,
               ),
               SizedBox(height: 16.0),
-              // Container(
-              //   child: GridView.builder(
-              //     shrinkWrap: true,
-              //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              //       crossAxisCount: 3,
-              //       childAspectRatio: 3 / 2,
-              //       mainAxisSpacing: 10,
-              //       crossAxisSpacing: 10,
-              //     ),
-              //     itemCount: 6,
-              //     itemBuilder: (context, index) => Workout(
-              //       name: 'hello',
-              //       setNumber: index,
-              //     ),
-              //   ),
-              // ),
             ],
           ),
         ),

@@ -16,7 +16,8 @@ class RoutineWorkoutPage extends StatefulWidget {
   _RoutineWorkoutPageState createState() => _RoutineWorkoutPageState();
 }
 
-class _RoutineWorkoutPageState extends State<RoutineWorkoutPage> {
+class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
+    with RouteAware {
   List<Workout> workoutList = [];
   List<WorkoutModel> workoutModelList = [];
 
@@ -43,13 +44,14 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage> {
           Workout newWorkout = Workout(workoutModel: selectedWorkoutModel);
           newWorkout.workoutState = WorkoutState.onRoutine;
           newWorkout.routineAutoKey = autoKey;
+          newWorkout.deleteWorkoutCallback = deleteWorkoutCallback;
+          newWorkout.checkWorkoutSetCallback = checkWorkoutSetCallback;
           // 로컬 변수 운동 위젯 리스트에 삽입한다.
           workoutList.add(newWorkout);
         });
       } catch (e) {
         print('addworkout error : $e');
       }
-      ;
     });
   }
 
@@ -71,8 +73,17 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage> {
         .toList();
   }
 
-  bool isWorkoutSet(List<WorkoutModel> list) {
-    return list.every((workoutModel) => workoutModel.type != WorkoutType.none);
+  void checkWorkoutSetCallback() {
+    workoutModelList.forEach((element) {
+      print('타입 : ');
+      print(element.type);
+    });
+    setState(() {
+      haveAllSet = workoutModelList
+          .every((workoutModel) => workoutModel.type != WorkoutType.none);
+    });
+
+    print('현재 모든 운동 세트 있는지? : $haveAllSet ');
   }
 
   @override
@@ -93,8 +104,10 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage> {
     workoutList.forEach((w) {
       w.workoutState = WorkoutState.onRoutine;
       w.deleteWorkoutCallback = deleteWorkoutCallback;
+      w.checkWorkoutSetCallback = checkWorkoutSetCallback;
     });
-    haveAllSet = isWorkoutSet(workoutModelList);
+
+    checkWorkoutSetCallback();
     super.didChangeDependencies();
   }
 
@@ -146,7 +159,9 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage> {
                             Navigator.pushNamed(context, 'Workout_list_page',
                                 arguments: AddWorkoutArgument(
                                   addWorkoutFunction: addWorkoutCallback,
-                                ));
+                                )).then((value) {
+                              checkWorkoutSetCallback();
+                            });
                           }),
                     ],
                   ),
