@@ -10,7 +10,6 @@ class TimerProvider with ChangeNotifier {
   List<Map<int, String>> routineList = [];
   String playBtn = btnStart;
   Map<int, String> selectRoutine = {};
-  int _playTime = 0;
   Timer _timer;
   Duration _routineTimer = Duration(seconds: 0);
 

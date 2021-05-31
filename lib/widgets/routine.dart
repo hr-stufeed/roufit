@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
-import 'file:///C:/Users/Hone/Desktop/develop/hru_app/lib/provider/routine_provider.dart';
-import 'file:///C:/Users/Hone/Desktop/develop/hru_app/lib/provider/timer_provider.dart';
+import 'package:hr_app/provider/routine_provider.dart';
+import 'package:hr_app/provider/timer_provider.dart';
 import 'package:hr_app/models/workout_model.dart';
-import 'package:hr_app/models/workout_set.dart';
+import 'package:hr_app/provider/workout_provider.dart';
 import 'package:provider/provider.dart';
 
 class Routine extends StatefulWidget {

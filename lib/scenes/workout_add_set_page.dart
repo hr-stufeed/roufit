@@ -3,8 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/models/workout_model.dart';
-import 'file:///C:/Users/Hone/Desktop/develop/hru_app/lib/provider/workout_provider.dart';
 import 'package:hr_app/models/workout_set.dart';
+import 'package:hr_app/provider/workout_provider.dart';
 import 'package:hr_app/widgets/TopBar.dart';
 import 'package:hr_app/widgets/bottomFixedButton.dart';
 import 'package:hr_app/widgets/workout.dart';
@@ -20,8 +20,7 @@ class WorkoutAddSetPage extends StatefulWidget {
 class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
   List<SetInputField> setList = [];
   List<WorkoutSet> setData = [];
-  WorkoutModel displayedWorkoutModel;
-  Workout displayedWorkout;
+  WorkoutModel _workoutModel;
   Function retrieveSetDataCallback;
   int thisWorkoutIndexInRoutine;
   WorkoutType _workoutType;
@@ -46,33 +45,26 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
   }
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   void didChangeDependencies() {
-    AddSetPageArgument args = ModalRoute.of(context).settings.arguments;
-    retrieveSetDataCallback = args.retrieveSetDataCallback;
-    setData = args.setData;
-    _workoutType = args.type;
-    thisWorkoutIndexInRoutine = args.thisWorkoutIndexInRoutine;
-    print('_workoutType : ${_workoutType}');
+    int index = Provider.of<WorkoutProvider>(context, listen: false).selIndex;
+    _workoutModel =
+        Provider.of<WorkoutProvider>(context, listen: false).selWorkouts[index];
+
+    setData = _workoutModel.setData;
+    _workoutType = _workoutModel.type;
+    print('_workoutType : $_workoutType');
 
     setList = List<SetInputField>.generate(
-        setData.length,
-        (index) => SetInputField(
-              setNumber: index + 1,
-              workoutType: _workoutType,
-              weight: setData[index].weight,
-              repCount: setData[index].repCount,
-              duration: setData[index].duration,
-            ));
+      setData.length,
+      (index) => SetInputField(
+        setNumber: index + 1,
+        workoutType: _workoutType,
+        weight: setData[index].weight,
+        repCount: setData[index].repCount,
+        duration: setData[index].duration,
+      ),
+    );
 
-    // displayedWorkoutModel =
-    //     Provider.of<WorkoutProvider>(context).generate(args.autoKey);
-    displayedWorkout = Workout(workoutModel: args.workoutModel);
-    displayedWorkout.workoutState = WorkoutState.onFront;
     super.didChangeDependencies();
   }
 
@@ -93,7 +85,10 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
                   hasMoreButton: false,
                 ),
                 kSizedBoxBetweenItems,
-                displayedWorkout,
+                Workout(
+                  workoutModel: _workoutModel,
+                  workoutState: WorkoutState.onFront,
+                ),
                 kSizedBoxBetweenItems,
                 // 운동 타입 선택하는 chip
                 Row(
@@ -161,7 +156,10 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
                   tap: () {
                     List<WorkoutSet> setData =
                         setList.map((e) => e.workoutSetData).toList();
-                    print(setData);
+                    _workoutModel.setData = setData;
+                    _workoutModel.type = _workoutType;
+                    Provider.of<WorkoutProvider>(context, listen: false).haveAllSetCheck();
+                    Navigator.pop(context);
                   },
                 ),
               ],

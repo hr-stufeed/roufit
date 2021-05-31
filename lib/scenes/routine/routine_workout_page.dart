@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/models/routine_model.dart';
-import 'file:///C:/Users/Hone/Desktop/develop/hru_app/lib/provider/routine_provider.dart';
+import 'package:hr_app/provider/routine_provider.dart';
 import 'package:hr_app/models/workout_model.dart';
-import 'file:///C:/Users/Hone/Desktop/develop/hru_app/lib/provider/workout_provider.dart';
+import 'package:hr_app/provider/workout_provider.dart';
 import 'package:hr_app/widgets/TopBar.dart';
 import 'package:hr_app/widgets/bottomFixedButton.dart';
 import 'package:hr_app/widgets/routine.dart';
@@ -35,7 +35,7 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
     days = _selRoutine.days;
     color = Color(_selRoutine.color);
     Provider.of<WorkoutProvider>(context, listen: false)
-        .selWorkout(_selRoutine.workoutModelList);
+        .routineWorkout(_selRoutine.workoutModelList);
 
     super.initState();
   }
@@ -44,7 +44,6 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
   void didChangeDependencies() {
     _workoutModelList =
         Provider.of<WorkoutProvider>(context, listen: true).selWorkouts;
-
     super.didChangeDependencies();
   }
 
@@ -60,6 +59,8 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
   }
 
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback(
+        (_) => Provider.of<WorkoutProvider>(context, listen: false).haveAllSet);
     return WillPopScope(
       onWillPop: () {
         // 완성하기 누르지 않고 back할 때 기존 리스트로 백업하여 운동을 추가하지 않는다
@@ -103,6 +104,14 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
                                 return Workout(
                                   workoutModel: _workoutModelList[index],
                                   workoutState: WorkoutState.onRoutine,
+                                  onTap: () => Provider.of<WorkoutProvider>(
+                                          context,
+                                          listen: false)
+                                      .selWorkout(index),
+                                  onDelete: () => Provider.of<WorkoutProvider>(
+                                          context,
+                                          listen: false)
+                                      .delWorkout(index),
                                 );
                               }),
                       FloatingActionButton(
@@ -113,25 +122,19 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
                           ),
                           backgroundColor: Colors.white,
                           onPressed: () {
-                            Navigator.pushNamed(context, 'Workout_list_page')
-                                .then((value) {});
+                            Navigator.pushNamed(context, 'Workout_list_page');
                           }),
                     ],
                   ),
                 ),
                 kSizedBoxBetweenItems,
-                true
+                Provider.of<WorkoutProvider>(context, listen: true).haveAllSet
                     ? BottomFixedButton(
                         text: '저장하기',
                         tap: () {
-                          print('저장하기');
                           Provider.of<RoutineProvider>(context, listen: false)
                               .saveWorkout(autoKey, _workoutModelList);
-                          print(Provider.of<RoutineProvider>(context,
-                                  listen: false)
-                              .routineModels[0]
-                              .workoutModelList);
-                          // Navigator.popUntil(context, (route) => route.isFirst);
+                          Navigator.popUntil(context, (route) => route.isFirst);
                         },
                       )
                     : BottomFixedButton(

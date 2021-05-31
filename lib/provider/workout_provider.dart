@@ -1,10 +1,10 @@
 import 'dart:collection';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/models/workout_model.dart';
+import 'package:hr_app/models/workout_set.dart';
 import 'package:intl/intl.dart';
 
 class WorkoutProvider with ChangeNotifier {
@@ -83,23 +83,59 @@ class WorkoutProvider with ChangeNotifier {
   현재 선택중인 워크아웃 리스트
   */
   List<WorkoutModel> _selWorkouts = [];
+  int selIndex = 0;
+  bool _haveAllSet = true;
 
+  bool get haveAllSet => _haveAllSet;
   UnmodifiableListView<WorkoutModel> get selWorkouts =>
       UnmodifiableListView(_selWorkouts);
 
   //루틴내 워크아웃 불러오기
-  void selWorkout(List<WorkoutModel> selList) {
+  void routineWorkout(List<WorkoutModel> selList) {
     _selWorkouts.addAll(selList);
   }
-  //신규 루틴 추가
+
+  //신규 워크아웃 추가
   void selAdd(WorkoutModel selData) {
     print(selData.name);
     _selWorkouts.add(selData);
+    haveAllSetCheck();
     notifyListeners();
   }
-  //루틴 초기화
+
+  //워크아웃 초기화
   void selInit() {
     _selWorkouts = [];
+  }
+
+  //워크아웃 선택
+  void selWorkout(int index) {
+    selIndex = index;
+  }
+
+  //워크세트 추가
+  void addSetWorkout(int _index, List<WorkoutSet> _setList) {
+    _selWorkouts[_index].setData =_setList;
+    notifyListeners();
+  }
+
+  //워크아웃 삭제
+  void delWorkout(int index) {
+    _selWorkouts.removeAt(index);
+    notifyListeners();
+  }
+
+  //세트 체크
+  void haveAllSetCheck() {
+    _haveAllSet = true;
+
+    selWorkouts.forEach((element) {
+      if (element.setData.isEmpty){
+        _haveAllSet = false;
+      }
+    });
+
+    notifyListeners();
   }
 
   // 확정 데이터
@@ -179,7 +215,7 @@ class WorkoutProvider with ChangeNotifier {
     // 현재 시간에 따른 키를 생성한다.
     var autokey = DateFormat('yyMMddhhmmss').format(DateTime.now());
     var loadWorkout =
-        _workouts.where((workout) => workout.autoKey == key).toList()[0];
+    _workouts.where((workout) => workout.autoKey == key).toList()[0];
     WorkoutModel returnValue = WorkoutModel(
       autoKey: autokey,
       name: loadWorkout.name,
@@ -211,13 +247,25 @@ class WorkoutProvider with ChangeNotifier {
         _workouts.add(WorkoutModel(
           autoKey: _box.keyAt(index),
           // 로딩시에도 박스에서 키를 가져와 다시 부여한다.
-          name: _box.getAt(index).name,
-          emoji: _box.getAt(index).emoji,
-          setData: _box.getAt(index).setData,
-          tags: _box.getAt(index).tags,
-          type: _box.getAt(index).type,
+          name: _box
+              .getAt(index)
+              .name,
+          emoji: _box
+              .getAt(index)
+              .emoji,
+          setData: _box
+              .getAt(index)
+              .setData,
+          tags: _box
+              .getAt(index)
+              .tags,
+          type: _box
+              .getAt(index)
+              .type,
         ));
-        print('workout load : ${_box.getAt(index).name}');
+        print('workout load : ${_box
+            .getAt(index)
+            .name}');
         print('workout index : $index');
       }
       notifyListeners();

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/widgets/routine.dart';
-import 'file:///C:/Users/Hone/Desktop/develop/hru_app/lib/provider/routine_provider.dart';
+import 'package:hr_app/provider/routine_provider.dart';
 
 import 'package:provider/provider.dart';
 import 'package:reorderables/reorderables.dart';

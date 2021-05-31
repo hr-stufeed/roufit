@@ -5,7 +5,7 @@ import 'package:hr_app/models/routine_model.dart';
 import 'package:hr_app/models/workout_model.dart';
 import 'package:hr_app/widgets/bottomFixedButton.dart';
 import 'package:provider/provider.dart';
-import 'file:///C:/Users/Hone/Desktop/develop/hru_app/lib/provider/routine_provider.dart';
+import 'package:hr_app/provider/routine_provider.dart';
 import 'package:hr_app/widgets/roundCheck.dart';
 import 'package:hr_app/widgets/topBar.dart';
 

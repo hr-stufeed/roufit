@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/models/workout_model.dart';
-import 'file:///C:/Users/Hone/Desktop/develop/hru_app/lib/provider/workout_provider.dart';
+import 'package:hr_app/provider/workout_provider.dart';
 import 'package:hr_app/widgets/bottomFixedButton.dart';
 import 'package:hr_app/widgets/workout.dart';
 import 'package:provider/provider.dart';
-import 'package:hr_app/scenes/routine/routine_workout_page.dart';
 
 class WorkoutListPage extends StatefulWidget {
   @override
