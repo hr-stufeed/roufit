@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
+import 'package:hr_app/models/routine_model.dart';
 import 'package:hr_app/models/routine_provider.dart';
 import 'package:hr_app/models/workout_model.dart';
 import 'package:hr_app/widgets/routine.dart';
@@ -14,6 +15,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   Routine frontRoutine;
+  RoutineModel _firstRoutine;
+  bool isRoutine = true;
   List<Workout> frontRoutineWorkoutList;
 
   List<Workout> createWorkoutList(List<WorkoutModel> list) {
@@ -29,16 +32,11 @@ class _HomePageState extends State<HomePage> {
   void didChangeDependencies() {
     // 추후 수정 필요 -> 요일에 따라서 루틴 나오도록.
     try {
-      frontRoutine = Provider.of<RoutineProvider>(context).copy(0);
-      frontRoutine.isListUp = false;
-      frontRoutineWorkoutList =
-          createWorkoutList(frontRoutine.workoutModelList);
-      frontRoutineWorkoutList.forEach((workout) {
-        workout.workoutState = WorkoutState.onFront;
-      });
+      _firstRoutine = Provider.of<RoutineProvider>(context).routineModels[0];
+      isRoutine = true;
     } catch (e) {
       // load되기 전에 페이지가 먼저 생성되어 빈 전역 리스트 참조하면 에러 루틴 뱉는다
-      frontRoutine = kErrorRoutine;
+      isRoutine = false;
     }
     super.didChangeDependencies();
   }
@@ -56,26 +54,39 @@ class _HomePageState extends State<HomePage> {
               style: kPageTitleStyle,
             ),
             kSizedBoxBetweenItems,
-            frontRoutine,
+            isRoutine
+                ? Routine(
+                    autoKey: _firstRoutine.key,
+                    name: _firstRoutine.name,
+                    color: Color(_firstRoutine.color),
+                    isListUp: false,
+                    days: _firstRoutine.days,
+                  )
+                : kErrorRoutine,
             kSizedBoxBetweenItems,
             Text(
               '운동할 준비 되셨나요?🔥',
               style: kPageSubTitleStyle,
             ),
             kSizedBoxBetweenItems,
-            frontRoutine == kErrorRoutine
+            isRoutine
                 ? Expanded(
-                    child: SpinKitDoubleBounce(
-                      color: Colors.blue,
-                      size: 100.0,
+                    child: ListView.builder(
+                      itemCount: _firstRoutine.workoutModelList.length,
+                      itemBuilder: (context, index) {
+                        WorkoutModel _workoutData =
+                            _firstRoutine.workoutModelList[index];
+                        return Workout(
+                          workoutModel: _workoutData,
+                          workoutState: WorkoutState.onFront,
+                        );
+                      },
                     ),
                   )
                 : Expanded(
-                    child: ListView.builder(
-                      itemCount: frontRoutineWorkoutList.length,
-                      itemBuilder: (context, index) {
-                        return frontRoutineWorkoutList[index];
-                      },
+                    child: SpinKitDoubleBounce(
+                      color: Colors.blue,
+                      size: 100.0,
                     ),
                   )
           ],

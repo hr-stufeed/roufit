@@ -30,6 +30,7 @@ class Workout extends StatefulWidget {
     this.routineAutoKey,
     this.deleteWorkoutCallback,
     this.checkWorkoutSetCallback,
+    this.workoutState = WorkoutState.onWorkoutList,
   });
 
   bool isSelected = false;
@@ -90,9 +91,9 @@ class _WorkoutState extends State<Workout> {
       widget.autoKey = widget.workoutModel.autoKey;
       widget.type = widget.workoutModel.type;
 
-      widget.parentRoutine =
-          Provider.of<RoutineProvider>(context, listen: false)
-              .find(widget.routineAutoKey);
+      // widget.parentRoutine =
+      //     Provider.of<RoutineProvider>(context, listen: false)
+      //         .find(widget.routineAutoKey);
       for (int i = 0; i < widget.parentRoutine.workoutModelList.length; i++) {
         if (widget.autoKey ==
             widget.parentRoutine.workoutModelList[i].autoKey) {
@@ -146,6 +147,7 @@ class _WorkoutListPageWorkoutState extends State<WorkoutListPageWorkout> {
   Color containerColor = Colors.white;
   Color titleColor = Colors.black;
   Color subTitleColor = Colors.grey;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -236,6 +238,7 @@ class RoutinedWorkout extends StatefulWidget {
   }) : super(key: key);
 
   final Workout widget;
+
   @override
   _RoutinedWorkoutState createState() => _RoutinedWorkoutState();
 }
@@ -369,6 +372,7 @@ class _HomePageWorkoutState extends State<HomePageWorkout> {
   Color containerColor = Colors.white;
   Color titleColor = Colors.black;
   Color subTitleColor = Colors.grey;
+
   @override
   Widget build(BuildContext context) {
     return Container(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
+import 'package:hr_app/models/routine_model.dart';
 import 'package:hr_app/models/routine_provider.dart';
 import 'package:hr_app/models/workout_model.dart';
 import 'package:hr_app/models/workout_provider.dart';
@@ -27,7 +28,7 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
   String autoKey;
   Color color;
   List<String> days;
-  Routine displayedRoutine;
+  RoutineModel displayedRoutine;
   bool haveAllSet = false;
 
 // 복수 선택한 운동들의 키를 받아오는 콜백함수
@@ -131,7 +132,13 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
                   hasMoreButton: false,
                 ),
                 kSizedBoxBetweenItems,
-                displayedRoutine,
+                Routine(
+                  autoKey: displayedRoutine.key,
+                  name: displayedRoutine.name,
+                  color: Color(displayedRoutine.color),
+                  days: displayedRoutine.days,
+                  isListUp: true,
+                ),
                 Expanded(
                   child: Stack(
                     alignment: Alignment.bottomRight,

@@ -11,89 +11,66 @@ import 'package:hr_app/data/constants.dart';
 class RoutineProvider with ChangeNotifier {
   //앱 전체에서 접근 가능한 전역 루틴리스트
   List<Routine> _routines = [];
+  List<RoutineModel> _routineModels = [];
 
   RoutineProvider() {
     load();
   }
 
   int get routineCount {
-    return _routines.length;
+    return _routineModels.length;
   }
 
   UnmodifiableListView get routines => UnmodifiableListView(_routines);
+
+  UnmodifiableListView get routineModels =>
+      UnmodifiableListView(_routineModels);
 
   void add(String text, Color color, List<String> days) async {
     var _box = await Hive.openBox<RoutineModel>('routines');
     // 현재 시간에 따른 키를 생성한다.
     var key = DateFormat('yyMMddhhmmss').format(DateTime.now());
     // 박스에 키와 함께 삽입한다.
-    _box.put(
-      key,
-      RoutineModel(
-        name: text,
-        color: color.value,
-        days: days,
-        workoutModelList: [],
-      ),
-    );
-    // 동일하게 routine list에도 키와 함께 삽입한다.
-    final routine = Routine(
-      autoKey: key,
+    RoutineModel _routineData = RoutineModel(
+      key: key,
       name: text,
-      color: color,
+      color: color.value,
       days: days,
       workoutModelList: [],
     );
-    _routines.add(routine);
+
+    _box.put(key, _routineData);
+    _routineModels.add(_routineData);
 
     print('키들 : ${_box.keys}');
 
     notifyListeners();
   }
 
-  Routine copy(int n) {
-    try {
-      return Routine(
-        autoKey: _routines[n].autoKey,
-        name: _routines[n].name,
-        color: _routines[n].color,
-        isListUp: false,
-        workoutModelList: _routines[n].workoutModelList,
-        days: _routines[n].days,
-      );
-    } catch (e) {
-      print('copy error:$e');
-      return kErrorRoutine;
-    }
-  }
-
   void modify(String autoKey, String text, Color color, List<String> days,
       List<WorkoutModel> workoutModelList) async {
     var _box = await Hive.openBox<RoutineModel>('routines');
     // 루틴 표지의 수정하기를 누르면 key를 전달받고 _box의 RoutineModel에 정보를 덮어 씌운다.
-    _box.put(
-        autoKey,
-        RoutineModel(
-            name: text,
-            color: color.value,
-            days: days,
-            workoutModelList: workoutModelList));
-    // 역시 key를 기준으로 _routines의 요소도 덮어씌운다.
-    for (int i = 0; i < _routines.length; i++) {
-      if (_routines[i].autoKey == autoKey)
-        _routines[i] = Routine(
-          autoKey: autoKey,
-          name: text,
-          color: color,
-          days: days,
-          workoutModelList: workoutModelList,
-        );
+    RoutineModel _routineData = RoutineModel(
+      key: autoKey,
+      name: text,
+      color: color.value,
+      days: days,
+      workoutModelList: [],
+    );
+    _box.put(autoKey, _routineData);
+
+    // key를 기준으로 _routineModels의 요소도 덮어씌운다.
+    for (int i = 0; i < _routineModels.length; i++) {
+      if (_routineModels[i].key == autoKey) _routineModels[i] = _routineData;
     }
     notifyListeners();
   }
 
-  Routine find(String autoKey) {
-    return _routines.where((routine) => routine.autoKey == autoKey).toList()[0];
+  RoutineModel find(String autoKey) {
+    return _routineModels
+        .where((routine) => routine.key == autoKey)
+        .toList()[0];
   }
 
   void saveWorkout(String autoKey, List<WorkoutModel> workoutModelList) async {
@@ -101,6 +78,7 @@ class RoutineProvider with ChangeNotifier {
     _box.put(
       autoKey,
       RoutineModel(
+        key: autoKey,
         name: _box.get(autoKey).name,
         color: _box.get(autoKey).color,
         days: _box.get(autoKey).days,
@@ -110,40 +88,27 @@ class RoutineProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void delete(String n) async {
+  void delete(String autoKey) async {
     var _box = await Hive.openBox<RoutineModel>('routines');
-    // 삭제 시 _routines에서는 키를 탐색하여 삭제한다.
-    for (int i = 0; i < _routines.length; i++) {
-      if (_routines[i].autoKey == n) _routines.removeAt(i);
-    }
-    // 박스는 그냥 키를 바로 대입하여 삭제한다.
-    _box.delete(n);
 
-    print('delete $n');
+    // 삭제 시 _routineModels에서는 키를 탐색하여 삭제한다.
+    for (int i = 0; i < _routineModels.length; i++) {
+      if (_routineModels[i].key == autoKey) _routineModels.removeAt(i);
+    }
+
+    // 박스는 그냥 키를 바로 대입하여 삭제한다.
+    _box.delete(autoKey);
+
+    print('delete $autoKey');
     notifyListeners();
   }
 
   void load() async {
     var _box = await Hive.openBox<RoutineModel>('routines');
-    try {
-      for (int index = 0; index < _box.length; index++) {
-        String autoKey = _box.keyAt(index);
-        _routines.add(Routine(
-          autoKey: autoKey, // 로딩시에도 박스에서 키를 가져와 다시 부여한다.
-          name: _box.get(autoKey).name,
-          color: Color(_box.get(autoKey).color),
-          days: _box.get(autoKey).days,
-          workoutModelList: _box.get(autoKey).workoutModelList,
-        ));
-        print('name : ${_box.get(autoKey).name}');
-        print('autoKey : ${_routines[0].autoKey}');
-        _box.get(autoKey).workoutModelList.forEach((element) {
-          print('workouts : ${element.name}');
-        });
-      }
-
-      notifyListeners();
-    } catch (e) {}
+    _box.toMap().forEach((key, _routineData) {
+      _routineModels.add(_routineData);
+    });
+    notifyListeners();
   }
 
   void clear() async {
@@ -154,9 +119,9 @@ class RoutineProvider with ChangeNotifier {
   }
 
   void reorder(int oldIndex, int newIndex) async {
-    Routine moveRoutine = _routines.removeAt(oldIndex);
-    _routines.insert(newIndex, moveRoutine);
-    print(_routines[0].name);
+    RoutineModel moveRoutine = _routineModels.removeAt(oldIndex);
+    _routineModels.insert(newIndex, moveRoutine);
+    print(_routineModels[0].name);
     notifyListeners();
   }
 }

@@ -40,10 +40,8 @@ class Routine extends StatefulWidget {
         ],
         onSelected: (value) {
           value == 2
-              ? {
-                  Provider.of<RoutineProvider>(context, listen: false)
-                      .delete(autoKey),
-                }
+              ? Provider.of<RoutineProvider>(context, listen: false)
+                  .delete(autoKey)
               : Navigator.pushNamed(
                   context,
                   'Routine_modify_page',

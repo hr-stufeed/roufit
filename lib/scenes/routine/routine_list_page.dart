@@ -67,11 +67,17 @@ class _RoutineListPageState extends State<RoutineListPage> {
                     },
                     children:
                         Provider.of<RoutineProvider>(context, listen: true)
-                            .routines
-                            .map((routine) {
+                            .routineModels
+                            .map((_routine) {
                       return Container(
                         key: UniqueKey(),
-                        child: routine,
+                        child: Routine(
+                          autoKey: _routine.key,
+                          name: _routine.name,
+                          color: Color(_routine.color),
+                          isListUp: true,
+                          days: _routine.days,
+                        ),
                       );
                     }).toList(),
                   ),
