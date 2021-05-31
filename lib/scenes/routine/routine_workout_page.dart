@@ -37,7 +37,7 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
         workoutKeys.forEach((e) {
           // 전역 운동 리스트에서 키를 사용해 운동 모델을 뽑아온다.
           var selectedWorkoutModel =
-              Provider.of<WorkoutProvider>(context, listen: false).find(e);
+              Provider.of<WorkoutProvider>(context, listen: false).generate(e);
           // 로컬 변수 운동 모델 리스트에 해당 운동 모델 저장한다.
           workoutModelList.add(selectedWorkoutModel);
           // 선택한 운동 모델로 운동 위젯 생성한다.

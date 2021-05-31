@@ -69,9 +69,9 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
               duration: setData[index].duration,
             ));
 
-    displayedWorkoutModel =
-        Provider.of<WorkoutProvider>(context).find(args.autoKey);
-    displayedWorkout = Workout(workoutModel: displayedWorkoutModel);
+    // displayedWorkoutModel =
+    //     Provider.of<WorkoutProvider>(context).generate(args.autoKey);
+    displayedWorkout = Workout(workoutModel: args.workoutModel);
     displayedWorkout.workoutState = WorkoutState.onFront;
     super.didChangeDependencies();
   }

@@ -6,7 +6,7 @@ part 'workout_model.g.dart';
 @HiveType(typeId: 2)
 class WorkoutModel {
   @HiveField(0)
-  final String autoKey;
+  String autoKey;
   @HiveField(1)
   final String name;
   @HiveField(2)

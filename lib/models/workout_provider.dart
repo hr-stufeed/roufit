@@ -148,9 +148,21 @@ class WorkoutProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  WorkoutModel find(String key) {
-    print('find 시 들어오는 key : $key');
-    return _workouts.where((workout) => workout.autoKey == key).toList()[0];
+  //전역 리스트에서 운동을 가져와 새로운 키를 부여하고 생성한다.
+  WorkoutModel generate(String key) {
+    // 현재 시간에 따른 키를 생성한다.
+    var autokey = DateFormat('yyMMddhhmmss').format(DateTime.now());
+    var loadWorkout =
+        _workouts.where((workout) => workout.autoKey == key).toList()[0];
+    WorkoutModel returnValue = WorkoutModel(
+      autoKey: autokey,
+      name: loadWorkout.name,
+      emoji: loadWorkout.emoji,
+      setData: loadWorkout.setData,
+      tags: loadWorkout.tags,
+      type: loadWorkout.type,
+    );
+    return returnValue;
   }
 
   void delete(String autoKey) async {
