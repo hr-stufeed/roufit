@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/models/workout_model.dart';
-import 'package:hr_app/models/workout_provider.dart';
+import 'file:///C:/Users/Hone/Desktop/develop/hru_app/lib/provider/workout_provider.dart';
 import 'package:hr_app/models/workout_set.dart';
 import 'package:hr_app/widgets/TopBar.dart';
 import 'package:hr_app/widgets/bottomFixedButton.dart';
@@ -57,7 +57,7 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
     setData = args.setData;
     _workoutType = args.type;
     thisWorkoutIndexInRoutine = args.thisWorkoutIndexInRoutine;
-    print('ddd : ${_workoutType}');
+    print('_workoutType : ${_workoutType}');
 
     setList = List<SetInputField>.generate(
         setData.length,
@@ -161,10 +161,7 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
                   tap: () {
                     List<WorkoutSet> setData =
                         setList.map((e) => e.workoutSetData).toList();
-                    print(thisWorkoutIndexInRoutine);
-                    retrieveSetDataCallback(
-                        setData, thisWorkoutIndexInRoutine, _workoutType);
-                    Navigator.pop(context);
+                    print(setData);
                   },
                 ),
               ],

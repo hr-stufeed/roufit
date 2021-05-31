@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/widgets/routine.dart';
-import 'package:hr_app/models/routine_provider.dart';
+import 'file:///C:/Users/Hone/Desktop/develop/hru_app/lib/provider/routine_provider.dart';
 
 import 'package:provider/provider.dart';
 import 'package:reorderables/reorderables.dart';
@@ -95,11 +95,8 @@ class _RoutineListPageState extends State<RoutineListPage> {
                   ),
                   backgroundColor: Colors.white,
                   onPressed: () {
-                    Navigator.pushNamed(
-                      context,
-                      'Routine_create_page',
-                      arguments: ModifyArgument(isModify: false),
-                    ).then((value) => init());
+                    Navigator.pushNamed(context, 'Routine_input_page')
+                        .then((value) => init());
                   },
                 ),
                 kSizedBoxBetweenItems,

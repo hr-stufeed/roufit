@@ -68,13 +68,6 @@ class WorkoutProvider with ChangeNotifier {
     ),
   ];
 
-  List<WorkoutModel> _selWorkouts = [];
-
-  void selAdd(WorkoutModel selData) {
-    print(selData.name);
-    _selWorkouts.add(selData);
-  }
-
   WorkoutProvider() {
     load();
   }
@@ -85,9 +78,31 @@ class WorkoutProvider with ChangeNotifier {
 
   UnmodifiableListView get workouts => UnmodifiableListView(_workouts);
 
+  /*
+  임시 데이터
+  현재 선택중인 워크아웃 리스트
+  */
+  List<WorkoutModel> _selWorkouts = [];
+
   UnmodifiableListView<WorkoutModel> get selWorkouts =>
       UnmodifiableListView(_selWorkouts);
 
+  //루틴내 워크아웃 불러오기
+  void selWorkout(List<WorkoutModel> selList) {
+    _selWorkouts.addAll(selList);
+  }
+  //신규 루틴 추가
+  void selAdd(WorkoutModel selData) {
+    print(selData.name);
+    _selWorkouts.add(selData);
+    notifyListeners();
+  }
+  //루틴 초기화
+  void selInit() {
+    _selWorkouts = [];
+  }
+
+  // 확정 데이터
   void add(String text, Color color, List<String> tags) async {
     var _box = await Hive.openBox<WorkoutModel>('workouts');
     // 현재 시간에 따른 키를 생성한다.

@@ -64,7 +64,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
         routes: {
           'Home_page': (context) => HomePage(),
           'Routine_page': (context) => RoutineListPage(),
-          'Routine_input_page': (context) => RoutineInputePage(),
+          'Routine_input_page': (context) => RoutineInputPage(),
           'Routine_start_page': (context) => RoutineStartPage(),
           'Routine_workout_page': (context) => RoutineWorkoutPage(),
           'Workout_list_page': (context) => WorkoutListPage(),

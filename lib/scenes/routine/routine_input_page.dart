@@ -9,12 +9,17 @@ import 'file:///C:/Users/Hone/Desktop/develop/hru_app/lib/provider/routine_provi
 import 'package:hr_app/widgets/roundCheck.dart';
 import 'package:hr_app/widgets/topBar.dart';
 
-class RoutineInputePage extends StatefulWidget {
+class RoutineInputPage extends StatefulWidget {
   @override
-  _RoutineInputePageState createState() => _RoutineInputePageState();
+  _RoutineInputPageState createState() => _RoutineInputPageState();
 }
 
-class _RoutineInputePageState extends State<RoutineInputePage> {
+/*
+루틴 수정 + 생성 병합작업진행
+_selRoutine 선택한 루틴이 null 여부 판별로 생성과 수정을 진행함
+*/
+
+class _RoutineInputPageState extends State<RoutineInputPage> {
   String autoKey;
   List<WorkoutModel> workoutList = [];
   Color screenPickerColor = Colors.red;
@@ -47,7 +52,7 @@ class _RoutineInputePageState extends State<RoutineInputePage> {
 
   @override
   void deactivate() {
-    Provider.of<RoutineProvider>(context, listen: false).sel(null);
+    Provider.of<RoutineProvider>(context, listen: false).selInit();
     super.deactivate();
   }
 
@@ -119,28 +124,29 @@ class _RoutineInputePageState extends State<RoutineInputePage> {
                 ],
               ),
               BottomFixedButton(
-                  text: _selRoutine == null ? '완료' : '수정 완료',
-                  tap: () {
-                    _selRoutine == null
-                        ? Provider.of<RoutineProvider>(context, listen: false)
-                            .add(
-                            myController.text,
-                            screenPickerColor,
-                            selectedDays,
-                          )
-                        : Provider.of<RoutineProvider>(context, listen: false)
-                            .modify(
-                            autoKey,
-                            myController.text,
-                            screenPickerColor,
-                            selectedDays,
-                            workoutList,
-                          );
-                    Provider.of<RoutineProvider>(context, listen: false)
-                        .sel(null);
+                text: _selRoutine == null ? '완료' : '수정 완료',
+                tap: () {
+                  _selRoutine == null
+                      ? Provider.of<RoutineProvider>(context, listen: false)
+                          .add(
+                          myController.text,
+                          screenPickerColor,
+                          selectedDays,
+                        )
+                      : Provider.of<RoutineProvider>(context, listen: false)
+                          .modify(
+                          autoKey,
+                          myController.text,
+                          screenPickerColor,
+                          selectedDays,
+                          workoutList,
+                        );
+                  Provider.of<RoutineProvider>(context, listen: false)
+                      .selInit();
 
-                    Navigator.pop(context);
-                  }),
+                  Navigator.pop(context);
+                },
+              ),
             ],
           ),
         ),

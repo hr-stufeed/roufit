@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hr_app/scenes/routine/routine_create_page.dart';
+import 'package:hr_app/scenes/routine/routine_input_page.dart';
 import 'package:hr_app/scenes/routine/routine_list_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hr_app/scenes/routine/routine_start_page.dart';
@@ -15,7 +15,7 @@ class PagesScreen extends StatelessWidget {
     return MaterialApp(
       routes: {
         'Routine_page': (context) => RoutineListPage(),
-        'Routine_create_page': (context) => RoutineCreatePage(),
+        'Routine_input_page': (context) => RoutineInputPage(),
         'Workout_add_page': (context) => WorkoutListPage(),
         'Workout_page': (context) => WorkoutListPage(),
       },

@@ -4,13 +4,11 @@ import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:hr_app/models/routine_model.dart';
 import 'package:hr_app/models/workout_model.dart';
-import 'package:hr_app/widgets/routine.dart';
 import 'package:intl/intl.dart';
-import 'package:hr_app/data/constants.dart';
 
 class RoutineProvider with ChangeNotifier {
   //앱 전체에서 접근 가능한 전역 루틴리스트
-  List<Routine> _routines = [];
+  //기존 루틴 위젯에서 루틴 모델로 변경 프로바이더에서는 데이터만 처리
   List<RoutineModel> _routineModels = [];
   RoutineModel _selRoutine = null;
 
@@ -24,18 +22,18 @@ class RoutineProvider with ChangeNotifier {
 
   RoutineModel get selRoutine => _selRoutine;
 
-  UnmodifiableListView get routines => UnmodifiableListView(_routines);
-
-  UnmodifiableListView get routineModels =>
+  UnmodifiableListView<RoutineModel> get routineModels =>
       UnmodifiableListView(_routineModels);
 
+  // 현재 루틴 선택
   void sel(String autoKey) {
-    if (autoKey != null) {
-      _selRoutine =
-          _routineModels.where((routine) => routine.key == autoKey).toList()[0];
-    }else{
-      _selRoutine = null;
-    }
+    _selRoutine =
+        _routineModels.where((routine) => routine.key == autoKey).toList()[0];
+    notifyListeners();
+  }
+  // 선택 루틴 초기화
+  void selInit() {
+    _selRoutine = null;
   }
 
   void add(String text, Color color, List<String> days) async {
@@ -87,16 +85,19 @@ class RoutineProvider with ChangeNotifier {
 
   void saveWorkout(String autoKey, List<WorkoutModel> workoutModelList) async {
     var _box = await Hive.openBox<RoutineModel>('routines');
-    _box.put(
-      autoKey,
-      RoutineModel(
-        key: autoKey,
-        name: _box.get(autoKey).name,
-        color: _box.get(autoKey).color,
-        days: _box.get(autoKey).days,
-        workoutModelList: workoutModelList,
-      ),
+
+    RoutineModel _routineData = RoutineModel(
+      key: autoKey,
+      name: _box.get(autoKey).name,
+      color: _box.get(autoKey).color,
+      days: _box.get(autoKey).days,
+      workoutModelList: workoutModelList,
     );
+    _box.put(autoKey, _routineData);
+
+    for (int i = 0; i < _routineModels.length; i++) {
+      if (_routineModels[i].key == autoKey) _routineModels[i] = _routineData;
+    }
     notifyListeners();
   }
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/models/workout_model.dart';
-import 'package:hr_app/models/workout_provider.dart';
+import 'file:///C:/Users/Hone/Desktop/develop/hru_app/lib/provider/workout_provider.dart';
 import 'package:hr_app/widgets/bottomFixedButton.dart';
 import 'package:hr_app/widgets/workout.dart';
 import 'package:provider/provider.dart';
@@ -15,11 +15,9 @@ class WorkoutListPage extends StatefulWidget {
 class _WorkoutListPageState extends State<WorkoutListPage> {
   List<String> selectedWorkouts = [];
   List<Workout> copiedList;
-  Function addWorkoutFunction;
+
   @override
   void didChangeDependencies() {
-    AddWorkoutArgument args = ModalRoute.of(context).settings.arguments;
-    addWorkoutFunction = args.addWorkoutFunction;
     List<WorkoutModel> copiedModelList =
         Provider.of<WorkoutProvider>(context).copyList();
     copiedList = copiedModelList
@@ -66,15 +64,16 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
                     }),
               ),
               BottomFixedButton(
-                  text: '완료',
-                  tap: () {
-                    addWorkoutFunction(copiedList
-                        .where((workout) => workout.isSelected)
-                        .toList()
-                        .map((e) => e.autoKey)
-                        .toList());
-                    Navigator.pop(context);
-                  }),
+                text: '완료',
+                tap: () {
+                  copiedList.forEach((e) => {
+                        if (e.isSelected)
+                          Provider.of<WorkoutProvider>(context, listen: false)
+                              .selAdd(e.workoutModel)
+                      });
+                  Navigator.pop(context);
+                },
+              ),
             ],
           ),
         ),

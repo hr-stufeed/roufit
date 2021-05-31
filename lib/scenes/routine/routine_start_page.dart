@@ -3,7 +3,7 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
-import 'package:hr_app/models/timer_provider.dart';
+import 'file:///C:/Users/Hone/Desktop/develop/hru_app/lib/provider/timer_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 

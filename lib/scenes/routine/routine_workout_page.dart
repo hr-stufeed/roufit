@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/models/routine_model.dart';
-import 'package:hr_app/models/routine_provider.dart';
+import 'file:///C:/Users/Hone/Desktop/develop/hru_app/lib/provider/routine_provider.dart';
 import 'package:hr_app/models/workout_model.dart';
-import 'package:hr_app/models/workout_provider.dart';
+import 'file:///C:/Users/Hone/Desktop/develop/hru_app/lib/provider/workout_provider.dart';
 import 'package:hr_app/widgets/TopBar.dart';
 import 'package:hr_app/widgets/bottomFixedButton.dart';
 import 'package:hr_app/widgets/routine.dart';
@@ -19,105 +19,52 @@ class RoutineWorkoutPage extends StatefulWidget {
 
 class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
     with RouteAware {
-  List<Workout> workoutList = [];
-  List<WorkoutModel> workoutModelList = [];
-
-  //완성하기 누르지 않고 back 할 때 운동을 추가하지 않기 위해 보관용으로 만든 리스트.
-  List<WorkoutModel> backupWorkoutModelList = [];
+  List<WorkoutModel> _workoutModelList = [];
   String name;
   String autoKey;
   Color color;
   List<String> days;
-  RoutineModel displayedRoutine;
-  bool haveAllSet = false;
+  RoutineModel _selRoutine;
 
-// 복수 선택한 운동들의 키를 받아오는 콜백함수
-  void addWorkoutCallback(List<String> workoutKeys) {
-    setState(() {
-      try {
-        workoutKeys.forEach((e) {
-          // 전역 운동 리스트에서 키를 사용해 운동 모델을 뽑아온다.
-          var selectedWorkoutModel =
-              Provider.of<WorkoutProvider>(context, listen: false).generate(e);
-          // 로컬 변수 운동 모델 리스트에 해당 운동 모델 저장한다.
-          workoutModelList.add(selectedWorkoutModel);
-          // 선택한 운동 모델로 운동 위젯 생성한다.
-          Workout newWorkout = Workout(workoutModel: selectedWorkoutModel);
-          newWorkout.workoutState = WorkoutState.onRoutine;
-          newWorkout.routineAutoKey = autoKey;
-          newWorkout.deleteWorkoutCallback = deleteWorkoutCallback;
-          newWorkout.checkWorkoutSetCallback = checkWorkoutSetCallback;
-          // 로컬 변수 운동 위젯 리스트에 삽입한다.
-          workoutList.add(newWorkout);
-        });
-      } catch (e) {
-        print('addworkout error : $e');
-      }
-    });
-  }
+  @override
+  void initState() {
+    _selRoutine =
+        Provider.of<RoutineProvider>(context, listen: false).selRoutine;
+    autoKey = _selRoutine.key;
+    name = _selRoutine.name;
+    days = _selRoutine.days;
+    color = Color(_selRoutine.color);
+    Provider.of<WorkoutProvider>(context, listen: false)
+        .selWorkout(_selRoutine.workoutModelList);
 
-  void deleteWorkoutCallback(String key) {
-    setState(() {
-      workoutList.removeWhere((workout) => workout.autoKey == key);
-      workoutModelList
-          .removeWhere((workoutModel) => workoutModel.autoKey == key);
-    });
-  }
-
-  List<Workout> createWorkoutList(List<WorkoutModel> list) {
-    print('생성시 부여되는 루틴 키 : $autoKey');
-    return list
-        .map((workoutModel) => Workout(
-              workoutModel: workoutModel,
-              routineAutoKey: autoKey,
-            ))
-        .toList();
-  }
-
-  void checkWorkoutSetCallback() {
-    workoutModelList.forEach((element) {
-      print('타입 : ');
-      print(element.type);
-    });
-    setState(() {
-      haveAllSet = workoutModelList
-          .every((workoutModel) => workoutModel.type != WorkoutType.none);
-    });
-
-    print('현재 모든 운동 세트 있는지? : $haveAllSet ');
+    super.initState();
   }
 
   @override
   void didChangeDependencies() {
-    WorkoutPageArgument args = ModalRoute.of(context).settings.arguments;
-    name = args.name;
-    autoKey = args.autoKey;
-    days = args.days;
-    color = args.color;
+    _workoutModelList =
+        Provider.of<WorkoutProvider>(context, listen: true).selWorkouts;
 
-    displayedRoutine = Provider.of<RoutineProvider>(context).find(args.autoKey);
-    workoutModelList = Provider.of<RoutineProvider>(context)
-        .find(args.autoKey)
-        .workoutModelList;
-    //기존 리스트를 백업한다.
-    backupWorkoutModelList = workoutModelList.toList();
-    workoutList = createWorkoutList(workoutModelList);
-    workoutList.forEach((w) {
-      w.workoutState = WorkoutState.onRoutine;
-      w.deleteWorkoutCallback = deleteWorkoutCallback;
-      w.checkWorkoutSetCallback = checkWorkoutSetCallback;
-    });
-
-    checkWorkoutSetCallback();
     super.didChangeDependencies();
+  }
+
+  @override
+  void deactivate() {
+    print('deactivate');
+    print(Provider.of<RoutineProvider>(context)
+        .routineModels[0]
+        .workoutModelList);
+    Provider.of<WorkoutProvider>(context, listen: false).selInit();
+    Provider.of<RoutineProvider>(context, listen: false).selInit();
+    super.deactivate();
   }
 
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
         // 완성하기 누르지 않고 back할 때 기존 리스트로 백업하여 운동을 추가하지 않는다
-        Provider.of<RoutineProvider>(context, listen: false)
-            .modify(autoKey, name, color, days, backupWorkoutModelList);
+        // Provider.of<RoutineProvider>(context, listen: false)
+        //     .modify(autoKey, name, color, days, backupWorkoutModelList);
         return Future(() => true);
       },
       child: SafeArea(
@@ -133,17 +80,17 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
                 ),
                 kSizedBoxBetweenItems,
                 Routine(
-                  autoKey: displayedRoutine.key,
-                  name: displayedRoutine.name,
-                  color: Color(displayedRoutine.color),
-                  days: displayedRoutine.days,
+                  autoKey: autoKey,
+                  name: name,
+                  color: color,
+                  days: days,
                   isListUp: true,
                 ),
                 Expanded(
                   child: Stack(
                     alignment: Alignment.bottomRight,
                     children: [
-                      workoutList.isEmpty
+                      _workoutModelList.isEmpty
                           ? Center(
                               child: Text(
                                 '루틴에 운동을 추가해주세요!',
@@ -151,9 +98,12 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
                               ),
                             )
                           : ListView.builder(
-                              itemCount: workoutList.length,
+                              itemCount: _workoutModelList.length,
                               itemBuilder: (context, index) {
-                                return workoutList[index];
+                                return Workout(
+                                  workoutModel: _workoutModelList[index],
+                                  workoutState: WorkoutState.onRoutine,
+                                );
                               }),
                       FloatingActionButton(
                           child: Icon(
@@ -163,25 +113,25 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
                           ),
                           backgroundColor: Colors.white,
                           onPressed: () {
-                            Navigator.pushNamed(context, 'Workout_list_page',
-                                arguments: AddWorkoutArgument(
-                                  addWorkoutFunction: addWorkoutCallback,
-                                )).then((value) {
-                              checkWorkoutSetCallback();
-                            });
+                            Navigator.pushNamed(context, 'Workout_list_page')
+                                .then((value) {});
                           }),
                     ],
                   ),
                 ),
                 kSizedBoxBetweenItems,
-                haveAllSet
+                true
                     ? BottomFixedButton(
                         text: '저장하기',
                         tap: () {
-                          //print(workoutModelList[0].setData[0].weight);
+                          print('저장하기');
                           Provider.of<RoutineProvider>(context, listen: false)
-                              .saveWorkout(autoKey, workoutModelList);
-                          Navigator.popUntil(context, (route) => route.isFirst);
+                              .saveWorkout(autoKey, _workoutModelList);
+                          print(Provider.of<RoutineProvider>(context,
+                                  listen: false)
+                              .routineModels[0]
+                              .workoutModelList);
+                          // Navigator.popUntil(context, (route) => route.isFirst);
                         },
                       )
                     : BottomFixedButton(
@@ -196,12 +146,4 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
       ),
     );
   }
-}
-
-class AddWorkoutArgument {
-  final Function addWorkoutFunction;
-
-  AddWorkoutArgument({
-    this.addWorkoutFunction,
-  });
 }
