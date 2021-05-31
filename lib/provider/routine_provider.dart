@@ -12,6 +12,7 @@ class RoutineProvider with ChangeNotifier {
   //앱 전체에서 접근 가능한 전역 루틴리스트
   List<Routine> _routines = [];
   List<RoutineModel> _routineModels = [];
+  RoutineModel _selRoutine = null;
 
   RoutineProvider() {
     load();
@@ -21,10 +22,21 @@ class RoutineProvider with ChangeNotifier {
     return _routineModels.length;
   }
 
+  RoutineModel get selRoutine => _selRoutine;
+
   UnmodifiableListView get routines => UnmodifiableListView(_routines);
 
   UnmodifiableListView get routineModels =>
       UnmodifiableListView(_routineModels);
+
+  void sel(String autoKey) {
+    if (autoKey != null) {
+      _selRoutine =
+          _routineModels.where((routine) => routine.key == autoKey).toList()[0];
+    }else{
+      _selRoutine = null;
+    }
+  }
 
   void add(String text, Color color, List<String> days) async {
     var _box = await Hive.openBox<RoutineModel>('routines');

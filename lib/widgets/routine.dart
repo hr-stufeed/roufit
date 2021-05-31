@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
-import 'package:hr_app/models/routine_provider.dart';
-import 'package:hr_app/models/timer_provider.dart';
+import 'file:///C:/Users/Hone/Desktop/develop/hru_app/lib/provider/routine_provider.dart';
+import 'file:///C:/Users/Hone/Desktop/develop/hru_app/lib/provider/timer_provider.dart';
 import 'package:hr_app/models/workout_model.dart';
 import 'package:hr_app/models/workout_set.dart';
 import 'package:provider/provider.dart';
@@ -23,12 +23,14 @@ class Routine extends StatefulWidget {
     this.workoutModelList,
   });
 
-  Widget _popup(BuildContext context) => PopupMenuButton<int>(
+  Widget _popup(BuildContext context) =>
+      PopupMenuButton<int>(
         icon: Icon(
           Icons.more_vert,
           color: Colors.white,
         ),
-        itemBuilder: (context) => [
+        itemBuilder: (context) =>
+        [
           PopupMenuItem(
             value: 1,
             child: Text("수정하기"),
@@ -39,21 +41,13 @@ class Routine extends StatefulWidget {
           ),
         ],
         onSelected: (value) {
-          value == 2
-              ? Provider.of<RoutineProvider>(context, listen: false)
-                  .delete(autoKey)
-              : Navigator.pushNamed(
-                  context,
-                  'Routine_modify_page',
-                  arguments: ModifyArgument(
-                    isModify: true,
-                    autoKey: autoKey,
-                    name: name,
-                    color: color,
-                    days: days,
-                    workoutModelList: workoutModelList,
-                  ),
-                );
+          if (value == 2) {
+            Provider.of<RoutineProvider>(context, listen: false)
+                .delete(autoKey);
+          } else {
+            Provider.of<RoutineProvider>(context, listen: false).sel(autoKey);
+            Navigator.pushNamed(context, 'Routine_input_page');
+          }
         },
       );
 
@@ -65,14 +59,10 @@ class _RoutineState extends State<Routine> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Navigator.pushNamed(context, 'Routine_workout_page',
-          arguments: WorkoutPageArgument(
-            autoKey: widget.autoKey,
-            name: widget.name,
-            workoutModelList: widget.workoutModelList,
-            days: widget.days,
-            color: widget.color,
-          )),
+      onTap: () {
+        Provider.of<RoutineProvider>(context, listen: false).sel(widget.autoKey);
+        Navigator.pushNamed(context, 'Routine_workout_page');
+      },
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
       child: Container(
@@ -134,11 +124,12 @@ class ListPageRoutine extends StatelessWidget {
             Row(
               children: widget.days
                   .map(
-                    (day) => Text(
+                    (day) =>
+                    Text(
                       '$day ',
                       style: kRoutineTagStyle,
                     ),
-                  )
+              )
                   .toList(),
             ),
           ],
@@ -177,6 +168,7 @@ class HomePageRoutine extends StatelessWidget {
                   size: 40.0,
                 ),
                 onPressed: () {
+                  Provider.of<RoutineProvider>(context, listen: false).sel(widget.autoKey);
                   Navigator.pushNamed(context, 'Routine_start_page');
                   print('setTimer');
                   Provider.of<TimerProvider>(context, listen: false)
@@ -193,42 +185,4 @@ class HomePageRoutine extends StatelessWidget {
       ],
     );
   }
-}
-
-//루틴 수정하기 인자 전달 클래스
-//routine_create_page pushNamed로 이동 시 argument:ModyfyArgument(value) 전달할 것
-class ModifyArgument {
-  final bool isModify;
-  final String autoKey;
-  final String name;
-  final Color color;
-  final List<String> days;
-  final List<WorkoutModel> workoutModelList;
-
-  ModifyArgument({
-    this.isModify,
-    this.autoKey = ' ',
-    this.name = ' ',
-    this.color = Colors.red,
-    this.days,
-    this.workoutModelList,
-  });
-}
-
-class WorkoutPageArgument {
-  final String autoKey;
-  final String name;
-  final Color color;
-  final List<WorkoutModel> workoutModelList;
-  final List<WorkoutSet> setData;
-  final List<String> days;
-
-  WorkoutPageArgument({
-    this.autoKey = ' ',
-    this.name = ' ',
-    this.workoutModelList,
-    this.setData,
-    this.days,
-    this.color,
-  });
 }

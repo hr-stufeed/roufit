@@ -2,20 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hr_app/data/constants.dart';
-import 'package:hr_app/models/routine_provider.dart';
-import 'package:hr_app/models/timer_provider.dart';
-import 'package:hr_app/models/workout_provider.dart';
+import 'file:///C:/Users/Hone/Desktop/develop/hru_app/lib/provider/routine_provider.dart';
+import 'file:///C:/Users/Hone/Desktop/develop/hru_app/lib/provider/timer_provider.dart';
+import 'file:///C:/Users/Hone/Desktop/develop/hru_app/lib/provider/workout_provider.dart';
 import 'package:hr_app/models/workout_set.dart';
 
 import 'package:hr_app/scenes/home_page.dart';
 import 'package:hr_app/scenes/mypage.dart';
-import 'package:hr_app/scenes/routine/routine_create_page.dart';
+import 'package:hr_app/scenes/routine/routine_input_page.dart';
 import 'package:hr_app/scenes/workout_add_set_page.dart';
 import 'package:hr_app/scenes/workout_list_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hr_app/scenes/routine/routine_start_page.dart';
 import 'package:hr_app/scenes/routine/routine_workout_page.dart';
-import 'package:hr_app/scenes/routine/routine_modify_page.dart';
 import 'package:provider/provider.dart';
 
 import 'models/routine_model.dart';
@@ -65,10 +64,9 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
         routes: {
           'Home_page': (context) => HomePage(),
           'Routine_page': (context) => RoutineListPage(),
-          'Routine_create_page': (context) => RoutineCreatePage(),
+          'Routine_input_page': (context) => RoutineInputePage(),
           'Routine_start_page': (context) => RoutineStartPage(),
           'Routine_workout_page': (context) => RoutineWorkoutPage(),
-          'Routine_modify_page': (context) => RoutineModifyPage(),
           'Workout_list_page': (context) => WorkoutListPage(),
           'Workout_create_page': (context) => WorkoutCreatePage(),
           'Workout_add_set_page': (context) => WorkoutAddSetPage(),

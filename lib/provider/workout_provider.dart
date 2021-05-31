@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
@@ -67,6 +68,13 @@ class WorkoutProvider with ChangeNotifier {
     ),
   ];
 
+  List<WorkoutModel> _selWorkouts = [];
+
+  void selAdd(WorkoutModel selData) {
+    print(selData.name);
+    _selWorkouts.add(selData);
+  }
+
   WorkoutProvider() {
     load();
   }
@@ -76,6 +84,9 @@ class WorkoutProvider with ChangeNotifier {
   }
 
   UnmodifiableListView get workouts => UnmodifiableListView(_workouts);
+
+  UnmodifiableListView<WorkoutModel> get selWorkouts =>
+      UnmodifiableListView(_selWorkouts);
 
   void add(String text, Color color, List<String> tags) async {
     var _box = await Hive.openBox<WorkoutModel>('workouts');
@@ -183,7 +194,8 @@ class WorkoutProvider with ChangeNotifier {
     try {
       for (int index = 0; index < _box.length; index++) {
         _workouts.add(WorkoutModel(
-          autoKey: _box.keyAt(index), // 로딩시에도 박스에서 키를 가져와 다시 부여한다.
+          autoKey: _box.keyAt(index),
+          // 로딩시에도 박스에서 키를 가져와 다시 부여한다.
           name: _box.getAt(index).name,
           emoji: _box.getAt(index).emoji,
           setData: _box.getAt(index).setData,
