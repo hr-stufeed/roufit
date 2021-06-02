@@ -104,6 +104,7 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
                                 return Workout(
                                   workoutModel: _workoutModelList[index],
                                   workoutState: WorkoutState.onRoutine,
+                                  type: _workoutModelList[index].type,
                                   onTap: () => Provider.of<WorkoutProvider>(
                                           context,
                                           listen: false)

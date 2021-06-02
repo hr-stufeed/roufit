@@ -25,32 +25,13 @@ class Workout extends StatefulWidget {
   Workout({
     @required this.workoutModel,
     this.workoutState = WorkoutState.onWorkoutList,
+    this.type,
     this.onTap,
     this.onDelete,
   });
 
   bool isSelected = false;
   WorkoutState workoutState = WorkoutState.onWorkoutList;
-
-  // Widget workoutStateText(WorkoutType type) {
-  //   Color subTitleColor = Colors.grey;
-  //
-  //   if (type == WorkoutType.setWeight)
-  //     return Text(
-  //       '@세트',
-  //       style: TextStyle(color: subTitleColor),
-  //     );
-  //   else if (type == WorkoutType.durationWeight)
-  //     return Text(
-  //       '@시간',
-  //       style: TextStyle(color: subTitleColor),
-  //     );
-  //   else if (type == WorkoutType.none)
-  //     return Text(
-  //       '세트를 추가해주세요',
-  //       style: TextStyle(color: subTitleColor),
-  //     );
-  // }
 
   Widget _popup(BuildContext context) => PopupMenuButton<int>(
         icon: Icon(
@@ -80,6 +61,28 @@ class _WorkoutState extends State<Workout> {
   Color containerColor = Colors.white;
   Color titleColor = Colors.black;
   Color subTitleColor = Colors.grey;
+
+  Widget workoutStateText(WorkoutType type) {
+    Color subTitleColor = Colors.grey;
+    if (widget.workoutState != WorkoutState.onRoutine) {
+      return SizedBox();
+    }
+    if (type == WorkoutType.setWeight)
+      return Text(
+        '@세트',
+        style: TextStyle(color: subTitleColor),
+      );
+    else if (type == WorkoutType.durationWeight)
+      return Text(
+        '@시간',
+        style: TextStyle(color: subTitleColor),
+      );
+    else if (type == WorkoutType.none)
+      return Text(
+        '세트를 추가해주세요',
+        style: TextStyle(color: subTitleColor),
+      );
+  }
 
   Widget workoutIcon() {
     switch (widget.workoutState) {
@@ -126,7 +129,6 @@ class _WorkoutState extends State<Workout> {
 
   @override
   Widget build(BuildContext context) {
-
     if (widget.workoutModel != null) {
       widget.autoKey = widget.workoutModel.autoKey;
       widget.name = widget.workoutModel.name;
@@ -193,6 +195,7 @@ class _WorkoutState extends State<Workout> {
                     )
                     .toList(),
               ),
+              workoutStateText(widget.type)
             ],
           ),
           trailing: workoutIcon(),

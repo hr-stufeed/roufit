@@ -47,6 +47,9 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
 
     setData = _workoutModel.setData;
     _workoutType = _workoutModel.type;
+    if(_workoutType == WorkoutType.none){
+      _workoutType = WorkoutType.setWeight;
+    }
     print('_workoutType : $_workoutType');
 
     setList = List<SetInputField>.generate(
