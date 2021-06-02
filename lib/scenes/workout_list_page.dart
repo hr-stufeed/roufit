@@ -14,6 +14,23 @@ class WorkoutListPage extends StatefulWidget {
 class _WorkoutListPageState extends State<WorkoutListPage> {
   List<String> selectedWorkouts = [];
   List<Workout> copiedList;
+  List<String> _tagList = [];
+  Set<String> _selectedTags = {"전체"};
+
+  // 전역 운동 리스트에서 태그들을 가져오는 함수
+  void getWorkoutTags(List<WorkoutModel> copiedModelList) {
+    copiedModelList.forEach((workoutModel) {
+      _tagList = ['전체', ...?_tagList, ...?workoutModel.tags];
+    });
+    Set<String> _sorter = Set.from(_tagList);
+    _tagList = List.from(_sorter);
+  }
+
+  void filterWorkoutByTags() {
+    // copiedList = copiedList.where((workout) {
+    //   return workout.tags.contains("등");
+    // }).toList();
+  }
 
   @override
   void didChangeDependencies() {
@@ -24,6 +41,8 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
               workoutModel: workoutModel,
             ))
         .toList();
+
+    getWorkoutTags(copiedModelList);
     super.didChangeDependencies();
   }
 
@@ -38,29 +57,57 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
             children: [
               Text('운동을 선택해주세요.', style: kPageTitleStyle),
               SizedBox(
-                height: 20,
+                height: 16,
               ),
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                '생성된 운동',
-                style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.normal,
-                  color: Colors.grey,
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Expanded(
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 16.0),
+                height: 32.0,
                 child: ListView.builder(
                     shrinkWrap: true,
-                    itemCount: copiedList.length,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _tagList.length,
                     itemBuilder: (context, index) {
-                      return copiedList[index];
+                      return Container(
+                        margin: EdgeInsets.symmetric(horizontal: 4.0),
+                        child: ChoiceChip(
+                          label: Text('${_tagList[index]}'),
+                          selected: _selectedTags.contains(_tagList[index]),
+                          onSelected: (bool selected) {
+                            setState(() {
+                              selected
+                                  ? _selectedTags.add(_tagList[index])
+                                  : _selectedTags.remove(_tagList[index]);
+                              filterWorkoutByTags();
+                            });
+                          },
+                        ),
+                      );
                     }),
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              Expanded(
+                child: Stack(
+                  alignment: Alignment.bottomRight,
+                  children: [
+                    ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: copiedList.length,
+                        itemBuilder: (context, index) {
+                          return copiedList[index];
+                        }),
+                    FloatingActionButton(
+                      child: Icon(
+                        Icons.add,
+                        color: Colors.black,
+                        size: 30.0,
+                      ),
+                      backgroundColor: Colors.white,
+                      onPressed: () => {},
+                    ),
+                  ],
+                ),
               ),
               BottomFixedButton(
                 text: '완료',

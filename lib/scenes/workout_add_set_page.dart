@@ -34,14 +34,9 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
           repCount: 0,
           weight: 0,
           duration: 0,
-          addSetDataCallback: addSetDataCallBack,
         ),
       );
     });
-  }
-
-  void addSetDataCallBack(WorkoutSet workoutSet) {
-    setData.add(workoutSet);
   }
 
   @override
@@ -158,7 +153,8 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
                         setList.map((e) => e.workoutSetData).toList();
                     _workoutModel.setData = setData;
                     _workoutModel.type = _workoutType;
-                    Provider.of<WorkoutProvider>(context, listen: false).haveAllSetCheck();
+                    Provider.of<WorkoutProvider>(context, listen: false)
+                        .haveAllSetCheck();
                     Navigator.pop(context);
                   },
                 ),
@@ -178,7 +174,6 @@ class SetInputField extends StatefulWidget {
   final int weight;
   final int repCount;
   final int duration;
-  final Function addSetDataCallback;
   WorkoutType workoutType;
   WorkoutSet workoutSetData = WorkoutSet(repCount: 0, weight: 0, duration: 0);
 
@@ -189,7 +184,6 @@ class SetInputField extends StatefulWidget {
     this.weight,
     this.repCount,
     this.duration,
-    this.addSetDataCallback,
   }) : super(key: key);
 
   @override
