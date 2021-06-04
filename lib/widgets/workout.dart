@@ -137,6 +137,12 @@ class _WorkoutState extends State<Workout> {
       widget.setData = widget.workoutModel.setData;
       widget.type = widget.workoutModel.type;
     }
+
+    if (!widget.isSelected) {
+      containerColor = Colors.white;
+      titleColor = Colors.black;
+      subTitleColor = Colors.grey;
+    }
     return GestureDetector(
       onTap: () {
         if (widget.workoutState == WorkoutState.onRoutine) {

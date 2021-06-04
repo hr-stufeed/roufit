@@ -13,7 +13,10 @@ class WorkoutListPage extends StatefulWidget {
 
 class _WorkoutListPageState extends State<WorkoutListPage> {
   List<String> selectedWorkouts = [];
-  List<Workout> copiedList;
+  // 전역 운동리스트의 복사본
+  List<Workout> _copiedList;
+  // 페이지에 보여지는 운동 리스트
+  List<Workout> _displayedList;
   List<String> _tagList = [];
   Set<String> _selectedTags = {"전체"};
 
@@ -22,27 +25,53 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
     copiedModelList.forEach((workoutModel) {
       _tagList = ['전체', ...?_tagList, ...?workoutModel.tags];
     });
+    //중복 제거 후 정렬
     Set<String> _sorter = Set.from(_tagList);
     _tagList = List.from(_sorter);
   }
 
+  // 선택된 태그에 따라 운동 리스트를 필터링하는 함수
   void filterWorkoutByTags() {
-    // copiedList = copiedList.where((workout) {
-    //   return workout.tags.contains("등");
-    // }).toList();
+    List<Workout> _filtedList;
+    // 초기화
+    _displayedList = [];
+    setState(() {
+      //선택된 태그안을 돌면서
+      _selectedTags.forEach((tag) {
+        // 전체가 아닐 경우
+        if (tag != "전체") {
+          //해당 태그를 포함한 모든 운동을 가져와 리스트에 추가한다
+          _filtedList = _copiedList
+              .where((workout) => workout.tags.contains(tag))
+              .toList();
+          _displayedList.addAll(_filtedList);
+        } else
+          // 전체인 경우 모든 운동을 가져온다
+          _displayedList = _copiedList;
+      });
+      // 중복 제거 후 정렬
+      Set<Workout> _sorter = Set.from(_displayedList);
+      // 모든 운동의 선택 상태 초기화
+      _displayedList.forEach((element) {
+        element.isSelected = false;
+      });
+      _displayedList = List.from(_sorter);
+    });
   }
 
   @override
   void didChangeDependencies() {
     List<WorkoutModel> copiedModelList =
         Provider.of<WorkoutProvider>(context).copyList();
-    copiedList = copiedModelList
+    _copiedList = copiedModelList
         .map((workoutModel) => Workout(
               workoutModel: workoutModel,
             ))
         .toList();
-
     getWorkoutTags(copiedModelList);
+
+    _displayedList = _copiedList;
+
     super.didChangeDependencies();
   }
 
@@ -69,14 +98,27 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
                     itemBuilder: (context, index) {
                       return Container(
                         margin: EdgeInsets.symmetric(horizontal: 4.0),
+                        // 태그 선택 칩들 생성
                         child: ChoiceChip(
                           label: Text('${_tagList[index]}'),
                           selected: _selectedTags.contains(_tagList[index]),
                           onSelected: (bool selected) {
                             setState(() {
-                              selected
-                                  ? _selectedTags.add(_tagList[index])
-                                  : _selectedTags.remove(_tagList[index]);
+                              // 전체를 눌렀을 때 다른 태그들을 모두 제거하고 전체만 남겨둔다
+                              if (_tagList[index] == "전체") {
+                                _selectedTags = {};
+                                _selectedTags.add("전체");
+                              }
+                              if (selected) {
+                                //다른 태그들을 눌렀을 땐 전체를 제거한다
+                                _selectedTags.remove("전체");
+                                _selectedTags.add(_tagList[index]);
+                              } else {
+                                _selectedTags.remove(_tagList[index]);
+                                //선택된 태그가 없다면 전체를 활성화한다
+                                if (_selectedTags.isEmpty)
+                                  _selectedTags.add("전체");
+                              }
                               filterWorkoutByTags();
                             });
                           },
@@ -91,12 +133,15 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
                 child: Stack(
                   alignment: Alignment.bottomRight,
                   children: [
-                    ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: copiedList.length,
-                        itemBuilder: (context, index) {
-                          return copiedList[index];
-                        }),
+                    Container(
+                      alignment: Alignment.topCenter,
+                      child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: _displayedList.length,
+                          itemBuilder: (context, index) {
+                            return _displayedList[index];
+                          }),
+                    ),
                     FloatingActionButton(
                       child: Icon(
                         Icons.add,
@@ -112,7 +157,7 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
               BottomFixedButton(
                 text: '완료',
                 tap: () {
-                  copiedList.forEach((e) => {
+                  _copiedList.forEach((e) => {
                         if (e.isSelected)
                           Provider.of<WorkoutProvider>(context, listen: false)
                               .selAdd(e.workoutModel)
