@@ -115,7 +115,7 @@ class WorkoutProvider with ChangeNotifier {
 
   //워크세트 추가
   void addSetWorkout(int _index, List<WorkoutSet> _setList) {
-    _selWorkouts[_index].setData =_setList;
+    _selWorkouts[_index].setData = _setList;
     notifyListeners();
   }
 
@@ -130,7 +130,7 @@ class WorkoutProvider with ChangeNotifier {
     _haveAllSet = true;
 
     selWorkouts.forEach((element) {
-      if (element.setData.isEmpty){
+      if (element.setData.isEmpty) {
         _haveAllSet = false;
       }
     });
@@ -139,7 +139,7 @@ class WorkoutProvider with ChangeNotifier {
   }
 
   // 확정 데이터
-  void add(String text, Color color, List<String> tags) async {
+  void add(String text, String emoji, List<String> tags) async {
     var _box = await Hive.openBox<WorkoutModel>('workouts');
     // 현재 시간에 따른 키를 생성한다.
     var key = DateFormat('yyMMddhhmmss').format(DateTime.now());
@@ -148,15 +148,20 @@ class WorkoutProvider with ChangeNotifier {
       key,
       WorkoutModel(
         name: text,
-        emoji: ' ',
+        emoji: emoji,
         tags: tags,
+        setData: [],
+        type: WorkoutType.none,
       ),
     );
     // 동일하게 workout list에도 키와 함께 삽입한다.
     final workout = WorkoutModel(
       autoKey: key,
       name: text,
+      emoji: emoji,
       tags: tags,
+      setData: [],
+      type: WorkoutType.none,
     );
     _workouts.add(workout);
 
@@ -215,7 +220,7 @@ class WorkoutProvider with ChangeNotifier {
     // 현재 시간에 따른 키를 생성한다.
     var autokey = DateFormat('yyMMddhhmmss').format(DateTime.now());
     var loadWorkout =
-    _workouts.where((workout) => workout.autoKey == key).toList()[0];
+        _workouts.where((workout) => workout.autoKey == key).toList()[0];
     WorkoutModel returnValue = WorkoutModel(
       autoKey: autokey,
       name: loadWorkout.name,
@@ -247,25 +252,13 @@ class WorkoutProvider with ChangeNotifier {
         _workouts.add(WorkoutModel(
           autoKey: _box.keyAt(index),
           // 로딩시에도 박스에서 키를 가져와 다시 부여한다.
-          name: _box
-              .getAt(index)
-              .name,
-          emoji: _box
-              .getAt(index)
-              .emoji,
-          setData: _box
-              .getAt(index)
-              .setData,
-          tags: _box
-              .getAt(index)
-              .tags,
-          type: _box
-              .getAt(index)
-              .type,
+          name: _box.getAt(index).name,
+          emoji: _box.getAt(index).emoji,
+          setData: _box.getAt(index).setData,
+          tags: _box.getAt(index).tags,
+          type: _box.getAt(index).type,
         ));
-        print('workout load : ${_box
-            .getAt(index)
-            .name}');
+        print('workout load : ${_box.getAt(index).name}');
         print('workout index : $index');
       }
       notifyListeners();

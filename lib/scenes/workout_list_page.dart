@@ -130,29 +130,20 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
                 height: 8,
               ),
               Expanded(
-                child: Stack(
-                  alignment: Alignment.bottomRight,
-                  children: [
-                    Container(
-                      alignment: Alignment.topCenter,
-                      child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: _displayedList.length,
-                          itemBuilder: (context, index) {
-                            return _displayedList[index];
-                          }),
-                    ),
-                    FloatingActionButton(
-                      child: Icon(
-                        Icons.add,
-                        color: Colors.black,
-                        size: 30.0,
-                      ),
-                      backgroundColor: Colors.white,
-                      onPressed: () => {},
-                    ),
-                  ],
-                ),
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: _displayedList.length,
+                    itemBuilder: (context, index) {
+                      return _displayedList[index];
+                    }),
+              ),
+              BottomFixedButton(
+                text: '새로운 운동 생성',
+                textColor: Colors.blue,
+                backgroundColor: Colors.white,
+                tap: () {
+                  Navigator.pushNamed(context, 'Workout_create_page');
+                },
               ),
               BottomFixedButton(
                 text: '완료',

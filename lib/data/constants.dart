@@ -59,11 +59,18 @@ const kOutlinedButtonTextStyle = TextStyle(
   fontWeight: FontWeight.normal,
   color: Colors.white,
 );
-const kBottomFixedButtonTextStyle = TextStyle(
+const kBottomFixedButtonTextStyle1 = TextStyle(
   fontSize: 28.0,
   fontWeight: FontWeight.bold,
   color: Colors.white,
 );
+
+const kBottomFixedButtonTextStyle2 = TextStyle(
+  fontSize: 28.0,
+  fontWeight: FontWeight.bold,
+  color: Colors.blue,
+);
+
 const kSizedBoxBetweenItems = SizedBox(
   height: 24.0,
 );
