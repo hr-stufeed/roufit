@@ -15,6 +15,8 @@ class WorkoutCreatePage extends StatefulWidget {
 
 class _WorkoutCreatePageState extends State<WorkoutCreatePage> {
   var myController = TextEditingController();
+  var tagController = TextEditingController();
+
   List<String> _tagList = [];
   List<Widget> _chipList = [];
   Set<String> _selectedTags = {};
@@ -54,6 +56,8 @@ class _WorkoutCreatePageState extends State<WorkoutCreatePage> {
   @override
   void dispose() {
     myController.dispose();
+    tagController.dispose();
+
     super.dispose();
   }
 
@@ -116,7 +120,36 @@ class _WorkoutCreatePageState extends State<WorkoutCreatePage> {
                                 color: Colors.white,
                               ),
                             ),
-                            onPressed: () => {},
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(16.0)),
+                                    title: Text("태그의 이름을 입력해주세요."),
+                                    content: TextField(
+                                      controller: tagController,
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          String newTag = tagController.text;
+                                          _tagList.remove("추가");
+                                          _tagList.add(newTag);
+                                          _tagList.add("추가");
+                                          tagController.clear();
+                                          setState(() {});
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text("완료"),
+                                      )
+                                    ],
+                                  );
+                                },
+                              );
+                            },
                           );
                         }
                       }),
