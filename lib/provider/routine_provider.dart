@@ -31,6 +31,7 @@ class RoutineProvider with ChangeNotifier {
         _routineModels.where((routine) => routine.key == autoKey).toList()[0];
     notifyListeners();
   }
+
   // 선택 루틴 초기화
   void selInit() {
     _selRoutine = null;

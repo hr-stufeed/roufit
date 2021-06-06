@@ -76,7 +76,7 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TopBar(
-                  title: '루틴 만들기',
+                  title: '운동 추가',
                   hasMoreButton: false,
                 ),
                 kSizedBoxBetweenItems,
@@ -86,6 +86,7 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
                   color: color,
                   days: days,
                   isListUp: true,
+                  isSelected: true,
                 ),
                 Expanded(
                   child: Stack(

@@ -13,24 +13,24 @@ class Routine extends StatefulWidget {
   final List<String> days;
   List<WorkoutModel> workoutModelList;
   bool isListUp;
+  bool isSelected = false;
 
   Routine({
     this.autoKey,
     this.name = '루틴 이름',
     this.color = Colors.lightBlueAccent,
     this.isListUp = true,
+    this.isSelected = false,
     this.days,
     this.workoutModelList,
   });
 
-  Widget _popup(BuildContext context) =>
-      PopupMenuButton<int>(
+  Widget _popup(BuildContext context) => PopupMenuButton<int>(
         icon: Icon(
           Icons.more_vert,
           color: Colors.white,
         ),
-        itemBuilder: (context) =>
-        [
+        itemBuilder: (context) => [
           PopupMenuItem(
             value: 1,
             child: Text("수정하기"),
@@ -59,10 +59,13 @@ class _RoutineState extends State<Routine> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        Provider.of<RoutineProvider>(context, listen: false).sel(widget.autoKey);
-        Navigator.pushNamed(context, 'Routine_workout_page');
-      },
+      onTap: !widget.isSelected
+          ? () {
+              Provider.of<RoutineProvider>(context, listen: false)
+                  .sel(widget.autoKey);
+              Navigator.pushNamed(context, 'Routine_workout_page');
+            }
+          : () => {},
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
       child: Container(
@@ -124,12 +127,11 @@ class ListPageRoutine extends StatelessWidget {
             Row(
               children: widget.days
                   .map(
-                    (day) =>
-                    Text(
+                    (day) => Text(
                       '$day ',
                       style: kRoutineTagStyle,
                     ),
-              )
+                  )
                   .toList(),
             ),
           ],
@@ -168,7 +170,8 @@ class HomePageRoutine extends StatelessWidget {
                   size: 40.0,
                 ),
                 onPressed: () {
-                  Provider.of<RoutineProvider>(context, listen: false).sel(widget.autoKey);
+                  Provider.of<RoutineProvider>(context, listen: false)
+                      .sel(widget.autoKey);
                   Navigator.pushNamed(context, 'Routine_start_page');
                   print('setTimer');
                   Provider.of<TimerProvider>(context, listen: false)
