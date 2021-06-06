@@ -66,6 +66,9 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
     _copiedList = copiedModelList
         .map((workoutModel) => Workout(
               workoutModel: workoutModel,
+              onDelete: () =>
+                  Provider.of<WorkoutProvider>(context, listen: false)
+                      .delete(workoutModel.autoKey),
             ))
         .toList();
     getWorkoutTags(copiedModelList);

@@ -62,6 +62,21 @@ class _WorkoutState extends State<Workout> {
   Color titleColor = Colors.black;
   Color subTitleColor = Colors.grey;
 
+  void selectedOnWorkoutList() {
+    setState(() {
+      widget.isSelected = !widget.isSelected;
+      if (widget.isSelected) {
+        containerColor = Colors.blue;
+        titleColor = Colors.white;
+        subTitleColor = Colors.white;
+      } else {
+        containerColor = Colors.white;
+        titleColor = Colors.black;
+        subTitleColor = Colors.grey;
+      }
+    });
+  }
+
   Widget workoutStateText(WorkoutType type) {
     Color subTitleColor = Colors.grey;
     if (widget.workoutState != WorkoutState.onRoutine) {
@@ -90,25 +105,7 @@ class _WorkoutState extends State<Workout> {
         return Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            IconButton(
-              onPressed: () {
-                setState(() {
-                  widget.isSelected = !widget.isSelected;
-                  if (widget.isSelected) {
-                    containerColor = Colors.blue;
-                    titleColor = Colors.white;
-                    subTitleColor = Colors.white;
-                  } else {
-                    containerColor = Colors.white;
-                    titleColor = Colors.black;
-                    subTitleColor = Colors.grey;
-                  }
-                });
-              },
-              icon: Icon(Icons.playlist_add_rounded),
-              color: Colors.black,
-              iconSize: 35.0,
-            ),
+            widget._popup(context),
           ],
         );
         break;
@@ -148,6 +145,8 @@ class _WorkoutState extends State<Workout> {
         if (widget.workoutState == WorkoutState.onRoutine) {
           widget.onTap();
           Navigator.pushNamed(context, 'Workout_add_set_page');
+        } else if (widget.workoutState == WorkoutState.onWorkoutList) {
+          selectedOnWorkoutList();
         }
       },
       child: Container(
@@ -210,3 +209,29 @@ class _WorkoutState extends State<Workout> {
     );
   }
 }
+
+
+// Row(
+//           mainAxisSize: MainAxisSize.min,
+//           children: [
+//             IconButton(
+//               onPressed: () {
+//                 setState(() {
+//                   widget.isSelected = !widget.isSelected;
+//                   if (widget.isSelected) {
+//                     containerColor = Colors.blue;
+//                     titleColor = Colors.white;
+//                     subTitleColor = Colors.white;
+//                   } else {
+//                     containerColor = Colors.white;
+//                     titleColor = Colors.black;
+//                     subTitleColor = Colors.grey;
+//                   }
+//                 });
+//               },
+//               icon: Icon(Icons.playlist_add_rounded),
+//               color: Colors.black,
+//               iconSize: 35.0,
+//             ),
+//           ],
+//         );
