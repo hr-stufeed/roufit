@@ -43,6 +43,7 @@ dependencies:
       # git에서 필요 패키지 fork 수정한 버전
   roundcheckbox: ^1.0.0+1
   syncfusion_flutter_gauges: ^19.1.63
+  scroll_snap_list: ^0.8.1
 
 dev_dependencies:
   flutter_test:

@@ -58,6 +58,7 @@ class Routine extends StatefulWidget {
 class _RoutineState extends State<Routine> {
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return InkWell(
       onTap: !widget.isSelected
           ? () {
@@ -70,8 +71,9 @@ class _RoutineState extends State<Routine> {
       highlightColor: Colors.transparent,
       child: Container(
         margin: EdgeInsets.only(bottom: 16.0),
+        width: !widget.isListUp ? size.width - 64 : size.width,
         padding: EdgeInsets.symmetric(
-          horizontal: 16.0,
+          horizontal: 24.0,
           vertical: 24.0,
         ),
         decoration: BoxDecoration(
@@ -173,7 +175,6 @@ class HomePageRoutine extends StatelessWidget {
                   Provider.of<RoutineProvider>(context, listen: false)
                       .sel(widget.autoKey);
                   Navigator.pushNamed(context, 'Routine_start_page');
-                  print('setTimer');
                   Provider.of<TimerProvider>(context, listen: false)
                       .timerStart();
                 })

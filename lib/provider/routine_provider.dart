@@ -122,6 +122,7 @@ class RoutineProvider with ChangeNotifier {
     _box.toMap().forEach((key, _routineData) {
       _routineModels.add(_routineData);
     });
+
     notifyListeners();
   }
 

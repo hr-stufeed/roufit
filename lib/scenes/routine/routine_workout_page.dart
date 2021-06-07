@@ -50,9 +50,9 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
   @override
   void deactivate() {
     print('deactivate');
-    print(Provider.of<RoutineProvider>(context)
-        .routineModels[0]
-        .workoutModelList);
+    // print(Provider.of<RoutineProvider>(context)
+    //     .routineModels[0]
+    //     .workoutModelList);
     Provider.of<WorkoutProvider>(context, listen: false).selInit();
     Provider.of<RoutineProvider>(context, listen: false).selInit();
     super.deactivate();
