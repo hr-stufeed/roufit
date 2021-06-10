@@ -4,13 +4,14 @@ import 'package:hr_app/data/constants.dart';
 class TopBar extends StatelessWidget {
   final String title;
   final bool hasMoreButton;
-  final Widget popUpMenu;
-
+  final Widget extraButton;
+  final Color color;
   const TopBar({
     Key key,
     @required this.title,
     @required this.hasMoreButton,
-    this.popUpMenu,
+    this.extraButton,
+    this.color = Colors.black,
   }) : super(key: key);
 
   @override
@@ -19,12 +20,15 @@ class TopBar extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         IconButton(
+          padding: EdgeInsets.zero,
+          constraints: BoxConstraints(),
           icon: Icon(Icons.keyboard_backspace),
+          color: color,
           onPressed: () => Navigator.pop(context),
         ),
         Text(title, style: kTopBarTextStyle),
         hasMoreButton
-            ? popUpMenu
+            ? extraButton
             : IconButton(
                 icon: Icon(
                   Icons.more_horiz,

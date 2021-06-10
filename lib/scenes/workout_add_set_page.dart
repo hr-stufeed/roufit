@@ -6,6 +6,7 @@ import 'package:hr_app/models/workout_model.dart';
 import 'package:hr_app/models/workout_set.dart';
 import 'package:hr_app/provider/workout_provider.dart';
 import 'package:hr_app/widgets/TopBar.dart';
+import 'package:hr_app/widgets/animatedToggle.dart';
 import 'package:hr_app/widgets/bottomFixedButton.dart';
 import 'package:hr_app/widgets/workout.dart';
 import 'package:provider/provider.dart';
@@ -47,7 +48,7 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
 
     setData = _workoutModel.setData;
     _workoutType = _workoutModel.type;
-    if(_workoutType == WorkoutType.none){
+    if (_workoutType == WorkoutType.none) {
       _workoutType = WorkoutType.setWeight;
     }
     print('_workoutType : $_workoutType');
@@ -67,62 +68,121 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
   }
 
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return WillPopScope(
       onWillPop: () {
         return Future(() => true);
       },
       child: SafeArea(
         child: Material(
-          child: Padding(
-            padding: kPagePaddingwithTopbar,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TopBar(
-                  title: '세트 추가',
-                  hasMoreButton: false,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                margin: EdgeInsets.only(bottom: 0.0),
+                width: size.width,
+                padding: EdgeInsets.symmetric(
+                  horizontal: 24.0,
+                  vertical: 24.0,
                 ),
-                kSizedBoxBetweenItems,
-                Workout(
-                  workoutModel: _workoutModel,
-                  workoutState: WorkoutState.onFront,
-                ),
-                kSizedBoxBetweenItems,
-                // 운동 타입 선택하는 chip
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ChoiceChip(
-                      label: Text('세트'),
-                      selected: _workoutType == WorkoutType.setWeight,
-                      onSelected: (bool selected) {
-                        setState(() {
-                          _workoutType = selected
-                              ? WorkoutType.setWeight
-                              : WorkoutType.none;
-                          setList.clear();
-                        });
-                      },
+                    TopBar(
+                      title: ' ',
+                      hasMoreButton: true,
+                      extraButton: IconButton(
+                          color: Colors.black,
+                          disabledColor: Colors.grey,
+                          icon: Icon(Icons.check),
+                          onPressed: () {
+                            List<WorkoutSet> setData =
+                                setList.map((e) => e.workoutSetData).toList();
+                            _workoutModel.setData = setData;
+                            _workoutModel.type = _workoutType;
+                            Provider.of<WorkoutProvider>(context, listen: false)
+                                .haveAllSetCheck();
+                            Navigator.pop(context);
+                          }),
                     ),
-                    SizedBox(width: 8.0),
-                    ChoiceChip(
-                      label: Text('시간'),
-                      selected: _workoutType == WorkoutType.durationWeight,
-                      onSelected: (bool selected) {
-                        setState(() {
-                          _workoutType = selected
-                              ? WorkoutType.durationWeight
-                              : WorkoutType.none;
-                          setList.clear();
-                        });
-                      },
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          _workoutModel.emoji + " " + _workoutModel.name,
+                          style: kWorkoutAddSetTitleStyle,
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 8.0,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Row(
+                          children: _workoutModel.tags
+                              .map(
+                                (tag) => Text(
+                                  '#$tag ',
+                                  style: kWorkoutAddSetTagStyle,
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-                kSizedBoxBetweenItems,
-                Expanded(
+              ),
+              // 운동 타입 선택하는 chip
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  AnimatedToggle(
+                    values: ['세트', '시간'],
+                    onToggleCallback: (selected) {
+                      setState(() {
+                        if (selected == 0)
+                          _workoutType = WorkoutType.setWeight;
+                        else
+                          _workoutType = WorkoutType.durationWeight;
+                        setList.clear();
+                      });
+                    },
+                    buttonColor: Colors.blue,
+                    backgroundColor: const Color(0xFFB5C1CC),
+                    textColor: const Color(0xFFFFFFFF),
+                  ),
+                ],
+              ),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Text(
+                    "SET",
+                    style: kPageSubTitleStyle,
+                  ),
+                  Text(
+                    "REP",
+                    style: kPageSubTitleStyle,
+                  ),
+                  Text(
+                    "WEIGHT",
+                    style: kPageSubTitleStyle,
+                  ),
+                ],
+              ),
+              kSizedBoxBetweenItems,
+              Padding(
+                padding: kPagePaddingwithTopbar,
+                child: Container(
+                  height: size.height * 0.6,
                   child: Stack(
-                    alignment: Alignment.bottomRight,
+                    alignment: Alignment.bottomCenter,
                     children: [
                       setList.isEmpty
                           ? Center(
@@ -136,33 +196,43 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
                               itemBuilder: (context, index) {
                                 return setList[index];
                               }),
-                      FloatingActionButton(
-                        child: Icon(
-                          Icons.add,
-                          color: Colors.black,
-                          size: 30.0,
-                        ),
-                        backgroundColor: Colors.white,
-                        onPressed: () => addSetList(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          TextButton(
+                            onPressed: () => addSetList(),
+                            child: Text(
+                              "ADD SET",
+                              style: TextStyle(color: Colors.blueAccent),
+                            ),
+                          ),
+                          TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  setList.removeLast();
+                                });
+                              },
+                              child: Text(
+                                "REMOVE SET",
+                                style: TextStyle(color: Colors.black),
+                              )),
+                        ],
                       ),
+
+                      // FloatingActionButton(
+                      //   child: Icon(
+                      //     Icons.add,
+                      //     color: Colors.black,
+                      //     size: 30.0,
+                      //   ),
+                      //   backgroundColor: Colors.white,
+                      //   onPressed: () => addSetList(),
+                      // ),
                     ],
                   ),
                 ),
-                kSizedBoxBetweenItems,
-                BottomFixedButton(
-                  text: '저장하기',
-                  tap: () {
-                    List<WorkoutSet> setData =
-                        setList.map((e) => e.workoutSetData).toList();
-                    _workoutModel.setData = setData;
-                    _workoutModel.type = _workoutType;
-                    Provider.of<WorkoutProvider>(context, listen: false)
-                        .haveAllSetCheck();
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -232,7 +302,10 @@ class _SetInputFieldState extends State<SetInputField> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Text('Set ${widget.setNumber}'),
+          Text(
+            '${widget.setNumber}',
+            textAlign: TextAlign.center,
+          ),
           widget.workoutType == WorkoutType.setWeight
               ? Row(
                   children: [

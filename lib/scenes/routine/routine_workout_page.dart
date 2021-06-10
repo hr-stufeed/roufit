@@ -61,6 +61,7 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback(
         (_) => Provider.of<WorkoutProvider>(context, listen: false).haveAllSet);
+    Size size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: () {
         // 완성하기 누르지 않고 back할 때 기존 리스트로 백업하여 운동을 추가하지 않는다
@@ -70,25 +71,87 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
       },
       child: SafeArea(
         child: Material(
-          child: Padding(
-            padding: kPagePaddingwithTopbar,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TopBar(
-                  title: '운동 추가',
-                  hasMoreButton: false,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                margin: EdgeInsets.only(bottom: 16.0),
+                width: size.width,
+                padding: EdgeInsets.symmetric(
+                  horizontal: 24.0,
+                  vertical: 24.0,
                 ),
-                kSizedBoxBetweenItems,
-                Routine(
-                  autoKey: autoKey,
-                  name: name,
-                  color: color,
-                  days: days,
-                  isListUp: true,
-                  isSelected: true,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [color, color.withBlue(250)],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                  //borderRadius: kBorderRadius,
                 ),
-                Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TopBar(
+                      title: ' ',
+                      hasMoreButton: true,
+                      extraButton: IconButton(
+                        color: Colors.white,
+                        disabledColor: Colors.grey,
+                        icon: Icon(Icons.check),
+                        onPressed: Provider.of<WorkoutProvider>(context,
+                                    listen: true)
+                                .haveAllSet
+                            ? () {
+                                Provider.of<RoutineProvider>(context,
+                                        listen: false)
+                                    .saveWorkout(autoKey, _workoutModelList);
+                                Navigator.popUntil(
+                                    context, (route) => route.isFirst);
+                              }
+                            : null,
+                      ),
+                      color: Colors.white,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          name,
+                          style: kRoutineTitleStyle,
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 8.0,
+                    ),
+                    Text(
+                      '#상체 #코어',
+                      style: kRoutineTagStyle,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Row(
+                          children: days
+                              .map(
+                                (day) => Text(
+                                  '$day ',
+                                  style: kRoutineTagStyle,
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: kPagePaddingwithTopbar,
+                child: Container(
+                  height: size.height * 0.7,
                   child: Stack(
                     alignment: Alignment.bottomRight,
                     children: [
@@ -129,23 +192,29 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
                     ],
                   ),
                 ),
-                kSizedBoxBetweenItems,
-                Provider.of<WorkoutProvider>(context, listen: true).haveAllSet
-                    ? BottomFixedButton(
-                        text: '저장하기',
-                        tap: () {
-                          Provider.of<RoutineProvider>(context, listen: false)
-                              .saveWorkout(autoKey, _workoutModelList);
-                          Navigator.popUntil(context, (route) => route.isFirst);
-                        },
-                      )
-                    : BottomFixedButton(
-                        text: '세트를 추가해주세요',
-                        backgroundColor: Colors.blue[100],
-                        tap: null,
-                      ),
-              ],
-            ),
+              ),
+              // kSizedBoxBetweenItems,
+              // Provider.of<WorkoutProvider>(context, listen: true).haveAllSet
+              //     ? Container(
+              //         padding: kPagePaddingwithTopbar,
+              //         child: BottomFixedButton(
+              //           text: '저장하기',
+              //           tap: () {
+              //             Provider.of<RoutineProvider>(context, listen: false)
+              //                 .saveWorkout(autoKey, _workoutModelList);
+              //             Navigator.popUntil(context, (route) => route.isFirst);
+              //           },
+              //         ),
+              //       )
+              //     : Container(
+              //         padding: kPagePaddingwithTopbar,
+              //         child: BottomFixedButton(
+              //           text: '세트를 추가해주세요',
+              //           backgroundColor: Colors.blue[100],
+              //           tap: null,
+              //         ),
+              //       ),
+            ],
           ),
         ),
       ),

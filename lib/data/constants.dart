@@ -37,15 +37,15 @@ const kTopBarTextStyle = TextStyle(
   color: Colors.black,
 );
 const kRoutineTitleStyle = TextStyle(
-  fontSize: 28.0,
+  fontSize: 32.0,
   fontWeight: FontWeight.bold,
   color: Colors.white,
 );
 
 const kRoutineTagStyle = TextStyle(
   fontSize: 16.0,
-  fontWeight: FontWeight.bold,
-  color: Colors.white,
+  fontWeight: FontWeight.normal,
+  color: Color(0xFFE0E0E0),
 );
 
 const kWorkoutNameStyle = TextStyle(
@@ -53,6 +53,19 @@ const kWorkoutNameStyle = TextStyle(
   fontWeight: FontWeight.bold,
   color: Colors.black,
 );
+
+const kWorkoutAddSetTitleStyle = TextStyle(
+  fontSize: 32.0,
+  fontWeight: FontWeight.bold,
+  color: Colors.black,
+);
+
+const kWorkoutAddSetTagStyle = TextStyle(
+  fontSize: 16.0,
+  fontWeight: FontWeight.normal,
+  color: Colors.black54,
+);
+
 const kOutlinedButtonTextStyle = TextStyle(
   fontSize: 15.0,
   fontWeight: FontWeight.normal,
@@ -75,6 +88,7 @@ const kSizedBoxBetweenItems = SizedBox(
 );
 
 final kBorderRadius = BorderRadius.circular(20.0);
+
 final Routine kErrorRoutine = Routine(
   name: '!###LOADING###!',
   days: [],
