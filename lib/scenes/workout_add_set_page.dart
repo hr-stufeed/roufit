@@ -200,13 +200,13 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
                               },
                               child: Text(
                                 "REMOVE SET",
-                                style: kAddSetPageRemoveButtonTextStyle,
+                                style: kWorkoutAddSetRemoveStyle,
                               )),
                           TextButton(
                             onPressed: () => addSetList(),
                             child: Text(
                               "ADD SET",
-                              style: kAddSetPageAddButtonTextStyle,
+                              style: kWorkoutAddSetAddStyle,
                             ),
                           ),
                         ],
@@ -297,7 +297,7 @@ class _SetInputFieldState extends State<SetInputField> {
         children: [
           Text(
             'SET ${widget.setNumber}',
-            style: kPageSubTitleStyle,
+            style: kSetTextStyle,
             textAlign: TextAlign.center,
           ),
           widget.workoutType == WorkoutType.setWeight

@@ -65,6 +65,27 @@ const kWorkoutAddSetTagStyle = TextStyle(
   fontWeight: FontWeight.normal,
   color: Colors.black54,
 );
+const kWorkoutAddSetRemoveStyle = TextStyle(
+  color: Colors.black,
+  fontSize: 16.0,
+);
+
+const kWorkoutAddSetAddStyle = TextStyle(
+  color: Colors.blueAccent,
+  fontSize: 16.0,
+);
+
+const kSetDataTextStyle = TextStyle(
+  fontSize: 40.0,
+  fontWeight: FontWeight.bold,
+  color: Colors.black,
+);
+
+const kSetTextStyle = TextStyle(
+  fontSize: 20.0,
+  fontWeight: FontWeight.normal,
+  color: Colors.black,
+);
 
 const kOutlinedButtonTextStyle = TextStyle(
   fontSize: 15.0,
@@ -81,21 +102,6 @@ const kBottomFixedButtonTextStyle2 = TextStyle(
   fontSize: 28.0,
   fontWeight: FontWeight.bold,
   color: Colors.blue,
-);
-
-const kAddSetPageRemoveButtonTextStyle = TextStyle(
-  color: Colors.black,
-  fontSize: 16.0,
-);
-
-const kAddSetPageAddButtonTextStyle = TextStyle(
-  color: Colors.blueAccent,
-  fontSize: 16.0,
-);
-const kSetDataTextStyle = TextStyle(
-  fontSize: 40.0,
-  fontWeight: FontWeight.bold,
-  color: Colors.black,
 );
 
 const kSizedBoxBetweenItems = SizedBox(

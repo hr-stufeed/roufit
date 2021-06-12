@@ -67,7 +67,7 @@ class RoutineProvider with ChangeNotifier {
       name: text,
       color: color.value,
       days: days,
-      workoutModelList: [],
+      workoutModelList: workoutModelList,
     );
     _box.put(autoKey, _routineData);
 
