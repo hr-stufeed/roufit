@@ -148,10 +148,9 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
                   ],
                 ),
               ),
-              Padding(
-                padding: kPagePaddingwithTopbar,
-                child: Container(
-                  height: size.height * 0.7,
+              Expanded(
+                child: Padding(
+                  padding: kPagePaddingwithTopbar.copyWith(bottom: 16),
                   child: Stack(
                     alignment: Alignment.bottomRight,
                     children: [
