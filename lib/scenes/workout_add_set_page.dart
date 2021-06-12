@@ -44,7 +44,7 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
   void didChangeDependencies() {
     int index = Provider.of<WorkoutProvider>(context, listen: false).selIndex;
     _workoutModel =
-        Provider.of<WorkoutProvider>(context, listen: false).selWorkouts[index];
+    Provider.of<WorkoutProvider>(context, listen: false).selWorkouts[index];
 
     setData = _workoutModel.setData;
     _workoutType = _workoutModel.type;
@@ -55,7 +55,7 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
 
     setList = List<SetInputField>.generate(
       setData.length,
-      (index) => SetInputField(
+          (index) => SetInputField(
         setNumber: index + 1,
         workoutType: _workoutType,
         weight: setData[index].weight,
@@ -68,8 +68,6 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
   }
 
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
     return WillPopScope(
       onWillPop: () {
         return Future(() => true);
@@ -81,7 +79,6 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
             children: [
               Container(
                 margin: EdgeInsets.only(bottom: 0.0),
-                width: size.width,
                 padding: EdgeInsets.symmetric(
                   horizontal: 24.0,
                   vertical: 24.0,
@@ -98,7 +95,7 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
                           icon: Icon(Icons.check),
                           onPressed: () {
                             List<WorkoutSet> setData =
-                                setList.map((e) => e.workoutSetData).toList();
+                            setList.map((e) => e.workoutSetData).toList();
                             _workoutModel.setData = setData;
                             _workoutModel.type = _workoutType;
                             Provider.of<WorkoutProvider>(context, listen: false)
@@ -126,10 +123,10 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
                           children: _workoutModel.tags
                               .map(
                                 (tag) => Text(
-                                  '#$tag ',
-                                  style: kWorkoutAddSetTagStyle,
-                                ),
-                              )
+                              '#$tag ',
+                              style: kWorkoutAddSetTagStyle,
+                            ),
+                          )
                               .toList(),
                         ),
                       ],
@@ -177,25 +174,24 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
                 ],
               ),
               kSizedBoxBetweenItems,
-              Padding(
-                padding: kPagePaddingwithTopbar,
-                child: Container(
-                  height: size.height * 0.6,
+              Expanded(
+                child: Padding(
+                  padding: kPagePaddingwithTopbar,
                   child: Stack(
                     alignment: Alignment.bottomCenter,
                     children: [
                       setList.isEmpty
                           ? Center(
-                              child: Text(
-                                '세트를 추가해주세요!',
-                                style: kPageSubTitleStyle,
-                              ),
-                            )
+                        child: Text(
+                          '세트를 추가해주세요!',
+                          style: kPageSubTitleStyle,
+                        ),
+                      )
                           : ListView.builder(
-                              itemCount: setList.length,
-                              itemBuilder: (context, index) {
-                                return setList[index];
-                              }),
+                          itemCount: setList.length,
+                          itemBuilder: (context, index) {
+                            return setList[index];
+                          }),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -308,67 +304,67 @@ class _SetInputFieldState extends State<SetInputField> {
           ),
           widget.workoutType == WorkoutType.setWeight
               ? Row(
-                  children: [
-                    Container(
-                      width: 32,
-                      child: TextField(
-                        maxLength: 2,
-                        controller: repController,
-                        selectionHeightStyle: BoxHeightStyle.tight,
-                        keyboardType: TextInputType.number,
-                        onChanged: (value) {
-                          try {
-                            widget.workoutSetData.repCount = int.parse(value);
-                            print(
-                                '전달하는 횟수값 : ${widget.workoutSetData.repCount}');
-                          } catch (e) {
-                            widget.workoutSetData.repCount = 0;
-                          }
-                        },
-                        onTap: () => repController.clear(),
-                        textAlign: TextAlign.center,
-                        decoration: InputDecoration(
-                          isDense: true,
-                          contentPadding: EdgeInsets.fromLTRB(0.0, 0, 0, 0.0),
-                          disabledBorder: InputBorder.none,
-                          counterText: '',
-                        ),
-                      ),
-                    ),
-                    Text('회'),
-                  ],
-                )
-              : Row(
-                  children: [
-                    Container(
-                      width: 32,
-                      child: TextField(
-                        maxLength: 2,
-                        controller: durationController,
-                        selectionHeightStyle: BoxHeightStyle.tight,
-                        keyboardType: TextInputType.number,
-                        onChanged: (value) {
-                          try {
-                            widget.workoutSetData.duration = int.parse(value);
-                            print(
-                                '전달하는 횟수값 : ${widget.workoutSetData.duration}');
-                          } catch (e) {
-                            widget.workoutSetData.duration = 0;
-                          }
-                        },
-                        onTap: () => durationController.clear(),
-                        textAlign: TextAlign.center,
-                        decoration: InputDecoration(
-                          isDense: true,
-                          contentPadding: EdgeInsets.fromLTRB(0.0, 0, 0, 0.0),
-                          disabledBorder: InputBorder.none,
-                          counterText: '',
-                        ),
-                      ),
-                    ),
-                    Text('분'),
-                  ],
+            children: [
+              Container(
+                width: 32,
+                child: TextField(
+                  maxLength: 2,
+                  controller: repController,
+                  selectionHeightStyle: BoxHeightStyle.tight,
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    try {
+                      widget.workoutSetData.repCount = int.parse(value);
+                      print(
+                          '전달하는 횟수값 : ${widget.workoutSetData.repCount}');
+                    } catch (e) {
+                      widget.workoutSetData.repCount = 0;
+                    }
+                  },
+                  onTap: () => repController.clear(),
+                  textAlign: TextAlign.center,
+                  decoration: InputDecoration(
+                    isDense: true,
+                    contentPadding: EdgeInsets.fromLTRB(0.0, 0, 0, 0.0),
+                    disabledBorder: InputBorder.none,
+                    counterText: '',
+                  ),
                 ),
+              ),
+              Text('회'),
+            ],
+          )
+              : Row(
+            children: [
+              Container(
+                width: 32,
+                child: TextField(
+                  maxLength: 2,
+                  controller: durationController,
+                  selectionHeightStyle: BoxHeightStyle.tight,
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    try {
+                      widget.workoutSetData.duration = int.parse(value);
+                      print(
+                          '전달하는 횟수값 : ${widget.workoutSetData.duration}');
+                    } catch (e) {
+                      widget.workoutSetData.duration = 0;
+                    }
+                  },
+                  onTap: () => durationController.clear(),
+                  textAlign: TextAlign.center,
+                  decoration: InputDecoration(
+                    isDense: true,
+                    contentPadding: EdgeInsets.fromLTRB(0.0, 0, 0, 0.0),
+                    disabledBorder: InputBorder.none,
+                    counterText: '',
+                  ),
+                ),
+              ),
+              Text('분'),
+            ],
+          ),
           Row(
             children: [
               Container(

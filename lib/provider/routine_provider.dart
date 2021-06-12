@@ -128,7 +128,6 @@ class RoutineProvider with ChangeNotifier {
 
   void clear() async {
     var _box = await Hive.openBox<RoutineModel>('routines');
-    _box.clear();
 
     print('clear ${_box.length}');
   }
