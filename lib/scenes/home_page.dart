@@ -125,6 +125,11 @@ class _HomePageState extends State<HomePage> {
               style: kPageTitleStyle,
             ),
             kSizedBoxBetweenItems,
+            Text(
+              '오늘의 루틴',
+              style: kPageSubTitleStyle,
+            ),
+            kSizedBoxBetweenItems,
             isRoutine
                 ? Container(
                     height: 150,
@@ -142,8 +147,9 @@ class _HomePageState extends State<HomePage> {
                       size: 100.0,
                     ),
                   ),
+            kSizedBoxBetweenItems,
             Text(
-              '운동할 준비 되셨나요?🔥',
+              '운동할 준비 되셨나요? 🔥',
               style: kPageSubTitleStyle,
             ),
             kSizedBoxBetweenItems,

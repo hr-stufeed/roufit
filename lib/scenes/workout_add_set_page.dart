@@ -28,15 +28,25 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
 
   void addSetList() {
     setState(() {
-      setList.add(
-        SetInputField(
-          setNumber: setList.length + 1,
-          workoutType: _workoutType,
-          repCount: 0,
-          weight: 0,
-          duration: 0,
-        ),
-      );
+      setList.length == 0
+          ? setList.add(
+              SetInputField(
+                setNumber: setList.length + 1,
+                workoutType: _workoutType,
+                repCount: 0,
+                weight: 0,
+                duration: 0,
+              ),
+            )
+          : setList.add(
+              SetInputField(
+                setNumber: setList.length + 1,
+                workoutType: _workoutType,
+                repCount: setList[setList.length - 1].workoutSetData.repCount,
+                weight: setList[setList.length - 1].workoutSetData.weight,
+                duration: setList[setList.length - 1].workoutSetData.duration,
+              ),
+            );
     });
   }
 
@@ -44,7 +54,7 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
   void didChangeDependencies() {
     int index = Provider.of<WorkoutProvider>(context, listen: false).selIndex;
     _workoutModel =
-    Provider.of<WorkoutProvider>(context, listen: false).selWorkouts[index];
+        Provider.of<WorkoutProvider>(context, listen: false).selWorkouts[index];
 
     setData = _workoutModel.setData;
     _workoutType = _workoutModel.type;
@@ -55,7 +65,7 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
 
     setList = List<SetInputField>.generate(
       setData.length,
-          (index) => SetInputField(
+      (index) => SetInputField(
         setNumber: index + 1,
         workoutType: _workoutType,
         weight: setData[index].weight,
@@ -95,7 +105,7 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
                           icon: Icon(Icons.check),
                           onPressed: () {
                             List<WorkoutSet> setData =
-                            setList.map((e) => e.workoutSetData).toList();
+                                setList.map((e) => e.workoutSetData).toList();
                             _workoutModel.setData = setData;
                             _workoutModel.type = _workoutType;
                             Provider.of<WorkoutProvider>(context, listen: false)
@@ -123,10 +133,10 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
                           children: _workoutModel.tags
                               .map(
                                 (tag) => Text(
-                              '#$tag ',
-                              style: kWorkoutAddSetTagStyle,
-                            ),
-                          )
+                                  '#$tag ',
+                                  style: kWorkoutAddSetTagStyle,
+                                ),
+                              )
                               .toList(),
                         ),
                       ],
@@ -139,7 +149,11 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   AnimatedToggle(
-                    values: ['세트', '시간'],
+                    values: ['REP', 'TIME'],
+                    isInitialPosition:
+                        _workoutType == WorkoutType.durationWeight
+                            ? false
+                            : true,
                     onToggleCallback: (selected) {
                       setState(() {
                         if (selected == 0)
@@ -156,23 +170,6 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
                 ],
               ),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Text(
-                    "SET",
-                    style: kPageSubTitleStyle,
-                  ),
-                  Text(
-                    "REP",
-                    style: kPageSubTitleStyle,
-                  ),
-                  Text(
-                    "WEIGHT",
-                    style: kPageSubTitleStyle,
-                  ),
-                ],
-              ),
               kSizedBoxBetweenItems,
               Expanded(
                 child: Padding(
@@ -182,26 +179,19 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
                     children: [
                       setList.isEmpty
                           ? Center(
-                        child: Text(
-                          '세트를 추가해주세요!',
-                          style: kPageSubTitleStyle,
-                        ),
-                      )
+                              child: Text(
+                                '세트를 추가해주세요!',
+                                style: kPageSubTitleStyle,
+                              ),
+                            )
                           : ListView.builder(
-                          itemCount: setList.length,
-                          itemBuilder: (context, index) {
-                            return setList[index];
-                          }),
+                              itemCount: setList.length,
+                              itemBuilder: (context, index) {
+                                return setList[index];
+                              }),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          TextButton(
-                            onPressed: () => addSetList(),
-                            child: Text(
-                              "ADD SET",
-                              style: TextStyle(color: Colors.blueAccent),
-                            ),
-                          ),
                           TextButton(
                               onPressed: () {
                                 setState(() {
@@ -210,11 +200,17 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
                               },
                               child: Text(
                                 "REMOVE SET",
-                                style: TextStyle(color: Colors.black),
+                                style: kAddSetPageRemoveButtonTextStyle,
                               )),
+                          TextButton(
+                            onPressed: () => addSetList(),
+                            child: Text(
+                              "ADD SET",
+                              style: kAddSetPageAddButtonTextStyle,
+                            ),
+                          ),
                         ],
                       ),
-
                       // FloatingActionButton(
                       //   child: Icon(
                       //     Icons.add,
@@ -228,6 +224,7 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
                   ),
                 ),
               ),
+              kSizedBoxBetweenItems
             ],
           ),
         ),
@@ -299,81 +296,87 @@ class _SetInputFieldState extends State<SetInputField> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Text(
-            '${widget.setNumber}',
+            'SET ${widget.setNumber}',
+            style: kPageSubTitleStyle,
             textAlign: TextAlign.center,
           ),
           widget.workoutType == WorkoutType.setWeight
               ? Row(
-            children: [
-              Container(
-                width: 32,
-                child: TextField(
-                  maxLength: 2,
-                  controller: repController,
-                  selectionHeightStyle: BoxHeightStyle.tight,
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    try {
-                      widget.workoutSetData.repCount = int.parse(value);
-                      print(
-                          '전달하는 횟수값 : ${widget.workoutSetData.repCount}');
-                    } catch (e) {
-                      widget.workoutSetData.repCount = 0;
-                    }
-                  },
-                  onTap: () => repController.clear(),
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(
-                    isDense: true,
-                    contentPadding: EdgeInsets.fromLTRB(0.0, 0, 0, 0.0),
-                    disabledBorder: InputBorder.none,
-                    counterText: '',
-                  ),
-                ),
-              ),
-              Text('회'),
-            ],
-          )
+                  children: [
+                    Container(
+                      width: 48,
+                      child: TextField(
+                        maxLength: 2,
+                        controller: repController,
+                        selectionHeightStyle: BoxHeightStyle.tight,
+                        keyboardType: TextInputType.number,
+                        style: kSetDataTextStyle,
+                        onChanged: (value) {
+                          try {
+                            widget.workoutSetData.repCount = int.parse(value);
+                            print(
+                                '전달하는 횟수값 : ${widget.workoutSetData.repCount}');
+                          } catch (e) {
+                            widget.workoutSetData.repCount = 0;
+                          }
+                        },
+                        onTap: () => repController.clear(),
+                        textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          contentPadding: EdgeInsets.fromLTRB(0.0, 0, 0, 0.0),
+                          border: InputBorder.none,
+                          disabledBorder: InputBorder.none,
+                          counterText: '',
+                        ),
+                      ),
+                    ),
+                    Text('회'),
+                  ],
+                )
               : Row(
-            children: [
-              Container(
-                width: 32,
-                child: TextField(
-                  maxLength: 2,
-                  controller: durationController,
-                  selectionHeightStyle: BoxHeightStyle.tight,
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    try {
-                      widget.workoutSetData.duration = int.parse(value);
-                      print(
-                          '전달하는 횟수값 : ${widget.workoutSetData.duration}');
-                    } catch (e) {
-                      widget.workoutSetData.duration = 0;
-                    }
-                  },
-                  onTap: () => durationController.clear(),
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(
-                    isDense: true,
-                    contentPadding: EdgeInsets.fromLTRB(0.0, 0, 0, 0.0),
-                    disabledBorder: InputBorder.none,
-                    counterText: '',
-                  ),
+                  children: [
+                    Container(
+                      width: 80,
+                      child: TextField(
+                        maxLength: 3,
+                        controller: durationController,
+                        selectionHeightStyle: BoxHeightStyle.tight,
+                        keyboardType: TextInputType.number,
+                        style: kSetDataTextStyle,
+                        onChanged: (value) {
+                          try {
+                            widget.workoutSetData.duration = int.parse(value);
+                            print(
+                                '전달하는 횟수값 : ${widget.workoutSetData.duration}');
+                          } catch (e) {
+                            widget.workoutSetData.duration = 0;
+                          }
+                        },
+                        onTap: () => durationController.clear(),
+                        textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          contentPadding: EdgeInsets.fromLTRB(0.0, 0, 0, 0.0),
+                          border: InputBorder.none,
+                          disabledBorder: InputBorder.none,
+                          counterText: '',
+                        ),
+                      ),
+                    ),
+                    Text('초'),
+                  ],
                 ),
-              ),
-              Text('분'),
-            ],
-          ),
           Row(
             children: [
               Container(
-                width: 32,
+                width: 48,
                 child: TextField(
                   controller: weightController,
                   keyboardType: TextInputType.number,
                   maxLength: 2,
                   selectionHeightStyle: BoxHeightStyle.tight,
+                  style: kSetDataTextStyle,
                   onChanged: (value) {
                     try {
                       widget.workoutSetData.weight = int.parse(value);
@@ -387,6 +390,7 @@ class _SetInputFieldState extends State<SetInputField> {
                   decoration: InputDecoration(
                     isDense: true,
                     contentPadding: EdgeInsets.fromLTRB(0.0, 0, 0, 0.0),
+                    border: InputBorder.none,
                     disabledBorder: InputBorder.none,
                     counterText: '',
                   ),

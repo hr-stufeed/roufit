@@ -22,14 +22,14 @@ const kDoneStyle = TextStyle(
   color: Colors.white,
 );
 const kPageTitleStyle = TextStyle(
-  fontSize: 32.0,
+  fontSize: 28.0,
   fontWeight: FontWeight.bold,
   color: Colors.black,
 );
 const kPageSubTitleStyle = TextStyle(
-  fontSize: 16.0,
-  fontWeight: FontWeight.bold,
-  color: Colors.black,
+  fontSize: 20.0,
+  fontWeight: FontWeight.normal,
+  color: Color(0xFF8E8E93),
 );
 const kTopBarTextStyle = TextStyle(
   fontSize: 22.0,
@@ -81,6 +81,21 @@ const kBottomFixedButtonTextStyle2 = TextStyle(
   fontSize: 28.0,
   fontWeight: FontWeight.bold,
   color: Colors.blue,
+);
+
+const kAddSetPageRemoveButtonTextStyle = TextStyle(
+  color: Colors.black,
+  fontSize: 16.0,
+);
+
+const kAddSetPageAddButtonTextStyle = TextStyle(
+  color: Colors.blueAccent,
+  fontSize: 16.0,
+);
+const kSetDataTextStyle = TextStyle(
+  fontSize: 40.0,
+  fontWeight: FontWeight.bold,
+  color: Colors.black,
 );
 
 const kSizedBoxBetweenItems = SizedBox(

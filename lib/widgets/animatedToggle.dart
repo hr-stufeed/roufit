@@ -6,25 +6,27 @@ class AnimatedToggle extends StatefulWidget {
   final Color backgroundColor;
   final Color buttonColor;
   final Color textColor;
+  bool isInitialPosition = true;
   AnimatedToggle({
     @required this.values,
     @required this.onToggleCallback,
     this.backgroundColor = const Color(0xFFe7e7e8),
     this.buttonColor = const Color(0xFFFFFFFF),
     this.textColor = const Color(0xFF000000),
+    this.isInitialPosition,
   });
   @override
   _AnimatedToggleState createState() => _AnimatedToggleState();
 }
 
 class _AnimatedToggleState extends State<AnimatedToggle> {
-  bool initialPosition = true;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    bool initialPosition = widget.isInitialPosition;
 
     return Container(
-      width: size.width * 0.8,
+      width: size.width * 0.82,
       height: size.width * 0.08,
       margin: EdgeInsets.all(20),
       child: Stack(
@@ -40,7 +42,7 @@ class _AnimatedToggleState extends State<AnimatedToggle> {
               setState(() {});
             },
             child: Container(
-              width: size.width * 0.8,
+              width: size.width * 0.82,
               height: size.width * 0.13,
               decoration: ShapeDecoration(
                 color: widget.backgroundColor,
@@ -71,11 +73,11 @@ class _AnimatedToggleState extends State<AnimatedToggle> {
           ),
           AnimatedAlign(
             duration: const Duration(milliseconds: 250),
-            curve: Curves.decelerate,
+            curve: Curves.fastLinearToSlowEaseIn,
             alignment:
                 initialPosition ? Alignment.centerLeft : Alignment.centerRight,
             child: Container(
-              width: size.width * 0.4,
+              width: size.width * 0.43,
               height: size.width * 0.13,
               decoration: ShapeDecoration(
                 color: widget.buttonColor,
