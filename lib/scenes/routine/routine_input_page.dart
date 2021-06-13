@@ -35,7 +35,7 @@ class _RoutineInputPageState extends State<RoutineInputPage> {
     Day(day: '일', order: 6),
   ];
   var myController = TextEditingController();
-
+  bool isText = false;
   RoutineModel _selRoutine;
 
   void roundCheckTap(bool isClicked, Day day) {
@@ -69,6 +69,7 @@ class _RoutineInputPageState extends State<RoutineInputPage> {
     super.deactivate();
   }
 
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -93,8 +94,15 @@ class _RoutineInputPageState extends State<RoutineInputPage> {
                         borderRadius: kBorderRadius,
                       ),
                       prefixIcon: Icon(Icons.create_rounded),
+                      errorText: isText ? '이름을 입력해주세요' : null,
                     ),
+                    onChanged: (value) {
+                      setState(() {
+                        isText = false;
+                      });
+                    },
                     controller: myController,
+                    autofocus: isText,
                   ),
                   kSizedBoxBetweenItems,
                   Text('요일을 설정해주세요.', style: kPageSubTitleStyle),
@@ -139,6 +147,13 @@ class _RoutineInputPageState extends State<RoutineInputPage> {
               BottomFixedButton(
                 text: _selRoutine == null ? '완료' : '수정 완료',
                 tap: () {
+                  if (myController.text.isEmpty) {
+                    setState(() {
+                      isText = true;
+                    });
+                    return;
+                  }
+
                   sortDayInOrder();
 
                   _selRoutine == null

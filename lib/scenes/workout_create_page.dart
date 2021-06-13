@@ -20,6 +20,7 @@ class _WorkoutCreatePageState extends State<WorkoutCreatePage> {
   List<String> _tagList = [];
   List<Widget> _chipList = [];
   Set<String> _selectedTags = {};
+  bool isText = false;
 
   // 전역 운동 리스트에서 태그들을 가져오는 함수
   void getWorkoutTags(List<WorkoutModel> copiedModelList) {
@@ -85,7 +86,13 @@ class _WorkoutCreatePageState extends State<WorkoutCreatePage> {
                         borderRadius: kBorderRadius,
                       ),
                       prefixIcon: Icon(Icons.create_rounded),
+                      errorText: isText ? '이름을 입력해주세요' : null,
                     ),
+                    onChanged: (value) {
+                      setState(() {
+                        isText = false;
+                      });
+                    },
                     controller: myController,
                   ),
                   kSizedBoxBetweenItems,
@@ -164,6 +171,13 @@ class _WorkoutCreatePageState extends State<WorkoutCreatePage> {
                 child: BottomFixedButton(
                   text: '완료',
                   tap: () {
+                    if (myController.text.isEmpty) {
+                      setState(() {
+                        isText = true;
+                      });
+                      return;
+                    }
+
                     Provider.of<WorkoutProvider>(context, listen: false).add(
                       myController.text,
                       '🤸‍♀️',
