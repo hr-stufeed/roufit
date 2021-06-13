@@ -124,7 +124,7 @@ class ListPageRoutine extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [widget.color, widget.color.withBlue(250)],
+            colors: [widget.color, widget.color.withBlue(225)],
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
           ),

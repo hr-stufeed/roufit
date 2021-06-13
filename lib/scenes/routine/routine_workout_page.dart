@@ -5,11 +5,10 @@ import 'package:hr_app/provider/routine_provider.dart';
 import 'package:hr_app/models/workout_model.dart';
 import 'package:hr_app/provider/workout_provider.dart';
 import 'package:hr_app/widgets/TopBar.dart';
-import 'package:hr_app/widgets/bottomFixedButton.dart';
 import 'package:hr_app/widgets/routine.dart';
 import 'package:hr_app/widgets/workout.dart';
 import 'package:provider/provider.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
 //루틴을 눌렀을 때 루틴이 담고 있는 운동들을 보여주는 페이지
 
 class RoutineWorkoutPage extends StatefulWidget {
@@ -67,6 +66,17 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
     super.deactivate();
   }
 
+  void showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: Colors.grey,
+      fontSize: 12.0,
+      textColor: Colors.white,
+      toastLength: Toast.LENGTH_SHORT,
+    );
+  }
+
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback(
         (_) => Provider.of<WorkoutProvider>(context, listen: false).haveAllSet);
@@ -106,7 +116,7 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
                       hasMoreButton: true,
                       extraButton: IconButton(
                         color: Colors.white,
-                        disabledColor: Colors.grey,
+                        disabledColor: Colors.grey[800],
                         icon: Icon(Icons.check),
                         onPressed: Provider.of<WorkoutProvider>(context,
                                     listen: true)
@@ -118,7 +128,7 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
                                 Navigator.popUntil(
                                     context, (route) => route.isFirst);
                               }
-                            : null,
+                            : () => showToast('세트를 추가해주세요'),
                       ),
                       color: Colors.white,
                     ),

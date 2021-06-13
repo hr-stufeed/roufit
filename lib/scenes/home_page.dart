@@ -26,31 +26,31 @@ class _HomePageState extends State<HomePage> {
     switch (today) {
       case 'Mon':
         today = '월';
-        return '월요일이에요.\n다시 시작해볼까요? 😎';
+        return '월요일이에요.\n다시 시작해볼까요?';
         break;
       case 'Tue':
         today = '화';
-        return '화요일이에요.\n힘차게 가볼까요? 😁';
+        return '화요일이에요.\n힘차게 가볼까요?';
         break;
       case 'Wed':
         today = '수';
-        return '수요일!\n벌써 중간까지 왔어요! 😊';
+        return '수요일!\n벌써 중간까지 왔어요!';
         break;
       case 'Thu':
         today = '목';
-        return '목요일이에요.\n조금만 더 버텨요! 💪';
+        return '목요일이에요.\n조금만 더 버텨요!';
         break;
       case 'Fri':
         today = '금';
-        return '불타는 금요일이에요!!!!!! 🔥';
+        return '불타는 금요일이에요!!!!!!';
         break;
       case 'Sat':
         today = '토';
-        return '어서오세요!\n기분 좋은 토요일이에요.😃';
+        return '어서오세요!\n기분 좋은 토요일이에요.';
         break;
       case 'Sun':
         today = '일';
-        return '안녕하세요!\n즐거운 일요일입니다. 🌞';
+        return '안녕하세요!\n즐거운 일요일입니다.';
         break;
       default:
         return '안녕하세요!';
@@ -119,9 +119,20 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              todayMessage,
-              style: kPageTitleStyle,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  todayMessage,
+                  style: kPageTitleStyle,
+                ),
+                CircleAvatar(
+                  radius: 25.0,
+                  backgroundImage: NetworkImage(
+                      'https://image.fmkorea.com/files/attach/new/20200901/3842645/1506383311/3069298677/45f429a81181d90ff8bf4e67f6c8179f.jpg'),
+                  backgroundColor: Colors.transparent,
+                ),
+              ],
             ),
             kSizedBoxBetweenItems,
             Text(

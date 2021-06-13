@@ -44,6 +44,7 @@ dependencies:
   roundcheckbox: ^1.0.0+1
   syncfusion_flutter_gauges: ^19.1.63
   scroll_snap_list: ^0.8.1
+  fluttertoast: ^8.0.7
 
 dev_dependencies:
   flutter_test:

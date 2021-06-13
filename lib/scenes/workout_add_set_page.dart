@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/models/workout_model.dart';
 import 'package:hr_app/models/workout_set.dart';
@@ -33,9 +34,9 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
               SetInputField(
                 setNumber: setList.length + 1,
                 workoutType: _workoutType,
-                repCount: 0,
+                repCount: 1,
                 weight: 0,
-                duration: 0,
+                duration: 10,
               ),
             )
           : setList.add(
@@ -261,6 +262,21 @@ class _SetInputFieldState extends State<SetInputField> {
   TextEditingController repController;
   TextEditingController durationController;
 
+  bool isRepZero = false;
+  bool isDurationZero = false;
+
+  void setRepValidator(valid) {
+    setState(() {
+      isRepZero = valid;
+    });
+  }
+
+  void setDurationValidator(valid) {
+    setState(() {
+      isDurationZero = valid;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -304,7 +320,7 @@ class _SetInputFieldState extends State<SetInputField> {
               ? Row(
                   children: [
                     Container(
-                      width: 48,
+                      width: 64,
                       child: TextField(
                         maxLength: 2,
                         controller: repController,
@@ -313,9 +329,12 @@ class _SetInputFieldState extends State<SetInputField> {
                         style: kSetDataTextStyle,
                         onChanged: (value) {
                           try {
-                            widget.workoutSetData.repCount = int.parse(value);
-                            print(
-                                '전달하는 횟수값 : ${widget.workoutSetData.repCount}');
+                            if (value == '0') {
+                              setRepValidator(true);
+                            } else {
+                              widget.workoutSetData.repCount = int.parse(value);
+                              setRepValidator(false);
+                            }
                           } catch (e) {
                             widget.workoutSetData.repCount = 0;
                           }
@@ -327,6 +346,7 @@ class _SetInputFieldState extends State<SetInputField> {
                           contentPadding: EdgeInsets.fromLTRB(0.0, 0, 0, 0.0),
                           border: InputBorder.none,
                           disabledBorder: InputBorder.none,
+                          errorText: isRepZero ? "0은 안돼요!" : null,
                           counterText: '',
                         ),
                       ),
@@ -346,9 +366,12 @@ class _SetInputFieldState extends State<SetInputField> {
                         style: kSetDataTextStyle,
                         onChanged: (value) {
                           try {
-                            widget.workoutSetData.duration = int.parse(value);
-                            print(
-                                '전달하는 횟수값 : ${widget.workoutSetData.duration}');
+                            if (value == '0') {
+                              setDurationValidator(true);
+                            } else {
+                              widget.workoutSetData.duration = int.parse(value);
+                              setDurationValidator(false);
+                            }
                           } catch (e) {
                             widget.workoutSetData.duration = 0;
                           }
@@ -360,6 +383,7 @@ class _SetInputFieldState extends State<SetInputField> {
                           contentPadding: EdgeInsets.fromLTRB(0.0, 0, 0, 0.0),
                           border: InputBorder.none,
                           disabledBorder: InputBorder.none,
+                          errorText: isDurationZero ? "0은 안돼요!" : null,
                           counterText: '',
                         ),
                       ),
