@@ -23,17 +23,30 @@ class _RoutineInputPageState extends State<RoutineInputPage> {
   String autoKey;
   List<WorkoutModel> workoutList = [];
   Color screenPickerColor = Colors.red;
-  List<String> selectedDays = [];
-  List<String> days = ['월', '화', '수', '목', '금', '토', '일'];
-
+  List<Day> selectedDays = [];
+  List<String> sortedSelectedDays = [];
+  List<Day> days = [
+    Day(day: '월', order: 0),
+    Day(day: '화', order: 1),
+    Day(day: '수', order: 2),
+    Day(day: '목', order: 3),
+    Day(day: '금', order: 4),
+    Day(day: '토', order: 5),
+    Day(day: '일', order: 6),
+  ];
   var myController = TextEditingController();
 
   RoutineModel _selRoutine;
 
-  void roundCheckTap(bool isClicked, String day) {
+  void roundCheckTap(bool isClicked, Day day) {
     setState(() {
       isClicked ? selectedDays.add(day) : selectedDays.remove(day);
     });
+  }
+
+  void sortDayInOrder() {
+    selectedDays.sort((a, b) => a.order.compareTo(b.order));
+    sortedSelectedDays = selectedDays.map((day) => day.day).toList();
   }
 
   @override
@@ -45,7 +58,7 @@ class _RoutineInputPageState extends State<RoutineInputPage> {
       myController.text = _selRoutine.name;
       workoutList = _selRoutine.workoutModelList;
       screenPickerColor = Color(_selRoutine.color);
-      selectedDays = _selRoutine.days;
+      sortedSelectedDays = _selRoutine.days;
     }
     super.initState();
   }
@@ -93,7 +106,7 @@ class _RoutineInputPageState extends State<RoutineInputPage> {
                               day: day,
                               selectedDays: selectedDays,
                               onTap: roundCheckTap,
-                              isModify: selectedDays.contains(day),
+                              //isModify: sortedSelectedDays.contains(day.day),
                             ))
                         .toList(),
                   ),
@@ -126,19 +139,21 @@ class _RoutineInputPageState extends State<RoutineInputPage> {
               BottomFixedButton(
                 text: _selRoutine == null ? '완료' : '수정 완료',
                 tap: () {
+                  sortDayInOrder();
+
                   _selRoutine == null
                       ? Provider.of<RoutineProvider>(context, listen: false)
                           .add(
                           myController.text,
                           screenPickerColor,
-                          selectedDays,
+                          sortedSelectedDays,
                         )
                       : Provider.of<RoutineProvider>(context, listen: false)
                           .modify(
                           autoKey,
                           myController.text,
                           screenPickerColor,
-                          selectedDays,
+                          sortedSelectedDays,
                           workoutList,
                         );
                   Provider.of<RoutineProvider>(context, listen: false)

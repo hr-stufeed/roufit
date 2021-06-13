@@ -1,4 +1,5 @@
 import 'package:hive/hive.dart';
+import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/models/workout_model.dart';
 part 'routine_model.g.dart';
 

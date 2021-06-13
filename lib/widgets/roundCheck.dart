@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hr_app/data/constants.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
 
 enum TweenProps { backgroundColor, textColor }
@@ -11,8 +12,8 @@ class RoundCheck extends StatefulWidget {
     this.onTap,
     this.isModify = false,
   });
-  final String day;
-  final List<String> selectedDays;
+  final Day day;
+  final List<Day> selectedDays;
   final Function onTap;
   bool isModify;
   @override
@@ -26,7 +27,7 @@ class _RoundCheckState extends State<RoundCheck> {
       isChecked: widget.isModify,
       uncheckedWidget: Center(
         child: Text(
-          '${widget.day}',
+          '${widget.day.day}',
           style: TextStyle(fontSize: 20.0),
         ),
       ),

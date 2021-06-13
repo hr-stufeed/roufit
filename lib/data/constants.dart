@@ -45,7 +45,7 @@ const kRoutineTitleStyle = TextStyle(
 const kRoutineTagStyle = TextStyle(
   fontSize: 16.0,
   fontWeight: FontWeight.normal,
-  color: Color(0xFFE0E0E0),
+  color: Colors.white, //Color(0xFFE0E0E0),
 );
 
 const kWorkoutNameStyle = TextStyle(
@@ -118,6 +118,43 @@ enum WorkoutState {
   onWorkoutList,
   onFront,
   onRoutine,
+}
+enum Cars {
+  hyundai,
+  toyota,
+}
+
+class Day {
+  String day;
+  int order;
+  int returnOrder(day) {
+    switch (day) {
+      case '월':
+        return 0;
+        break;
+      case '화':
+        return 1;
+        break;
+      case '수':
+        return 2;
+        break;
+      case '목':
+        return 3;
+        break;
+      case '금':
+        return 4;
+        break;
+      case '토':
+        return 5;
+        break;
+      case '일':
+        return 6;
+        break;
+    }
+    return -1;
+  }
+
+  Day({this.day, this.order});
 }
 
 @HiveType(typeId: 3)
