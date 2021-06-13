@@ -5,8 +5,15 @@
 - 회수 / 시간 기준으로 운동 세트를 만들 수 있다
 - 매일 매일 운동을 하고 기록으로 남길 수 있다  
 
-# 구현기능
-
+## 앱 화면
+<p align="center">
+<img src="https://user-images.githubusercontent.com/74769597/121810063-4899c900-cc9a-11eb-83f6-323b0f7ca6b4.jpg"  width="480" height="1024">
+<img src="https://user-images.githubusercontent.com/74769597/121810083-59e2d580-cc9a-11eb-8140-2463cb21414e.jpg"  width="480" height="1024">
+    </p>
+    <p align="center">
+<img src="https://user-images.githubusercontent.com/74769597/121810128-8dbdfb00-cc9a-11eb-94a9-20a5cc49c885.jpg"  width="480" height="1024">
+<img src="https://user-images.githubusercontent.com/74769597/121810129-8f87be80-cc9a-11eb-8d51-7400651feabf.jpg"  width="480" height="1024">
+ </p>
 ## 우선기능
 
 - [x]  루틴 생성
