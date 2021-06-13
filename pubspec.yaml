@@ -45,6 +45,7 @@ dependencies:
   syncfusion_flutter_gauges: ^19.1.63
   scroll_snap_list: ^0.8.1
   fluttertoast: ^8.0.7
+  animated_text_kit: ^4.2.1
 
 dev_dependencies:
   flutter_test:

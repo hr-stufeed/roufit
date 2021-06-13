@@ -1,3 +1,4 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/models/routine_model.dart';
@@ -119,20 +120,30 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  todayMessage,
-                  style: kPageTitleStyle,
-                ),
-                CircleAvatar(
-                  radius: 25.0,
-                  backgroundImage: NetworkImage(
-                      'https://image.fmkorea.com/files/attach/new/20200901/3842645/1506383311/3069298677/45f429a81181d90ff8bf4e67f6c8179f.jpg'),
-                  backgroundColor: Colors.transparent,
-                ),
-              ],
+            Expanded(
+              flex: 1,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    height: 80,
+                    child: AnimatedTextKit(
+                      animatedTexts: [
+                        TypewriterAnimatedText(todayMessage,
+                            speed: const Duration(milliseconds: 100),
+                            textStyle: kPageTitleStyle),
+                      ],
+                      isRepeatingAnimation: false,
+                    ),
+                  ),
+                  CircleAvatar(
+                    radius: 25.0,
+                    backgroundImage: NetworkImage(
+                        'https://image.fmkorea.com/files/attach/new/20200901/3842645/1506383311/3069298677/45f429a81181d90ff8bf4e67f6c8179f.jpg'),
+                    backgroundColor: Colors.transparent,
+                  ),
+                ],
+              ),
             ),
             kSizedBoxBetweenItems,
             Text(
@@ -141,8 +152,8 @@ class _HomePageState extends State<HomePage> {
             ),
             kSizedBoxBetweenItems,
             isRoutine
-                ? Container(
-                    height: 150,
+                ? Expanded(
+                    flex: 2,
                     child: ScrollSnapList(
                       shrinkWrap: true,
                       itemBuilder: _buildListItem,
@@ -152,6 +163,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   )
                 : Expanded(
+                    flex: 2,
                     child: SpinKitDoubleBounce(
                       color: Colors.blue,
                       size: 100.0,
@@ -165,6 +177,7 @@ class _HomePageState extends State<HomePage> {
             kSizedBoxBetweenItems,
             isRoutine
                 ? Expanded(
+                    flex: 3,
                     child: ListView.builder(
                       itemCount:
                           _todayRoutines[_focusedIndex].workoutModelList.length,
