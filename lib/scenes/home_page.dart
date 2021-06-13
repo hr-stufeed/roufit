@@ -74,20 +74,19 @@ class _HomePageState extends State<HomePage> {
   void _onItemFocus(int index) {
     setState(() {
       _focusedIndex = index;
-      print("선택한루틴인덱스:$_focusedIndex");
     });
   }
 
   void getRoutineList() async {
     //전역 루틴 리스트 가져옴
-    // while (!isRoutine) {
+
     List<RoutineModel> _routineList =
         Provider.of<RoutineProvider>(context).routineModels;
     _todayRoutines =
         _routineList.where((routine) => routine.days.contains(today)).toList();
+
     if (_todayRoutines.isNotEmpty) isRoutine = true;
     setState(() {});
-    // }
   }
 
   @override

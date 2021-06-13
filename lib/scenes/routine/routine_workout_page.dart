@@ -25,6 +25,7 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
   Color color;
   List<String> days;
   RoutineModel _selRoutine;
+  Set<String> tags = {};
 
   @override
   void initState() {
@@ -44,6 +45,14 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
   void didChangeDependencies() {
     _workoutModelList =
         Provider.of<WorkoutProvider>(context, listen: true).selWorkouts;
+    _workoutModelList.forEach((workoutModel) {
+      if (tags.length <= 3) {
+        tags.addAll(workoutModel.tags);
+      }
+    });
+    if (tags.length == 0) {
+      tags.add("운동을 추가해주세요");
+    }
     super.didChangeDependencies();
   }
 
@@ -125,9 +134,15 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
                     SizedBox(
                       height: 8.0,
                     ),
-                    Text(
-                      '#상체 #코어',
-                      style: kRoutineTagStyle,
+                    Row(
+                      children: tags
+                          .map(
+                            (tag) => Text(
+                              '#$tag ',
+                              style: kRoutineTagStyle,
+                            ),
+                          )
+                          .toList(),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

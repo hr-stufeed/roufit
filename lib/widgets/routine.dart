@@ -11,6 +11,8 @@ class Routine extends StatefulWidget {
   final String name;
   final Color color;
   final List<String> days;
+  Set<String> tags;
+
   List<WorkoutModel> workoutModelList;
   bool isListUp;
   bool isSelected = false;
@@ -23,6 +25,7 @@ class Routine extends StatefulWidget {
     this.isSelected = false,
     this.days,
     this.workoutModelList,
+    this.tags,
   });
 
   Widget _popup(BuildContext context) => PopupMenuButton<int>(
@@ -51,11 +54,37 @@ class Routine extends StatefulWidget {
         },
       );
 
+  void initTags(BuildContext context) {
+    workoutModelList = Provider.of<RoutineProvider>(context, listen: false)
+        .find(autoKey)
+        .workoutModelList;
+    tags = {};
+
+    workoutModelList.forEach((workoutModel) {
+      if (tags.length <= 3) {
+        tags.addAll(workoutModel.tags);
+      }
+    });
+    if (tags.length == 0) {
+      tags.add("운동을 추가해주세요");
+    }
+  }
+
   @override
   _RoutineState createState() => _RoutineState();
 }
 
 class _RoutineState extends State<Routine> {
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    setState(() {
+      widget.initTags(context);
+    });
+
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     return widget.isListUp
@@ -117,9 +146,15 @@ class ListPageRoutine extends StatelessWidget {
             SizedBox(
               height: 8.0,
             ),
-            Text(
-              '#상체 #코어',
-              style: kRoutineTagStyle,
+            Row(
+              children: widget.tags
+                  .map(
+                    (tag) => Text(
+                      '#$tag ',
+                      style: kRoutineTagStyle,
+                    ),
+                  )
+                  .toList(),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -156,7 +191,7 @@ class HomePageRoutine extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
+    widget.initTags(context);
     return InkWell(
       onTap: !widget.isSelected
           ? () {
@@ -169,7 +204,7 @@ class HomePageRoutine extends StatelessWidget {
       highlightColor: Colors.transparent,
       child: Container(
         margin: EdgeInsets.only(bottom: 16.0),
-        width: !widget.isListUp ? size.width - 64 : size.width,
+        width: size.width - 64,
         padding: EdgeInsets.symmetric(
           horizontal: 24.0,
           vertical: 24.0,
@@ -209,9 +244,15 @@ class HomePageRoutine extends StatelessWidget {
               ],
             ),
             SizedBox(height: 8.0),
-            Text(
-              '#상체 #코어',
-              style: kRoutineTagStyle,
+            Row(
+              children: widget.tags
+                  .map(
+                    (tag) => Text(
+                      '#$tag ',
+                      style: kRoutineTagStyle,
+                    ),
+                  )
+                  .toList(),
             ),
             SizedBox(height: 8.0),
           ],

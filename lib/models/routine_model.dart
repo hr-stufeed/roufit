@@ -11,7 +11,7 @@ class RoutineModel {
   @HiveField(2)
   final int color;
   @HiveField(3)
-  final bool isListUp;
+  bool isListUp;
   @HiveField(4)
   List<WorkoutModel> workoutModelList;
   @HiveField(5)
