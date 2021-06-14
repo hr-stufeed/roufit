@@ -26,7 +26,7 @@ class TopBar extends StatelessWidget {
           color: color,
           onPressed: () => Navigator.pop(context),
         ),
-        Text(title, style: kTopBarTextStyle),
+        Text(title, style: kTopBarTextStyle.copyWith(color: color)),
         hasMoreButton
             ? extraButton
             : IconButton(
