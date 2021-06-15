@@ -177,7 +177,7 @@ class _HomePageState extends State<HomePage> {
             kSizedBoxBetweenItems,
             isRoutine
                 ? Expanded(
-                    flex: 3,
+                    flex: 4,
                     child: ListView.builder(
                       itemCount:
                           _todayRoutines[_focusedIndex].workoutModelList.length,

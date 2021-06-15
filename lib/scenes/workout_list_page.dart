@@ -13,6 +13,7 @@ class WorkoutListPage extends StatefulWidget {
 
 class _WorkoutListPageState extends State<WorkoutListPage> {
   List<String> selectedWorkouts = [];
+  List<WorkoutModel> copiedModelList = [];
   // 전역 운동리스트의 복사본
   List<Workout> _copiedList;
   // 페이지에 보여지는 운동 리스트
@@ -32,7 +33,7 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
 
   // 선택된 태그에 따라 운동 리스트를 필터링하는 함수
   void filterWorkoutByTags() {
-    List<Workout> _filtedList;
+    List<WorkoutModel> _filterdList = [];
     // 초기화
     _displayedList = [];
 
@@ -42,10 +43,22 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
         // 전체가 아닐 경우
         if (tag != "전체") {
           //해당 태그를 포함한 모든 운동을 가져와 리스트에 추가한다
-          _filtedList = _copiedList.where((workout) {
+          print("_copiedList : ${_copiedList}");
+
+          _filterdList = copiedModelList.where((workout) {
+            print(workout.tags.contains(tag));
             return workout.tags.contains(tag);
           }).toList();
-          _displayedList.addAll(_filtedList);
+
+          _copiedList = _filterdList
+              .map((workoutModel) => Workout(
+                    workoutModel: workoutModel,
+                    onDelete: () =>
+                        Provider.of<WorkoutProvider>(context, listen: false)
+                            .delete(workoutModel.autoKey),
+                  ))
+              .toList();
+          _displayedList.addAll(_copiedList);
         } else
           // 전체인 경우 모든 운동을 가져온다
           _displayedList = _copiedList;
@@ -62,8 +75,7 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
 
   @override
   void didChangeDependencies() {
-    List<WorkoutModel> copiedModelList =
-        Provider.of<WorkoutProvider>(context).copyList();
+    copiedModelList = Provider.of<WorkoutProvider>(context).copyList();
     _copiedList = copiedModelList
         .map((workoutModel) => Workout(
               workoutModel: workoutModel,
