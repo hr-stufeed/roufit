@@ -43,10 +43,7 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
         // 전체가 아닐 경우
         if (tag != "전체") {
           //해당 태그를 포함한 모든 운동을 가져와 리스트에 추가한다
-          print("_copiedList : ${_copiedList}");
-
           _filterdList = copiedModelList.where((workout) {
-            print(workout.tags.contains(tag));
             return workout.tags.contains(tag);
           }).toList();
 

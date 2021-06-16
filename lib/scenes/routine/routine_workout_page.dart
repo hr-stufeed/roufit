@@ -145,14 +145,24 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
                       height: 8.0,
                     ),
                     Row(
-                      children: tags
-                          .map(
-                            (tag) => Text(
-                              '#$tag ',
-                              style: kRoutineTagStyle,
-                            ),
-                          )
-                          .toList(),
+                      children: [
+                        Row(
+                          children: tags
+                              .map(
+                                (tag) => Text(
+                                  '#$tag ',
+                                  style: kRoutineTagStyle,
+                                ),
+                              )
+                              .toList(),
+                        ),
+                        tags.length >= 3
+                            ? Text(
+                                '…',
+                                style: kRoutineTagStyle,
+                              )
+                            : Text(''),
+                      ],
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

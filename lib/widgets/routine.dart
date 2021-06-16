@@ -147,14 +147,24 @@ class ListPageRoutine extends StatelessWidget {
               height: 8.0,
             ),
             Row(
-              children: widget.tags
-                  .map(
-                    (tag) => Text(
-                      '#$tag ',
-                      style: kRoutineTagStyle,
-                    ),
-                  )
-                  .toList(),
+              children: [
+                Row(
+                  children: widget.tags
+                      .map(
+                        (tag) => Text(
+                          '#$tag ',
+                          style: kRoutineTagStyle,
+                        ),
+                      )
+                      .toList(),
+                ),
+                widget.tags.length >= 3
+                    ? Text(
+                        '…',
+                        style: kRoutineTagStyle,
+                      )
+                    : Text(''),
+              ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -245,14 +255,24 @@ class HomePageRoutine extends StatelessWidget {
             ),
             SizedBox(height: 8.0),
             Row(
-              children: widget.tags
-                  .map(
-                    (tag) => Text(
-                      '#$tag ',
-                      style: kRoutineTagStyle,
-                    ),
-                  )
-                  .toList(),
+              children: [
+                Row(
+                  children: widget.tags
+                      .map(
+                        (tag) => Text(
+                          '#$tag ',
+                          style: kRoutineTagStyle,
+                        ),
+                      )
+                      .toList(),
+                ),
+                widget.tags.length >= 3
+                    ? Text(
+                        '…',
+                        style: kRoutineTagStyle,
+                      )
+                    : Text(''),
+              ],
             ),
             SizedBox(height: 8.0),
           ],
