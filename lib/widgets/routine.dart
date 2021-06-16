@@ -116,7 +116,7 @@ class ListPageRoutine extends StatelessWidget {
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
       child: Container(
-        margin: EdgeInsets.only(bottom: 16.0),
+        margin: EdgeInsets.fromLTRB(0, 0, 0, 16),
         width: size.width,
         padding: EdgeInsets.symmetric(
           horizontal: 24.0,

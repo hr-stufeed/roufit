@@ -113,7 +113,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    print("size:${size.width}");
     return Material(
       child: Padding(
         padding: kPagePadding,

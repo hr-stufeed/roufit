@@ -49,77 +49,96 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => RoutineProvider()),
-        // main.dart에서 RoutineProvider 생성 시 load 함수 호출함
-        // async라 페이지들 생성이 먼저 됨.
-        // 그래서 load가 안되고 전역 운동,루틴 리스트에 데이터가 들어가기 전에 각 페이지
-        // 에서 데이터를 받아와 에러가 뜨는 경우 있음.
-        // 이럴때는 try-catch로 에러 잡고 예외 처리 해줄 것.
-        ChangeNotifierProvider(create: (_) => WorkoutProvider()),
-        ChangeNotifierProvider(create: (_) => TimerProvider()),
-      ],
-      child: MaterialApp(
-        routes: {
-          'Home_page': (context) => HomePage(),
-          'Routine_page': (context) => RoutineListPage(),
-          'Routine_input_page': (context) => RoutineInputPage(),
-          'Routine_start_page': (context) => RoutineStartPage(),
-          'Routine_workout_page': (context) => RoutineWorkoutPage(),
-          'Workout_list_page': (context) => WorkoutListPage(),
-          'Workout_create_page': (context) => WorkoutCreatePage(),
-          'Workout_add_set_page': (context) => WorkoutAddSetPage(),
-          'MyPage': (context) => MyPage(),
-        },
-        theme: ThemeData(
-          dividerColor: Colors.transparent,
-          textTheme: TextTheme(
-            bodyText1: TextStyle(
-                fontSize: 18,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'NotoSans'),
-          ),
-        ),
-        home: DefaultTabController(
-          length: 3,
-          child: Scaffold(
-            body: SafeArea(
-              child: TabBarView(
-                physics: NeverScrollableScrollPhysics(),
-                controller: _tabController,
-                children: [
-                  HomePage(),
-                  RoutineListPage(),
-                  MyPage(),
-                ],
-              ),
-            ),
-            bottomNavigationBar: Container(
-              decoration: BoxDecoration(color: Colors.white),
-              child: TabBar(
-                controller: _tabController,
-                labelColor: Colors.black,
-                indicatorColor: Colors.transparent,
-                tabs: [
-                  Tab(
-                    icon: FaIcon(FontAwesomeIcons.home),
-                    text: 'Home',
+    return FutureBuilder(
+        future: Future.delayed(Duration(seconds: 2)),
+        builder: (context, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return MaterialApp(home: Splash());
+          } else {
+            return MultiProvider(
+              providers: [
+                ChangeNotifierProvider(create: (_) => RoutineProvider()),
+                // main.dart에서 RoutineProvider 생성 시 load 함수 호출함
+                // async라 페이지들 생성이 먼저 됨.
+                // 그래서 load가 안되고 전역 운동,루틴 리스트에 데이터가 들어가기 전에 각 페이지
+                // 에서 데이터를 받아와 에러가 뜨는 경우 있음.
+                // 이럴때는 try-catch로 에러 잡고 예외 처리 해줄 것.
+                ChangeNotifierProvider(create: (_) => WorkoutProvider()),
+                ChangeNotifierProvider(create: (_) => TimerProvider()),
+              ],
+              child: MaterialApp(
+                routes: {
+                  'Home_page': (context) => HomePage(),
+                  'Routine_page': (context) => RoutineListPage(),
+                  'Routine_input_page': (context) => RoutineInputPage(),
+                  'Routine_start_page': (context) => RoutineStartPage(),
+                  'Routine_workout_page': (context) => RoutineWorkoutPage(),
+                  'Workout_list_page': (context) => WorkoutListPage(),
+                  'Workout_create_page': (context) => WorkoutCreatePage(),
+                  'Workout_add_set_page': (context) => WorkoutAddSetPage(),
+                  'MyPage': (context) => MyPage(),
+                },
+                theme: ThemeData(
+                  dividerColor: Colors.transparent,
+                  textTheme: TextTheme(
+                    bodyText1: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'NotoSans'),
                   ),
-                  Tab(
-                    icon: FaIcon(FontAwesomeIcons.clipboardList),
-                    text: 'Routine',
+                ),
+                home: DefaultTabController(
+                  length: 3,
+                  child: Scaffold(
+                    body: SafeArea(
+                      child: TabBarView(
+                        physics: NeverScrollableScrollPhysics(),
+                        controller: _tabController,
+                        children: [
+                          HomePage(),
+                          RoutineListPage(),
+                          MyPage(),
+                        ],
+                      ),
+                    ),
+                    bottomNavigationBar: Container(
+                      decoration: BoxDecoration(color: Colors.white),
+                      child: TabBar(
+                        controller: _tabController,
+                        labelColor: Colors.black,
+                        indicatorColor: Colors.transparent,
+                        tabs: [
+                          Tab(
+                            icon: FaIcon(FontAwesomeIcons.home),
+                            text: 'Home',
+                          ),
+                          Tab(
+                            icon: FaIcon(FontAwesomeIcons.clipboardList),
+                            text: 'Routine',
+                          ),
+                          Tab(
+                            icon: FaIcon(FontAwesomeIcons.userAlt),
+                            text: 'My Page',
+                          )
+                        ],
+                      ),
+                    ),
                   ),
-                  Tab(
-                    icon: FaIcon(FontAwesomeIcons.userAlt),
-                    text: 'My Page',
-                  )
-                ],
+                ),
               ),
-            ),
-          ),
-        ),
+            );
+          }
+        });
+  }
+}
+
+class Splash extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Image.asset('assets/splash_400.png'),
       ),
     );
   }
