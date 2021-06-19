@@ -21,6 +21,13 @@ const kDoneStyle = TextStyle(
   fontWeight: FontWeight.bold,
   color: Colors.white,
 );
+
+const kLoginTitleStyle = TextStyle(
+  fontSize: 52.0,
+  fontWeight: FontWeight.normal,
+  color: Colors.black,
+);
+
 const kPageTitleStyle = TextStyle(
   fontSize: 28.0,
   fontWeight: FontWeight.bold,
@@ -93,7 +100,7 @@ const kOutlinedButtonTextStyle = TextStyle(
   color: Colors.white,
 );
 const kBottomFixedButtonTextStyle1 = TextStyle(
-  fontSize: 28.0,
+  fontSize: 16.0,
   fontWeight: FontWeight.bold,
   color: Colors.white,
 );
@@ -102,6 +109,12 @@ const kBottomFixedButtonTextStyle2 = TextStyle(
   fontSize: 28.0,
   fontWeight: FontWeight.bold,
   color: Colors.blue,
+);
+
+const kFooterStyle = TextStyle(
+  fontSize: 16.0,
+  fontWeight: FontWeight.normal,
+  color: Color(0xFF8E8E93),
 );
 
 const kSizedBoxBetweenItems = SizedBox(

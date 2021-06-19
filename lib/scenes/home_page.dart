@@ -29,31 +29,24 @@ class _HomePageState extends State<HomePage> {
   String showTodayMessage() {
     switch (today) {
       case 'Mon':
-        today = '월';
         return '월요일이에요.\n다시 시작해볼까요?';
         break;
       case 'Tue':
-        today = '화';
         return '화요일이에요.\n힘차게 가볼까요?';
         break;
       case 'Wed':
-        today = '수';
         return '수요일!\n벌써 중간까지 왔어요!';
         break;
       case 'Thu':
-        today = '목';
         return '목요일이에요.\n조금만 더 버텨요!';
         break;
       case 'Fri':
-        today = '금';
         return '불타는 금요일이에요!!!!!!';
         break;
       case 'Sat':
-        today = '토';
         return '어서오세요! $userName님\n기분 좋은 토요일이에요.';
         break;
       case 'Sun':
-        today = '일';
         return '안녕하세요!\n즐거운 일요일입니다.';
         break;
       default:
@@ -82,13 +75,36 @@ class _HomePageState extends State<HomePage> {
   }
 
   void getRoutineList() async {
-    //전역 루틴 리스트 가져옴
+    String day = '';
+    switch (today) {
+      case 'Mon':
+        day = '월';
+        break;
+      case 'Tue':
+        day = '화';
+        break;
+      case 'Wed':
+        day = '수';
+        break;
+      case 'Thu':
+        day = '목';
+        break;
+      case 'Fri':
+        day = '금';
+        break;
+      case 'Sat':
+        day = '토';
+        break;
+      case 'Sun':
+        day = '일';
+        break;
+    }
 
+    //전역 루틴 리스트 가져옴
     List<RoutineModel> _routineList =
         Provider.of<RoutineProvider>(context).routineModels;
     _todayRoutines =
-        _routineList.where((routine) => routine.days.contains(today)).toList();
-
+        _routineList.where((routine) => routine.days.contains(day)).toList();
     if (_todayRoutines.isNotEmpty) isRoutine = true;
     setState(() {});
   }
@@ -119,7 +135,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    print('dd:$photoURL');
     return Material(
       child: Padding(
         padding: kPagePadding,
@@ -142,10 +157,17 @@ class _HomePageState extends State<HomePage> {
                       isRepeatingAnimation: false,
                     ),
                   ),
-                  CircleAvatar(
-                    radius: 25.0,
-                    backgroundImage: NetworkImage(photoURL),
-                    backgroundColor: Colors.transparent,
+                  GestureDetector(
+                    onTap: () {
+                      Provider.of<UserProvider>(context, listen: false)
+                          .signOut();
+                      Navigator.pushNamed(context, 'Log_in_page');
+                    },
+                    child: CircleAvatar(
+                      radius: 25.0,
+                      backgroundImage: NetworkImage(photoURL),
+                      backgroundColor: Colors.transparent,
+                    ),
                   ),
                 ],
               ),

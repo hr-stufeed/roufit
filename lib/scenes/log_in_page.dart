@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/provider/user_provider.dart';
 import 'package:hr_app/scenes/init_page.dart';
 import 'package:provider/provider.dart';
@@ -75,7 +76,7 @@ class _LoginWidgetState extends State<LoginWidget> {
       url = user.photoURL;
       name = user.displayName;
     });
-
+    getUserInformation();
     return "로그인 성공";
   }
 
@@ -92,6 +93,11 @@ class _LoginWidgetState extends State<LoginWidget> {
     print("User Sign Out");
   }
 
+  void getUserInformation() {
+    var url = _auth.currentUser;
+    Provider.of<UserProvider>(context, listen: false).signIn(url);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -99,48 +105,62 @@ class _LoginWidgetState extends State<LoginWidget> {
 
   @override
   void didChangeDependencies() {
-    var url = _auth.currentUser;
-    Provider.of<UserProvider>(context).signIn(url);
+    try {
+      getUserInformation();
+    } catch (e) {
+      print('error:$e');
+    }
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return MaterialApp(
       home: Scaffold(
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              email == ""
-                  ? Container()
-                  : Column(
-                      children: <Widget>[
-                        Image.network(url),
-                        Text(name),
-                        Text(email),
-                      ],
+          child: Padding(
+            padding: kPagePadding,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.run_circle_outlined,
+                      size: 50,
                     ),
-              ElevatedButton(
-                onPressed: () {
-                  if (email == "") {
-                    signInGoogle(context);
-                  } else {
-                    signOutgoogle();
-                  }
-                },
-                child: Container(
-                  width: 150,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Icon(FontAwesomeIcons.google),
-                      Text(email == "" ? 'Google Login' : "Google Logout")
-                    ],
-                  ),
+                    Text('fitin', style: kLoginTitleStyle),
+                    Text('로그인을 진행해주세요', style: kPageSubTitleStyle),
+                  ],
                 ),
-              ),
-            ],
+                Column(
+                  children: [
+                    ElevatedButton(
+                      onPressed: () => signInGoogle(context),
+                      child: Container(
+                        width: size.width * 0.6,
+                        padding: EdgeInsets.symmetric(vertical: 24.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Icon(FontAwesomeIcons.google),
+                            Text(
+                              'SIGN IN WITH GOOGLE',
+                              style: kBottomFixedButtonTextStyle1,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 16.0),
+                    Text('이미 아이디가 있으신가요?', style: kFooterStyle),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

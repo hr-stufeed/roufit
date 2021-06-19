@@ -52,41 +52,34 @@ class _RoutineListPageState extends State<RoutineListPage> {
                   ],
                 ),
                 Expanded(
-                  child: Container(
-                    margin: EdgeInsets.fromLTRB(0, 16, 0, 0),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: kBorderRadius,
-                    ),
-                    child: ReorderableColumn(
-                      padding: kPagePadding,
-                      scrollController: _scrollController,
-                      enabled: true,
-                      onReorder:
-                          Provider.of<RoutineProvider>(context, listen: false)
-                              .reorder,
-                      draggingWidgetOpacity: 0,
-                      onNoReorder: (int index) {
-                        //this callback is optional
-                        debugPrint(
-                            '${DateTime.now().toString().substring(5, 22)} reorder cancelled. index:$index');
-                      },
-                      children:
-                          Provider.of<RoutineProvider>(context, listen: true)
-                              .routineModels
-                              .map((_routine) {
-                        return Container(
-                          key: UniqueKey(),
-                          child: Routine(
-                            autoKey: _routine.key,
-                            name: _routine.name,
-                            color: Color(_routine.color),
-                            isListUp: true,
-                            days: _routine.days,
-                          ),
-                        );
-                      }).toList(),
-                    ),
+                  child: ReorderableColumn(
+                    padding: kPagePadding,
+                    scrollController: _scrollController,
+                    enabled: true,
+                    onReorder:
+                        Provider.of<RoutineProvider>(context, listen: false)
+                            .reorder,
+                    draggingWidgetOpacity: 0,
+                    onNoReorder: (int index) {
+                      //this callback is optional
+                      debugPrint(
+                          '${DateTime.now().toString().substring(5, 22)} reorder cancelled. index:$index');
+                    },
+                    children:
+                        Provider.of<RoutineProvider>(context, listen: true)
+                            .routineModels
+                            .map((_routine) {
+                      return Container(
+                        key: UniqueKey(),
+                        child: Routine(
+                          autoKey: _routine.key,
+                          name: _routine.name,
+                          color: Color(_routine.color),
+                          isListUp: true,
+                          days: _routine.days,
+                        ),
+                      );
+                    }).toList(),
                   ),
                 ),
               ],
