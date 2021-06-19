@@ -4,6 +4,7 @@ import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/models/routine_model.dart';
 import 'package:hr_app/provider/routine_provider.dart';
 import 'package:hr_app/models/workout_model.dart';
+import 'package:hr_app/provider/user_provider.dart';
 import 'package:hr_app/widgets/routine.dart';
 import 'package:hr_app/widgets/workout.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +23,8 @@ class _HomePageState extends State<HomePage> {
   String todayMessage;
   int _focusedIndex = 0;
   var today = DateFormat('EEE').format(DateTime.now());
+  String photoURL;
+  String userName;
 
   String showTodayMessage() {
     switch (today) {
@@ -47,7 +50,7 @@ class _HomePageState extends State<HomePage> {
         break;
       case 'Sat':
         today = '토';
-        return '어서오세요!\n기분 좋은 토요일이에요.';
+        return '어서오세요! $userName님\n기분 좋은 토요일이에요.';
         break;
       case 'Sun':
         today = '일';
@@ -93,7 +96,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     // TODO: implement initState
-    todayMessage = showTodayMessage();
 
     super.initState();
   }
@@ -107,12 +109,17 @@ class _HomePageState extends State<HomePage> {
       print(e);
       isRoutine = false;
     }
+    userName = Provider.of<UserProvider>(context, listen: false).getUserName();
+    photoURL = Provider.of<UserProvider>(context, listen: false).getPhotoURL();
+    todayMessage = showTodayMessage();
+
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    print('dd:$photoURL');
     return Material(
       child: Padding(
         padding: kPagePadding,
@@ -137,8 +144,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   CircleAvatar(
                     radius: 25.0,
-                    backgroundImage: NetworkImage(
-                        'https://image.fmkorea.com/files/attach/new/20200901/3842645/1506383311/3069298677/45f429a81181d90ff8bf4e67f6c8179f.jpg'),
+                    backgroundImage: NetworkImage(photoURL),
                     backgroundColor: Colors.transparent,
                   ),
                 ],
