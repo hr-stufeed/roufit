@@ -27,7 +27,12 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
     setState(() {
       _setCount = 0;
       _workoutCount += 1;
-      _selWorkout = _selRoutine.workoutModelList[_workoutCount];
+
+      if (_workoutCount == _selRoutine.workoutModelList.length) {
+        Navigator.pushReplacementNamed(context, 'Routine_finish_page');
+      } else {
+        _selWorkout = _selRoutine.workoutModelList[_workoutCount];
+      }
     });
   }
 
@@ -36,15 +41,89 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
       _setCount += 1;
     });
 
-    try{
+    try {
       _workoutSet = _selWorkout.setData[_setCount];
-    }catch(e){}
+    } catch (e) {}
 
     Future.delayed(const Duration(milliseconds: 300), () {
       if (_setCount == _selWorkout.setData.length.abs()) {
         changeWorkout();
       }
     });
+  }
+
+  timeSet() {}
+
+  Widget repWidget() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          '${_selWorkout.name}',
+          style: kRoutineTitleStyle.copyWith(
+            color: Colors.black,
+            fontSize: 20,
+          ),
+        ),
+        Text(
+          '${_selWorkout.emoji}',
+          style: kRoutineTitleStyle,
+        ),
+        SizedBox(
+          height: 16,
+        ),
+        Text(
+          '${_workoutSet.repCount} REP',
+          style: kRoutineTitleStyle.copyWith(
+            color: Colors.black,
+            fontSize: 20,
+          ),
+        ),
+        Text(
+          _workoutSet.weight != 0 ? '${_workoutSet.weight} KG' : '',
+          style: kRoutineTitleStyle.copyWith(
+            color: Colors.black,
+            fontSize: 20,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget timeWidget() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          '${_selWorkout.name}',
+          style: kRoutineTitleStyle.copyWith(
+            color: Colors.black,
+            fontSize: 20,
+          ),
+        ),
+        Text(
+          '${_selWorkout.emoji}',
+          style: kRoutineTitleStyle,
+        ),
+        SizedBox(
+          height: 16,
+        ),
+        Text(
+          '${_workoutSet.duration} Time',
+          style: kRoutineTitleStyle.copyWith(
+            color: Colors.black,
+            fontSize: 20,
+          ),
+        ),
+        Text(
+          _workoutSet.weight != 0 ? '${_workoutSet.weight} KG' : '',
+          style: kRoutineTitleStyle.copyWith(
+            color: Colors.black,
+            fontSize: 20,
+          ),
+        ),
+      ],
+    );
   }
 
   @override
@@ -59,6 +138,7 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
         _tags.addAll(workoutModel.tags);
       }
     });
+
     super.initState();
   }
 
@@ -135,39 +215,10 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
                                 decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(300)),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      '${_selWorkout.name}',
-                                      style: kRoutineTitleStyle.copyWith(
-                                        color: Colors.black,
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                    Text(
-                                      '${_selWorkout.emoji}',
-                                      style: kRoutineTitleStyle,
-                                    ),
-                                    SizedBox(
-                                      height: 16,
-                                    ),
-                                    Text(
-                                      '${_workoutSet.repCount} REP',
-                                      style: kRoutineTitleStyle.copyWith(
-                                        color: Colors.black,
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                    Text(
-                                      '${_workoutSet.weight} KG',
-                                      style: kRoutineTitleStyle.copyWith(
-                                        color: Colors.black,
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                child: _selWorkout.type !=
+                                        WorkoutType.durationWeight
+                                    ? repWidget()
+                                    : timeWidget(),
                               ),
                             ),
                             SfRadialGauge(
@@ -182,7 +233,16 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
                                       thickness: 0.15,
                                       thicknessUnit: GaugeSizeUnit.factor),
                                   showLabels: false,
-                                  showTicks: false,
+                                  tickOffset: -0.15,
+                                  offsetUnit: GaugeSizeUnit.factor,
+                                  interval: 1,
+                                  majorTickStyle: MajorTickStyle(
+                                    thickness: 5,
+                                    length: 0.15,
+                                    color: Colors.white,
+                                    lengthUnit: GaugeSizeUnit.factor,
+                                  ),
+                                  minorTickStyle: MinorTickStyle(length: 0),
                                   pointers: [
                                     RangePointer(
                                       value: _setCount.ceilToDouble(),
@@ -197,7 +257,7 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
                                         ],
                                         stops: <double>[0.25, 0.75],
                                       ),
-                                    )
+                                    ),
                                   ],
                                 )
                               ],
