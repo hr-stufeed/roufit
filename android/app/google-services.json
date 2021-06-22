@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "768604335788",
+    "project_id": "health-routine-app",
+    "storage_bucket": "health-routine-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:768604335788:android:c63ce2ce6e527864223909",
+        "android_client_info": {
+          "package_name": "com.stufeed.hr_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "768604335788-u9ed4m3g7o4q00m9c0t9b315f77t1ij5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.stufeed.hr_app",
+            "certificate_hash": "d0a1055538880ad76bcf99ffbb4772849fe21601"
+          }
+        },
+        {
+          "client_id": "768604335788-p4sjb9822lq7fa8du3dh35atucb03tlb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxGzd1DqGmJr9ebasjT76CyLvx44PTSSw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "768604335788-p4sjb9822lq7fa8du3dh35atucb03tlb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

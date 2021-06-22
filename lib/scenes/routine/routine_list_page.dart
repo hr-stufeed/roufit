@@ -51,9 +51,9 @@ class _RoutineListPageState extends State<RoutineListPage> {
                     Text('루틴 리스트', style: kPageTitleStyle),
                   ],
                 ),
+                kSizedBoxBetweenItems,
                 Expanded(
                   child: ReorderableColumn(
-                    padding: kPagePadding,
                     scrollController: _scrollController,
                     enabled: true,
                     onReorder:

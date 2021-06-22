@@ -1,10 +1,12 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/models/routine_model.dart';
 import 'package:hr_app/provider/routine_provider.dart';
 import 'package:hr_app/models/workout_model.dart';
 import 'package:hr_app/provider/user_provider.dart';
+import 'package:hr_app/widgets/bottomFixedButton.dart';
 import 'package:hr_app/widgets/routine.dart';
 import 'package:hr_app/widgets/workout.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +25,9 @@ class _HomePageState extends State<HomePage> {
   String todayMessage;
   int _focusedIndex = 0;
   var today = DateFormat('EEE').format(DateTime.now());
-  String photoURL;
+  String photoURL =
+      'https://w7.pngwing.com/pngs/90/776/png-transparent-internet-meme-cat-internet-forum-game-meme-game-cat-like-mammal-carnivoran.png' ??
+          '';
   String userName;
 
   String showTodayMessage() {
@@ -120,13 +124,16 @@ class _HomePageState extends State<HomePage> {
   void didChangeDependencies() {
     try {
       getRoutineList();
+      userName =
+          Provider.of<UserProvider>(context, listen: false).getUserName();
+      photoURL =
+          Provider.of<UserProvider>(context, listen: false).getPhotoURL();
     } catch (e) {
       // load되기 전에 페이지가 먼저 생성되어 빈 전역 리스트 참조하면 에러 루틴 뱉는다
       print(e);
       isRoutine = false;
     }
-    userName = Provider.of<UserProvider>(context, listen: false).getUserName();
-    photoURL = Provider.of<UserProvider>(context, listen: false).getPhotoURL();
+
     todayMessage = showTodayMessage();
 
     super.didChangeDependencies();
@@ -224,7 +231,17 @@ class _HomePageState extends State<HomePage> {
                       color: Colors.blue,
                       size: 100.0,
                     ),
-                  )
+                  ),
+            BottomFixedButton(
+                text: 'UPDATE',
+                tap: () {
+                  var _db = FirebaseFirestore.instance;
+                  _db
+                      .collection('routines')
+                      .doc('POHULCdnWuNfLpmVxAip')
+                      .set({'name': 'pullup'});
+                  //.setData({'name': 'pullup'});
+                }),
           ],
         ),
       ),

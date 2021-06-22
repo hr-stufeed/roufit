@@ -19,7 +19,7 @@ class BottomFixedButton extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Container(
-          margin: EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 8.0),
+          margin: EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 4.0),
           child: OutlinedButton(
             child: Text(text,
                 style: textColor == Colors.white
