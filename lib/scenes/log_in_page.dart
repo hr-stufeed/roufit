@@ -6,6 +6,7 @@ import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/provider/user_provider.dart';
 import 'package:hr_app/scenes/init_page.dart';
 import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LogInPage extends StatefulWidget {
   const LogInPage({Key key}) : super(key: key);
@@ -56,7 +57,6 @@ class _LoginWidgetState extends State<LoginWidget> {
   Future<String> signInGoogle(BuildContext context) async {
     final GoogleSignInAccount account = await googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth = await account.authentication;
-
     final AuthCredential credential = GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
@@ -77,6 +77,7 @@ class _LoginWidgetState extends State<LoginWidget> {
       name = user.displayName;
     });
     getUserInformation();
+    saveUserInformation();
     return "로그인 성공";
   }
 
@@ -94,8 +95,22 @@ class _LoginWidgetState extends State<LoginWidget> {
   }
 
   void getUserInformation() {
-    var url = _auth.currentUser;
-    Provider.of<UserProvider>(context, listen: false).signIn(url);
+    User user = _auth.currentUser;
+    print("uid : ${user.uid}");
+    Provider.of<UserProvider>(context, listen: false).signIn(user);
+  }
+
+  void saveUserInformation() {
+    User user = _auth.currentUser;
+    var _db = FirebaseFirestore.instance;
+
+    _db.collection('users').doc(user.uid).set({
+      'email': user.email,
+      'name': user.displayName,
+      'photoURL': user.photoURL,
+    });
+
+    print("user data saved in firestore");
   }
 
   @override
@@ -107,6 +122,7 @@ class _LoginWidgetState extends State<LoginWidget> {
   void didChangeDependencies() {
     try {
       getUserInformation();
+      saveUserInformation();
     } catch (e) {
       print('error:$e');
     }
