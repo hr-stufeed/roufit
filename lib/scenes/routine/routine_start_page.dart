@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/models/routine_model.dart';
@@ -20,14 +22,71 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
   WorkoutSet _workoutSet;
   int _workoutCount = 0;
   int _setCount = 0;
+  bool _isNext = true;
   Color _color;
   Set<String> _tags = {};
+  List<Map<int, String>> routineList = [];
+  String playBtn = btnStart;
+  Map<int, String> selectRoutine = {};
+  Timer _timer;
+  Duration _routineTimer = Duration(seconds: 0);
+
+  get routineTimer => _routineTimer;
+
+  timerState() {
+    switch (playBtn) {
+      case btnStart:
+        timerStart();
+        break;
+      case btnStop:
+        timerStop();
+        break;
+    }
+  }
+
+  timerStop() {
+    playBtn = btnStart;
+    _timer.cancel();
+  }
+
+  timerStart() {
+    _routineTimer = Duration(seconds: 0);
+    if (_timer.runtimeType != Null) {
+      _timer.cancel();
+    }
+    _timer = Timer.periodic(Duration(seconds: 1), _tick);
+  }
+
+  _tick(Timer timer) {
+    _routineTimer += Duration(seconds: 1);
+
+    if (_routineTimer.inSeconds >= _workoutSet.duration) {
+      setState(() {
+        _setCount += 1;
+      });
+
+      try {
+        _workoutSet = _selWorkout.setData[_setCount];
+      } catch (e) {}
+
+      Future.delayed(const Duration(milliseconds: 100), () {
+        _routineTimer = Duration(seconds: 0);
+
+        if (_setCount == _selWorkout.setData.length.abs()) {
+          timerStop();
+          changeWorkout();
+        }
+      });
+    }
+  }
 
   changeWorkout() {
     setState(() {
       _setCount = 0;
       _workoutCount += 1;
-
+      if (_workoutCount == _selRoutine.workoutModelList.length - 1) {
+        _isNext = false;
+      }
       if (_workoutCount == _selRoutine.workoutModelList.length) {
         Navigator.pushReplacementNamed(context, 'Routine_finish_page');
       } else {
@@ -37,19 +96,23 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
   }
 
   doneSet() {
-    setState(() {
-      _setCount += 1;
-    });
+    if (_selWorkout.type != WorkoutType.durationWeight) {
+      setState(() {
+        _setCount += 1;
+      });
 
-    try {
-      _workoutSet = _selWorkout.setData[_setCount];
-    } catch (e) {}
+      try {
+        _workoutSet = _selWorkout.setData[_setCount];
+      } catch (e) {}
 
-    Future.delayed(const Duration(milliseconds: 300), () {
-      if (_setCount == _selWorkout.setData.length.abs()) {
-        changeWorkout();
-      }
-    });
+      Future.delayed(const Duration(milliseconds: 300), () {
+        if (_setCount == _selWorkout.setData.length.abs()) {
+          changeWorkout();
+        }
+      });
+    } else {
+      timerStart();
+    }
   }
 
   timeSet() {}
@@ -199,103 +262,110 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
                 ),
               ),
               Expanded(
-                child: Container(
-                  padding: kPagePadding,
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: kPagePadding,
-                        child: Stack(
-                          alignment: AlignmentDirectional.center,
-                          children: [
-                            Center(
-                              child: Container(
-                                width: 300,
-                                height: 300,
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(300)),
-                                child: _selWorkout.type !=
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: kPagePadding,
+                      child: Stack(
+                        alignment: AlignmentDirectional.center,
+                        children: [
+                          Center(
+                            child: Container(
+                              width: 300,
+                              height: 300,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(300)),
+                              child:
+                                  _selWorkout.type != WorkoutType.durationWeight
+                                      ? repWidget()
+                                      : timeWidget(),
+                            ),
+                          ),
+                          SfRadialGauge(
+                            axes: [
+                              RadialAxis(
+                                minimum: 0,
+                                maximum: _selWorkout.type !=
                                         WorkoutType.durationWeight
-                                    ? repWidget()
-                                    : timeWidget(),
-                              ),
-                            ),
-                            SfRadialGauge(
-                              axes: [
-                                RadialAxis(
-                                  minimum: 0,
-                                  maximum:
-                                      _selWorkout.setData.length.ceilToDouble(),
-                                  startAngle: 270,
-                                  endAngle: 270,
-                                  axisLineStyle: AxisLineStyle(
-                                      thickness: 0.15,
-                                      thicknessUnit: GaugeSizeUnit.factor),
-                                  showLabels: false,
-                                  tickOffset: -0.15,
-                                  offsetUnit: GaugeSizeUnit.factor,
-                                  interval: 1,
-                                  majorTickStyle: MajorTickStyle(
-                                    thickness: 5,
-                                    length: 0.15,
-                                    color: Colors.white,
-                                    lengthUnit: GaugeSizeUnit.factor,
-                                  ),
-                                  minorTickStyle: MinorTickStyle(length: 0),
-                                  pointers: [
-                                    RangePointer(
-                                      value: _setCount.ceilToDouble(),
-                                      enableAnimation: true,
-                                      animationDuration: 300,
-                                      width: 0.15,
-                                      sizeUnit: GaugeSizeUnit.factor,
-                                      gradient: SweepGradient(
-                                        colors: <Color>[
-                                          _color.withBlue(200).withOpacity(0.9),
-                                          _color,
-                                        ],
-                                        stops: <double>[0.25, 0.75],
-                                      ),
+                                    ? _selWorkout.setData.length.ceilToDouble()
+                                    : Duration(seconds: _workoutSet.duration)
+                                        .inSeconds
+                                        .ceilToDouble(),
+                                startAngle: 270,
+                                endAngle: 270,
+                                axisLineStyle: AxisLineStyle(
+                                    thickness: 0.15,
+                                    thicknessUnit: GaugeSizeUnit.factor),
+                                showLabels: false,
+                                tickOffset: -0.15,
+                                offsetUnit: GaugeSizeUnit.factor,
+                                interval: 1,
+                                majorTickStyle: MajorTickStyle(
+                                  thickness: 5,
+                                  length: 0.15,
+                                  color: Colors.white,
+                                  lengthUnit: GaugeSizeUnit.factor,
+                                ),
+                                minorTickStyle: MinorTickStyle(length: 0),
+                                pointers: [
+                                  RangePointer(
+                                    value: _selWorkout.type !=
+                                            WorkoutType.durationWeight
+                                        ? _setCount.ceilToDouble()
+                                        : _routineTimer.inSeconds
+                                            .ceilToDouble(),
+                                    enableAnimation: true,
+                                    animationDuration: 300,
+                                    width: 0.15,
+                                    sizeUnit: GaugeSizeUnit.factor,
+                                    gradient: SweepGradient(
+                                      colors: <Color>[
+                                        _color.withBlue(200).withOpacity(0.9),
+                                        _color,
+                                      ],
+                                      stops: <double>[0.25, 0.75],
                                     ),
-                                  ],
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ],
                       ),
-                      SizedBox(height: 12),
-                      // Text(
-                      //   'Next',
-                      //   style: kRoutineTitleStyle.copyWith(
-                      //     color: Colors.black,
-                      //     fontSize: 24,
-                      //   ),
-                      // ),
-                      // Text(
-                      //   '${_selRoutine.workoutModelList[_workoutCount + 1].name}',
-                      //   style: kRoutineTitleStyle.copyWith(
-                      //     color: Colors.black,
-                      //     fontSize: 20,
-                      //   ),
-                      // ),
-                      SizedBox(height: 12),
-                      TextButton(
-                        child: Text(
-                          'Done',
-                          style: kDoneStyle,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            doneSet();
-                          });
-                        },
-                        style: TextButton.styleFrom(
-                            backgroundColor: Color(0xFF3161A6)),
+                    ),
+                    SizedBox(height: 12),
+                    Text(
+                      _isNext ? 'Next' : 'Finish',
+                      style: kRoutineTitleStyle.copyWith(
+                        color: Colors.black,
+                        fontSize: 24,
                       ),
-                    ],
-                  ),
+                    ),
+                    Text(
+                      _isNext
+                          ? '${_selRoutine.workoutModelList[_workoutCount + 1].name}'
+                          : '',
+                      style: kRoutineTitleStyle.copyWith(
+                        color: Colors.black,
+                        fontSize: 20,
+                      ),
+                    ),
+                    SizedBox(height: 12),
+                    TextButton(
+                      child: Text(
+                        'Done',
+                        style: kDoneStyle,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          doneSet();
+                        });
+                      },
+                      style: TextButton.styleFrom(
+                          backgroundColor: Color(0xFF3161A6)),
+                    ),
+                  ],
                 ),
               ),
             ],
