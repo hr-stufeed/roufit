@@ -78,7 +78,7 @@ class _LoginWidgetState extends State<LoginWidget> {
     //   name = user.displayName;
     // });
     getUserInformation();
-    saveUserInformation();
+    createUserInformation();
     Navigator.pop(context, true);
     return "로그인 성공";
   }
@@ -102,9 +102,10 @@ class _LoginWidgetState extends State<LoginWidget> {
     Provider.of<UserProvider>(context, listen: false).signIn(user);
   }
 
-  void saveUserInformation() {
+  void createUserInformation() {
     User user = _auth.currentUser;
     var _db = FirebaseFirestore.instance;
+    _db.collection('users').doc(currentUser.uid).collection('routines');
 
     _db.collection('users').doc(user.uid).set({
       'email': user.email,
@@ -124,7 +125,7 @@ class _LoginWidgetState extends State<LoginWidget> {
   void didChangeDependencies() {
     try {
       getUserInformation();
-      saveUserInformation();
+      createUserInformation();
     } catch (e) {
       print('error:$e');
     }

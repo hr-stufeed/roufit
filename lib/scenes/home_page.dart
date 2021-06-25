@@ -153,9 +153,6 @@ class _HomePageState extends State<HomePage> {
       photoURL =
           Provider.of<UserProvider>(context, listen: false).getPhotoURL();
       todayMessage = showTodayMessage();
-      //showTodayMessage();
-
-      print('dfffefefefefefe:$todayMessage');
     });
   }
 
@@ -218,6 +215,9 @@ class _HomePageState extends State<HomePage> {
                               isLoggedin = value;
                               updateUserInfo();
                             });
+                          }).then((value) {
+                            Provider.of<UserProvider>(context, listen: false)
+                                .saveRoutines(context);
                           });
                         },
                         child: Icon(
@@ -227,10 +227,6 @@ class _HomePageState extends State<HomePage> {
                       ),
               ],
             ),
-            // Expanded(
-            //   flex: 1,
-            //   child:
-            // ),
             kSizedBoxBetweenItems,
             Text(
               '오늘의 루틴',
@@ -284,13 +280,13 @@ class _HomePageState extends State<HomePage> {
                       size: 100.0,
                     ),
                   ),
-            BottomFixedButton(
-                text: 'UPDATE',
-                tap: () {
-                  setState(() {
-                    todayMessage = 'hamburger';
-                  });
-                }),
+            // BottomFixedButton(
+            //     text: 'UPDATE',
+            //     tap: () {
+            //       setState(() {
+            //         todayMessage = 'hamburger';
+            //       });
+            //     }),
           ],
         ),
       ),
