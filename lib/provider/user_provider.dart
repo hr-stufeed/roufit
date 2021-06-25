@@ -11,6 +11,7 @@ class UserProvider with ChangeNotifier {
   String name = "";
   String email = "";
   String photoURL = "";
+  bool isLoggedin = false;
   final GoogleSignIn googleSignIn = GoogleSignIn();
 
   void signIn(User user) {
@@ -18,15 +19,22 @@ class UserProvider with ChangeNotifier {
     photoURL = user.photoURL;
     name = user.displayName;
     email = user.email;
+    isLoggedin = true;
   }
 
-  Future<void> signOut() async {
+  Future<bool> signOut() async {
     await Firebase.initializeApp();
 
     try {
       await FirebaseAuth.instance.signOut();
       await googleSignIn.signOut();
+      currentUser = null;
+      photoURL = " ";
+      name = " ";
+      email = " ";
+      isLoggedin = false;
       print("Success");
+      return isLoggedin;
     } catch (e) {
       print(e.toString());
     }
@@ -38,5 +46,9 @@ class UserProvider with ChangeNotifier {
 
   String getUserName() {
     return name;
+  }
+
+  bool getLoginState() {
+    return isLoggedin;
   }
 }

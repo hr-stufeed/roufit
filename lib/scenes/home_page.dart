@@ -6,6 +6,7 @@ import 'package:hr_app/models/routine_model.dart';
 import 'package:hr_app/provider/routine_provider.dart';
 import 'package:hr_app/models/workout_model.dart';
 import 'package:hr_app/provider/user_provider.dart';
+import 'package:hr_app/scenes/firebase_Init.dart';
 import 'package:hr_app/widgets/bottomFixedButton.dart';
 import 'package:hr_app/widgets/routine.dart';
 import 'package:hr_app/widgets/workout.dart';
@@ -25,36 +26,66 @@ class _HomePageState extends State<HomePage> {
   String todayMessage;
   int _focusedIndex = 0;
   var today = DateFormat('EEE').format(DateTime.now());
+
+  bool isLoggedin = false;
   String photoURL =
       'https://w7.pngwing.com/pngs/90/776/png-transparent-internet-meme-cat-internet-forum-game-meme-game-cat-like-mammal-carnivoran.png' ??
           '';
-  String userName;
+  String userName = " ";
 
   String showTodayMessage() {
-    switch (today) {
-      case 'Mon':
-        return '월요일이에요.\n다시 시작해볼까요?';
-        break;
-      case 'Tue':
-        return '화요일이에요.\n힘차게 가볼까요?';
-        break;
-      case 'Wed':
-        return '수요일!\n벌써 중간까지 왔어요!';
-        break;
-      case 'Thu':
-        return '목요일이에요.\n조금만 더 버텨요!';
-        break;
-      case 'Fri':
-        return '불타는 금요일이에요!!!!!!';
-        break;
-      case 'Sat':
-        return '어서오세요! $userName님\n기분 좋은 토요일이에요.';
-        break;
-      case 'Sun':
-        return '안녕하세요!\n즐거운 일요일입니다.';
-        break;
-      default:
-        return '안녕하세요!';
+    if (isLoggedin) {
+      switch (today) {
+        case 'Mon':
+          return '월요일이에요.\n다시 시작해볼까요?';
+          break;
+        case 'Tue':
+          return '화요일이에요.\n힘차게 가볼까요?';
+          break;
+        case 'Wed':
+          return '수요일!\n벌써 중간까지 왔어요!';
+          break;
+        case 'Thu':
+          return '목요일이에요.$userName님 \n조금만 더 버텨요!';
+          break;
+        case 'Fri':
+          return '$userName님\n불타는 금요일이에요! ';
+          break;
+        case 'Sat':
+          return '어서오세요! $userName님\n기분 좋은 토요일이에요.';
+          break;
+        case 'Sun':
+          return '안녕하세요!\n즐거운 일요일입니다.';
+          break;
+        default:
+          return '안녕하세요!';
+      }
+    } else {
+      switch (today) {
+        case 'Mon':
+          return '월요일이에요.\n다시 시작해볼까요?';
+          break;
+        case 'Tue':
+          return '화요일이에요.\n힘차게 가볼까요?';
+          break;
+        case 'Wed':
+          return '수요일!\n벌써 중간까지 왔어요!';
+          break;
+        case 'Thu':
+          return '목요일이에요.\n조금만 더 버텨요!';
+          break;
+        case 'Fri':
+          return '불타는 금요일이에요! ';
+          break;
+        case 'Sat':
+          return '어서오세요! \n기분 좋은 토요일이에요.';
+          break;
+        case 'Sun':
+          return '안녕하세요!\n즐거운 일요일입니다.';
+          break;
+        default:
+          return '안녕하세요!';
+      }
     }
   }
 
@@ -113,9 +144,25 @@ class _HomePageState extends State<HomePage> {
     setState(() {});
   }
 
+  void updateUserInfo() {
+    setState(() {
+      isLoggedin =
+          Provider.of<UserProvider>(context, listen: false).getLoginState();
+      userName =
+          Provider.of<UserProvider>(context, listen: false).getUserName();
+      photoURL =
+          Provider.of<UserProvider>(context, listen: false).getPhotoURL();
+      todayMessage = showTodayMessage();
+      //showTodayMessage();
+
+      print('dfffefefefefefe:$todayMessage');
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
+    todayMessage = showTodayMessage();
 
     super.initState();
   }
@@ -124,18 +171,12 @@ class _HomePageState extends State<HomePage> {
   void didChangeDependencies() {
     try {
       getRoutineList();
-      userName =
-          Provider.of<UserProvider>(context, listen: false).getUserName();
-      photoURL =
-          Provider.of<UserProvider>(context, listen: false).getPhotoURL();
     } catch (e) {
       // load되기 전에 페이지가 먼저 생성되어 빈 전역 리스트 참조하면 에러 루틴 뱉는다
       print(e);
       isRoutine = false;
     }
-
-    todayMessage = showTodayMessage();
-
+    updateUserInfo();
     super.didChangeDependencies();
   }
 
@@ -148,37 +189,48 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Expanded(
-              flex: 1,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    height: 80,
-                    child: AnimatedTextKit(
-                      animatedTexts: [
-                        TypewriterAnimatedText(todayMessage,
-                            speed: const Duration(milliseconds: 100),
-                            textStyle: kPageTitleStyle),
-                      ],
-                      isRepeatingAnimation: false,
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Provider.of<UserProvider>(context, listen: false)
-                          .signOut();
-                      Navigator.pushNamed(context, 'Log_in_page');
-                    },
-                    child: CircleAvatar(
-                      radius: 25.0,
-                      backgroundImage: NetworkImage(photoURL),
-                      backgroundColor: Colors.transparent,
-                    ),
-                  ),
-                ],
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(todayMessage, style: kPageTitleStyle),
+                isLoggedin
+                    ? InkWell(
+                        onTap: () {
+                          Provider.of<UserProvider>(context, listen: false)
+                              .signOut()
+                              .then((value) {
+                            setState(() {
+                              isLoggedin = false;
+                              updateUserInfo();
+                            });
+                          });
+                        },
+                        child: CircleAvatar(
+                          radius: 25.0,
+                          backgroundImage: NetworkImage(photoURL),
+                          backgroundColor: Colors.transparent,
+                        ))
+                    : InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(context, 'Firebase_init')
+                              .then((value) {
+                            setState(() {
+                              isLoggedin = value;
+                              updateUserInfo();
+                            });
+                          });
+                        },
+                        child: Icon(
+                          Icons.power_settings_new_rounded,
+                          size: 32.0,
+                        ),
+                      ),
+              ],
             ),
+            // Expanded(
+            //   flex: 1,
+            //   child:
+            // ),
             kSizedBoxBetweenItems,
             Text(
               '오늘의 루틴',
@@ -235,12 +287,9 @@ class _HomePageState extends State<HomePage> {
             BottomFixedButton(
                 text: 'UPDATE',
                 tap: () {
-                  var _db = FirebaseFirestore.instance;
-                  _db
-                      .collection('routines')
-                      .doc('POHULCdnWuNfLpmVxAip')
-                      .set({'name': 'pullup'});
-                  //.setData({'name': 'pullup'});
+                  setState(() {
+                    todayMessage = 'hamburger';
+                  });
                 }),
           ],
         ),

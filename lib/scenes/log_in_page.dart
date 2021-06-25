@@ -18,24 +18,25 @@ class LogInPage extends StatefulWidget {
 class _LogInPageState extends State<LogInPage> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: MultiProvider(
-          providers: [
-            ChangeNotifierProvider(create: (_) => UserProvider()),
-          ],
-          child: StreamBuilder(
-              stream: FirebaseAuth.instance.authStateChanges(),
-              builder: (context, AsyncSnapshot<User> snapshot) {
-                if (!snapshot.hasData) {
-                  return LoginWidget();
-                } else {
-                  return InitPage();
-                }
-              }),
-        ),
-      ),
-    );
+    return LoginWidget();
+    // return MaterialApp(
+    //   home: Scaffold(
+    //     body: MultiProvider(
+    //       providers: [
+    //         ChangeNotifierProvider(create: (_) => UserProvider()),
+    //       ],
+    //       child: StreamBuilder(
+    //           stream: FirebaseAuth.instance.authStateChanges(),
+    //           builder: (context, AsyncSnapshot<User> snapshot) {
+    //             if (!snapshot.hasData) {
+    //               return LoginWidget();
+    //             } else {
+    //               return InitPage();
+    //             }
+    //           }),
+    //     ),
+    //   ),
+    // );
   }
 }
 
@@ -71,13 +72,14 @@ class _LoginWidgetState extends State<LoginWidget> {
     currentUser = _auth.currentUser;
     assert(user.uid == currentUser.uid);
 
-    setState(() {
-      email = user.email;
-      url = user.photoURL;
-      name = user.displayName;
-    });
+    // setState(() {
+    //   email = user.email;
+    //   url = user.photoURL;
+    //   name = user.displayName;
+    // });
     getUserInformation();
     saveUserInformation();
+    Navigator.pop(context, true);
     return "로그인 성공";
   }
 
@@ -110,7 +112,7 @@ class _LoginWidgetState extends State<LoginWidget> {
       'photoURL': user.photoURL,
     });
 
-    print("user data saved in firestore");
+    print("user data is saved in firestore");
   }
 
   @override
@@ -148,7 +150,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                       Icons.run_circle_outlined,
                       size: 50,
                     ),
-                    Text('fitin', style: kLoginTitleStyle),
+                    Text('roufit', style: kLoginTitleStyle),
                     Text('로그인을 진행해주세요', style: kPageSubTitleStyle),
                   ],
                 ),
