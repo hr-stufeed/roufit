@@ -193,8 +193,7 @@ class _HomePageState extends State<HomePage> {
                 isLoggedin
                     ? InkWell(
                         onTap: () {
-                          Provider.of<UserProvider>(context, listen: false)
-                              .signOut()
+                          Navigator.pushNamed(context, 'Profile_page')
                               .then((value) {
                             setState(() {
                               isLoggedin = false;
@@ -216,8 +215,8 @@ class _HomePageState extends State<HomePage> {
                               updateUserInfo();
                             });
                           }).then((value) {
-                            Provider.of<UserProvider>(context, listen: false)
-                                .saveRoutines(context);
+                            // Provider.of<UserProvider>(context, listen: false)
+                            //     .saveRoutines(context);
                           });
                         },
                         child: Icon(

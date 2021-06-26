@@ -3,6 +3,7 @@ import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/provider/routine_provider.dart';
 import 'package:hr_app/provider/timer_provider.dart';
 import 'package:hr_app/models/workout_model.dart';
+import 'package:hr_app/provider/user_provider.dart';
 import 'package:hr_app/widgets/topBar.dart';
 import 'package:provider/provider.dart';
 

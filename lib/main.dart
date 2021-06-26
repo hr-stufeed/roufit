@@ -12,6 +12,7 @@ import 'package:hr_app/scenes/log_in_page.dart';
 
 import 'package:hr_app/scenes/home_page.dart';
 import 'package:hr_app/scenes/mypage.dart';
+import 'package:hr_app/scenes/profile_page.dart';
 import 'package:hr_app/scenes/routine/routine_input_page.dart';
 import 'package:hr_app/scenes/workout_add_set_page.dart';
 import 'package:hr_app/scenes/workout_list_page.dart';
@@ -86,6 +87,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
           'Workout_add_set_page': (context) => WorkoutAddSetPage(),
           'Firebase_init': (context) => FirebaseInit(),
           'Log_in_page': (context) => LogInPage(),
+          'Profile_page': (context) => ProfilePage(),
           'MyPage': (context) => MyPage(),
         },
         theme: ThemeData(

@@ -38,7 +38,7 @@ class RoutineProvider with ChangeNotifier {
     _selRoutine = null;
   }
 
-  void add(String text, Color color, List<String> days) async {
+  Future<void> add(String text, Color color, List<String> days) async {
     var _box = await Hive.openBox<RoutineModel>('routines');
     // 현재 시간에 따른 키를 생성한다.
     var key = DateFormat('yyMMddhhmmss').format(DateTime.now());
@@ -59,8 +59,8 @@ class RoutineProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void modify(String autoKey, String text, Color color, List<String> days,
-      List<WorkoutModel> workoutModelList) async {
+  Future<RoutineModel> modify(String autoKey, String text, Color color,
+      List<String> days, List<WorkoutModel> workoutModelList) async {
     var _box = await Hive.openBox<RoutineModel>('routines');
     // 루틴 표지의 수정하기를 누르면 key를 전달받고 _box의 RoutineModel에 정보를 덮어 씌운다.
     RoutineModel _routineData = RoutineModel(
@@ -76,7 +76,9 @@ class RoutineProvider with ChangeNotifier {
     for (int i = 0; i < _routineModels.length; i++) {
       if (_routineModels[i].key == autoKey) _routineModels[i] = _routineData;
     }
+
     notifyListeners();
+    return _routineData;
   }
 
   RoutineModel find(String autoKey) {
@@ -103,7 +105,7 @@ class RoutineProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void delete(String autoKey) async {
+  Future<void> delete(String autoKey) async {
     var _box = await Hive.openBox<RoutineModel>('routines');
 
     // 삭제 시 _routineModels에서는 키를 탐색하여 삭제한다.

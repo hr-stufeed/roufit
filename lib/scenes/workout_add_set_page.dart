@@ -111,6 +111,9 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
                             _workoutModel.type = _workoutType;
                             Provider.of<WorkoutProvider>(context, listen: false)
                                 .haveAllSetCheck();
+                            setData.forEach((element) {
+                              print('dfere:${element.repCount}');
+                            });
                             Navigator.pop(context);
                           }),
                     ),
@@ -212,15 +215,6 @@ class _WorkoutAddSetPageState extends State<WorkoutAddSetPage> {
                           ),
                         ],
                       ),
-                      // FloatingActionButton(
-                      //   child: Icon(
-                      //     Icons.add,
-                      //     color: Colors.black,
-                      //     size: 30.0,
-                      //   ),
-                      //   backgroundColor: Colors.white,
-                      //   onPressed: () => addSetList(),
-                      // ),
                     ],
                   ),
                 ),

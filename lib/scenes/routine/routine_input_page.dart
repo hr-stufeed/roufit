@@ -3,6 +3,7 @@ import 'package:hr_app/data/constants.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:hr_app/models/routine_model.dart';
 import 'package:hr_app/models/workout_model.dart';
+import 'package:hr_app/provider/user_provider.dart';
 import 'package:hr_app/widgets/bottomFixedButton.dart';
 import 'package:provider/provider.dart';
 import 'package:hr_app/provider/routine_provider.dart';
@@ -68,7 +69,6 @@ class _RoutineInputPageState extends State<RoutineInputPage> {
     Provider.of<RoutineProvider>(context, listen: false).selInit();
     super.deactivate();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -171,6 +171,7 @@ class _RoutineInputPageState extends State<RoutineInputPage> {
                           sortedSelectedDays,
                           workoutList,
                         );
+
                   Provider.of<RoutineProvider>(context, listen: false)
                       .selInit();
 
