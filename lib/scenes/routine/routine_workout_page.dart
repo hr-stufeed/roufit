@@ -66,17 +66,6 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
     super.deactivate();
   }
 
-  void showToast(String message) {
-    Fluttertoast.showToast(
-      msg: message,
-      gravity: ToastGravity.BOTTOM,
-      backgroundColor: Colors.grey,
-      fontSize: 12.0,
-      textColor: Colors.white,
-      toastLength: Toast.LENGTH_SHORT,
-    );
-  }
-
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback(
         (_) => Provider.of<WorkoutProvider>(context, listen: false).haveAllSet);

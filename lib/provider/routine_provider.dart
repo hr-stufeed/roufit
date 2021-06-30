@@ -120,7 +120,7 @@ class RoutineProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void load() async {
+  Future<void> load() async {
     var _box = await Hive.openBox<RoutineModel>('routines');
     _box.toMap().forEach((key, _routineData) {
       _routineModels.add(_routineData);
@@ -131,8 +131,26 @@ class RoutineProvider with ChangeNotifier {
 
   void clear() async {
     var _box = await Hive.openBox<RoutineModel>('routines');
-
+    _box.clear();
+    _routineModels = [];
     print('clear ${_box.length}');
+  }
+
+  void overwrite(List<RoutineModel> list) async {
+    var _box = await Hive.openBox<RoutineModel>('routines');
+
+    await _box.clear();
+    _routineModels = [];
+
+    _routineModels = list;
+    _routineModels.forEach((rt) {
+      _box.add(rt);
+    });
+    _box.toMap().forEach((key, value) {
+      print('dd:${value.name}');
+    });
+
+    notifyListeners();
   }
 
   void reorder(int oldIndex, int newIndex) async {

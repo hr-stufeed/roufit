@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hr_app/widgets/routine.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
 part 'constants.g.dart';
 
 const kPagePadding = EdgeInsets.fromLTRB(16.0, 32.0, 16.0, 0.0);
@@ -178,4 +180,23 @@ enum WorkoutType {
   durationWeight,
   @HiveField(2)
   setWeight,
+}
+WorkoutType converter(String type) {
+  if (type == "WorkoutType.setWeight")
+    return WorkoutType.setWeight;
+  else if (type == "WorkoutType.durationWeight")
+    return WorkoutType.durationWeight;
+  else
+    return WorkoutType.none;
+}
+
+void showToast(String message) {
+  Fluttertoast.showToast(
+    msg: message,
+    gravity: ToastGravity.BOTTOM,
+    backgroundColor: Colors.grey,
+    fontSize: 12.0,
+    textColor: Colors.white,
+    toastLength: Toast.LENGTH_SHORT,
+  );
 }
