@@ -127,7 +127,7 @@ class UserProvider with ChangeNotifier {
           .doc(currentUser.uid)
           .collection('routines');
 
-      routineDB.doc('delete this').delete();
+      await routineDB.doc('delete this').delete();
       //DB의 루틴 컬렉션을 스냅샷으로 얻는다
       QuerySnapshot routineSnapshot = await routineDB.get();
       LoadedData loadedData = LoadedData();

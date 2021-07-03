@@ -244,12 +244,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   )
                 : Expanded(
-                    flex: 2,
-                    child: SpinKitDoubleBounce(
-                      color: Colors.blue,
-                      size: 100.0,
-                    ),
-                  ),
+                    flex: 2, child: Center(child: Text('오늘의 루틴을 추가해주세요.'))),
             kSizedBoxBetweenItems,
             Text(
               '운동할 준비 되셨나요? 🔥',
@@ -273,12 +268,7 @@ class _HomePageState extends State<HomePage> {
                       },
                     ),
                   )
-                : Expanded(
-                    child: SpinKitDoubleBounce(
-                      color: Colors.blue,
-                      size: 100.0,
-                    ),
-                  ),
+                : Expanded(child: Center(child: Text('오늘의 루틴을 추가해주세요.'))),
           ],
         ),
       ),

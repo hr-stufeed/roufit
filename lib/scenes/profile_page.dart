@@ -131,6 +131,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               Provider.of<UserProvider>(context, listen: false)
                                   .signOut()
                                   .then((value) => value)
+                                  .then((value) => showToast('로그아웃 되었어요.'))
                                   .then((value) => Navigator.pop(context));
                             },
                           ),
