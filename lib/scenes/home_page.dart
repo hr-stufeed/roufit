@@ -279,13 +279,6 @@ class _HomePageState extends State<HomePage> {
                       size: 100.0,
                     ),
                   ),
-            // BottomFixedButton(
-            //     text: 'UPDATE',
-            //     tap: () {
-            //       setState(() {
-            //         todayMessage = 'hamburger';
-            //       });
-            //     }),
           ],
         ),
       ),

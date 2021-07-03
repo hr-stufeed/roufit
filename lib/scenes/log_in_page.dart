@@ -19,24 +19,6 @@ class _LogInPageState extends State<LogInPage> {
   @override
   Widget build(BuildContext context) {
     return LoginWidget();
-    // return MaterialApp(
-    //   home: Scaffold(
-    //     body: MultiProvider(
-    //       providers: [
-    //         ChangeNotifierProvider(create: (_) => UserProvider()),
-    //       ],
-    //       child: StreamBuilder(
-    //           stream: FirebaseAuth.instance.authStateChanges(),
-    //           builder: (context, AsyncSnapshot<User> snapshot) {
-    //             if (!snapshot.hasData) {
-    //               return LoginWidget();
-    //             } else {
-    //               return InitPage();
-    //             }
-    //           }),
-    //     ),
-    //   ),
-    // );
   }
 }
 
@@ -54,6 +36,7 @@ class _LoginWidgetState extends State<LoginWidget> {
   String name = "";
   String email = "";
   String url = "";
+  bool _loading = false;
 
   Future<String> signInGoogle(BuildContext context) async {
     final GoogleSignInAccount account = await googleSignIn.signIn();
@@ -62,7 +45,9 @@ class _LoginWidgetState extends State<LoginWidget> {
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-
+    setState(() {
+      _loading = true;
+    });
     final UserCredential authResult =
         await _auth.signInWithCredential(credential);
     final User user = authResult.user;
@@ -72,13 +57,17 @@ class _LoginWidgetState extends State<LoginWidget> {
     currentUser = _auth.currentUser;
     assert(user.uid == currentUser.uid);
 
-    // setState(() {
-    //   email = user.email;
-    //   url = user.photoURL;
-    //   name = user.displayName;
-    // });
     getUserInformation();
     createUserInformation();
+
+    await Provider.of<UserProvider>(context, listen: false)
+        .loadRoutines(context)
+        .then((value) =>
+            value ? showToast('로그인 되었어요.') : showToast('로그인에 실패했습니다.'))
+        .whenComplete(() => setState(() {
+              _loading = false;
+            }));
+
     Navigator.pop(context, true);
     return "로그인 성공";
   }
@@ -105,15 +94,18 @@ class _LoginWidgetState extends State<LoginWidget> {
   void createUserInformation() {
     User user = _auth.currentUser;
     var _db = FirebaseFirestore.instance;
-    _db.collection('users').doc(currentUser.uid).collection('routines');
+    _db
+        .collection('users')
+        .doc(currentUser.uid)
+        .collection('routines')
+        .doc('delete this')
+        .set({});
 
     _db.collection('users').doc(user.uid).set({
       'email': user.email,
       'name': user.displayName,
       'photoURL': user.photoURL,
     });
-
-    print("user data is saved in firestore");
   }
 
   @override
@@ -137,50 +129,65 @@ class _LoginWidgetState extends State<LoginWidget> {
     Size size = MediaQuery.of(context).size;
     return MaterialApp(
       home: Scaffold(
-        body: Center(
-          child: Padding(
-            padding: kPagePadding,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(
-                      Icons.run_circle_outlined,
-                      size: 50,
-                    ),
-                    Text('roufit', style: kLoginTitleStyle),
-                    Text('로그인을 진행해주세요', style: kPageSubTitleStyle),
-                  ],
-                ),
-                Column(
-                  children: [
-                    ElevatedButton(
-                      onPressed: () => signInGoogle(context),
-                      child: Container(
-                        width: size.width * 0.6,
-                        padding: EdgeInsets.symmetric(vertical: 24.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+        body: Stack(
+          children: [
+            Opacity(
+              opacity: _loading ? 0.5 : 1,
+              child: AbsorbPointer(
+                absorbing: _loading,
+                child: Center(
+                  child: Padding(
+                    padding: kPagePadding,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(FontAwesomeIcons.google),
-                            Text(
-                              'SIGN IN WITH GOOGLE',
-                              style: kBottomFixedButtonTextStyle1,
+                            Icon(
+                              Icons.run_circle_outlined,
+                              size: 50,
                             ),
+                            Text('roufit', style: kLoginTitleStyle),
+                            Text('로그인을 진행해주세요', style: kPageSubTitleStyle),
                           ],
                         ),
-                      ),
+                        Column(
+                          children: [
+                            ElevatedButton(
+                              onPressed: () => signInGoogle(context),
+                              child: Container(
+                                width: size.width * 0.6,
+                                padding: EdgeInsets.symmetric(vertical: 24.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Icon(FontAwesomeIcons.google),
+                                    Text(
+                                      'SIGN IN WITH GOOGLE',
+                                      style: kBottomFixedButtonTextStyle1,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 16.0),
+                            Text('이미 아이디가 있으신가요?', style: kFooterStyle),
+                          ],
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 16.0),
-                    Text('이미 아이디가 있으신가요?', style: kFooterStyle),
-                  ],
+                  ),
                 ),
-              ],
+              ),
             ),
-          ),
+            Opacity(
+              opacity: _loading ? 1.0 : 0,
+              child: Center(child: CircularProgressIndicator()),
+            ),
+          ],
         ),
       ),
     );

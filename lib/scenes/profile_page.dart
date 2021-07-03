@@ -29,9 +29,7 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Stack(
           children: [
             Opacity(
-              opacity: _loading
-                  ? 0.5
-                  : 1, // You can reduce this when loading to give different effect
+              opacity: _loading ? 0.5 : 1,
               child: AbsorbPointer(
                 absorbing: _loading,
                 child: Column(
@@ -78,7 +76,6 @@ class _ProfilePageState extends State<ProfilePage> {
                             style: kPageSubTitleStyle,
                           ),
                           kSizedBoxBetweenItems,
-
                           ListTile(
                             leading: Icon(Icons.cloud_upload_outlined),
                             title: Text(
@@ -137,11 +134,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                   .then((value) => Navigator.pop(context));
                             },
                           ),
-                          // Row(
-                          //   children: [
-
-                          //   ],
-                          // )
                         ],
                       ),
                     ),
