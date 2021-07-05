@@ -102,7 +102,7 @@ const kOutlinedButtonTextStyle = TextStyle(
   color: Colors.white,
 );
 const kBottomFixedButtonTextStyle1 = TextStyle(
-  fontSize: 16.0,
+  fontSize: 28.0,
   fontWeight: FontWeight.bold,
   color: Colors.white,
 );

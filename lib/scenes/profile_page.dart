@@ -87,9 +87,15 @@ class _ProfilePageState extends State<ProfilePage> {
                               style: kPageSubTitleStyle,
                             ),
                             onTap: () {
+                              setState(() {
+                                _loading = true;
+                              });
                               Provider.of<UserProvider>(context, listen: false)
                                   .saveRoutines(context)
-                                  .then((value) => showToast('서버에 저장되었습니다.'));
+                                  .then((value) => showToast('서버에 저장되었습니다.'))
+                                  .whenComplete(() => setState(() {
+                                        _loading = false;
+                                      }));
                             },
                           ),
                           ListTile(
