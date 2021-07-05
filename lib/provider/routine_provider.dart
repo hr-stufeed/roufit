@@ -12,6 +12,7 @@ class RoutineProvider with ChangeNotifier {
   //기존 루틴 위젯에서 루틴 모델로 변경 프로바이더에서는 데이터만 처리
   List<RoutineModel> _routineModels = [];
   RoutineModel _selRoutine = null;
+  var _box;
 
   RoutineProvider() {
     load();
@@ -39,7 +40,6 @@ class RoutineProvider with ChangeNotifier {
   }
 
   Future<void> add(String text, Color color, List<String> days) async {
-    var _box = await Hive.openBox<RoutineModel>('routines');
     // 현재 시간에 따른 키를 생성한다.
     var key = DateFormat('yyMMddhhmmss').format(DateTime.now());
     // 박스에 키와 함께 삽입한다.
@@ -61,7 +61,6 @@ class RoutineProvider with ChangeNotifier {
 
   Future<RoutineModel> modify(String autoKey, String text, Color color,
       List<String> days, List<WorkoutModel> workoutModelList) async {
-    var _box = await Hive.openBox<RoutineModel>('routines');
     // 루틴 표지의 수정하기를 누르면 key를 전달받고 _box의 RoutineModel에 정보를 덮어 씌운다.
     RoutineModel _routineData = RoutineModel(
       key: autoKey,
@@ -88,8 +87,6 @@ class RoutineProvider with ChangeNotifier {
   }
 
   void saveWorkout(String autoKey, List<WorkoutModel> workoutModelList) async {
-    var _box = await Hive.openBox<RoutineModel>('routines');
-
     RoutineModel _routineData = RoutineModel(
       key: autoKey,
       name: _box.get(autoKey).name,
@@ -106,8 +103,6 @@ class RoutineProvider with ChangeNotifier {
   }
 
   Future<void> delete(String autoKey) async {
-    var _box = await Hive.openBox<RoutineModel>('routines');
-
     // 삭제 시 _routineModels에서는 키를 탐색하여 삭제한다.
     for (int i = 0; i < _routineModels.length; i++) {
       if (_routineModels[i].key == autoKey) _routineModels.removeAt(i);
@@ -121,7 +116,7 @@ class RoutineProvider with ChangeNotifier {
   }
 
   Future<void> load() async {
-    var _box = await Hive.openBox<RoutineModel>('routines');
+    _box = await Hive.openBox<RoutineModel>('routines');
     _box.toMap().forEach((key, _routineData) {
       _routineModels.add(_routineData);
     });
@@ -130,21 +125,18 @@ class RoutineProvider with ChangeNotifier {
   }
 
   void clear() async {
-    var _box = await Hive.openBox<RoutineModel>('routines');
     _box.clear();
     _routineModels = [];
     print('clear ${_box.length}');
   }
 
   void overwrite(List<RoutineModel> list) async {
-    var _box = await Hive.openBox<RoutineModel>('routines');
-
     await _box.clear();
     _routineModels = [];
 
     _routineModels = list;
     _routineModels.forEach((rt) {
-      _box.add(rt);
+      _box.put(rt.key, rt);
     });
     _box.toMap().forEach((key, value) {
       print('dd:${value.name}');

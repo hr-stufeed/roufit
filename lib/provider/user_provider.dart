@@ -122,21 +122,22 @@ class UserProvider with ChangeNotifier {
   Future<bool> loadRoutines(BuildContext context) async {
     if (isLoggedin) {
       // firebase 루틴 컬렉션에 접근하는 변수
-      final routineDB = await _db
-          .collection('users')
-          .doc(currentUser.uid)
-          .collection('routines');
+      final routineDB =
+          _db.collection('users').doc(currentUser.uid).collection('routines');
 
-      await routineDB.doc('delete this').delete();
+      routineDB.doc('delete this').delete();
       //DB의 루틴 컬렉션을 스냅샷으로 얻는다
       QuerySnapshot routineSnapshot = await routineDB.get();
       LoadedData loadedData = LoadedData();
-
-      //컬렉션을 순회한다
       for (int i = 0; i < routineSnapshot.size; i++) {
         //컬렉션의 루틴 데이터
         var rt = routineSnapshot.docs[i];
-        var rtName = rt.get('name');
+        var rtName;
+        try {
+          rtName = rt.get('name');
+        } catch (e) {
+          continue;
+        }
         List<WorkoutModel> workoutList = [];
         //루틴 내부의 운동 리스트 하위 컬렉션을 얻는다.
         var workoutSnapshot =
@@ -278,6 +279,7 @@ class LoadedData {
   void overwrite(BuildContext context) {
     var routineProvider = Provider.of<RoutineProvider>(context, listen: false);
     routineProvider.overwrite(routineModels);
+    routineProvider.load();
     print("덮어씌우기 완료");
   }
 }

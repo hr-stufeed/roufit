@@ -64,9 +64,7 @@ class _LoginWidgetState extends State<LoginWidget> {
         .loadRoutines(context)
         .then((value) =>
             value ? showToast('로그인 되었어요.') : showToast('로그인에 실패했습니다.'))
-        .whenComplete(() => setState(() {
-              _loading = false;
-            }));
+        .whenComplete(() => setState(() => _loading = false));
 
     Navigator.pop(context, true);
     return "로그인 성공";
@@ -93,6 +91,7 @@ class _LoginWidgetState extends State<LoginWidget> {
 
   void createUserInformation() {
     User user = _auth.currentUser;
+
     var _db = FirebaseFirestore.instance;
     _db
         .collection('users')

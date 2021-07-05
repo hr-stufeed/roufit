@@ -216,27 +216,6 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
                   ),
                 ),
               ),
-              // kSizedBoxBetweenItems,
-              // Provider.of<WorkoutProvider>(context, listen: true).haveAllSet
-              //     ? Container(
-              //         padding: kPagePaddingwithTopbar,
-              //         child: BottomFixedButton(
-              //           text: '저장하기',
-              //           tap: () {
-              //             Provider.of<RoutineProvider>(context, listen: false)
-              //                 .saveWorkout(autoKey, _workoutModelList);
-              //             Navigator.popUntil(context, (route) => route.isFirst);
-              //           },
-              //         ),
-              //       )
-              //     : Container(
-              //         padding: kPagePaddingwithTopbar,
-              //         child: BottomFixedButton(
-              //           text: '세트를 추가해주세요',
-              //           backgroundColor: Colors.blue[100],
-              //           tap: null,
-              //         ),
-              //       ),
             ],
           ),
         ),
