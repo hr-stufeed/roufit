@@ -1,4 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:hr_app/data/constants.dart';
+import 'package:hr_app/models/routine_model.dart';
+import 'package:hr_app/models/workout_model.dart';
+import 'package:hr_app/models/workout_set.dart';
+import 'package:hr_app/provider/log_provider.dart';
+import 'package:hr_app/provider/routine_provider.dart';
+import 'package:hr_app/provider/timer_provider.dart';
+import 'package:hr_app/provider/workout_provider.dart';
+import 'package:hr_app/widgets/topBar.dart';
+import 'package:hr_app/widgets/workout.dart';
+import 'package:provider/provider.dart';
 
 class RoutineFinishPage extends StatefulWidget {
   @override
@@ -6,6 +17,36 @@ class RoutineFinishPage extends StatefulWidget {
 }
 
 class _RoutineFinishPageState extends State<RoutineFinishPage> {
+  RoutineModel _selRoutine;
+  List<WorkoutModel> _selWorkout;
+  WorkoutSet _workoutSet;
+  int _workoutCount = 0;
+  int _setCount = 0;
+  int _totalTime = 0;
+  Color _color;
+  Set<String> _tags = {};
+  List<Map<int, String>> routineList = [];
+
+  @override
+  void initState() {
+    Provider.of<LogProvider>(context, listen: false).load();
+
+    _totalTime =
+        Provider.of<LogProvider>(context, listen: false).selLog.totalTime;
+    _selRoutine =
+        Provider.of<RoutineProvider>(context, listen: false).selRoutine;
+    _color = Color(_selRoutine.color);
+    _selWorkout = _selRoutine.workoutModelList;
+    // _workoutSet = _selWorkout.setData[_setCount];
+    _selRoutine.workoutModelList.forEach((workoutModel) {
+      if (_tags.length <= 3) {
+        _tags.addAll(workoutModel.tags);
+      }
+    });
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -13,7 +54,67 @@ class _RoutineFinishPageState extends State<RoutineFinishPage> {
         child: Container(
           child: Column(
             children: [
-              Text('종료'),
+              Container(
+                // margin: EdgeInsets.only(bottom: 16.0),
+                padding: EdgeInsets.symmetric(
+                  horizontal: 24.0,
+                  vertical: 16.0,
+                ),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [_color, _color.withBlue(250)],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TopBar(
+                      title: '',
+                      hasMoreButton: false,
+                      color: Colors.white,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          _selRoutine.name,
+                          style: kRoutineTitleStyle,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: _tags
+                          .map(
+                            (tag) => Text(
+                              '#$tag ',
+                              style: kRoutineTagStyle,
+                            ),
+                          )
+                          .toList(),
+                    ),
+                    Text(
+                      '운동시간 : ${Duration(seconds: _totalTime).toString().split('.').first.padLeft(8, "0")}',
+                      style: kRoutineTagStyle,
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: kPagePadding,
+                  child: ListView.builder(
+                      itemCount: _selWorkout.length,
+                      itemBuilder: (context, index) {
+                        return Workout(
+                          workoutModel: _selWorkout[index],
+                          workoutState: WorkoutState.onFront,
+                          type: _selWorkout[index].type,
+                        );
+                      }),
+                ),
+              ),
             ],
           ),
         ),

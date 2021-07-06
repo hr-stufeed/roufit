@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hr_app/data/constants.dart';
+import 'package:hr_app/models/log_model.dart';
+import 'package:hr_app/provider/log_provider.dart';
 import 'package:hr_app/provider/routine_provider.dart';
 import 'package:hr_app/provider/timer_provider.dart';
 import 'package:hr_app/provider/workout_provider.dart';
@@ -30,6 +32,7 @@ void main() async {
   Hive.registerAdapter(WorkoutModelAdapter());
   Hive.registerAdapter(WorkoutTypeAdapter());
   Hive.registerAdapter(WorkoutSetAdapter());
+  Hive.registerAdapter(LogModelAdapter());
 
   runApp(MyApp());
 }
@@ -41,6 +44,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   TabController _tabController;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -60,6 +64,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
         // 이럴때는 try-catch로 에러 잡고 예외 처리 해줄 것.
         ChangeNotifierProvider(create: (_) => WorkoutProvider()),
         ChangeNotifierProvider(create: (_) => TimerProvider()),
+        ChangeNotifierProvider(create: (_) => LogProvider()),
       ],
       child: MaterialApp(
         routes: {

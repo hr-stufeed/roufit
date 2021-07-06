@@ -5,6 +5,7 @@ import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/models/routine_model.dart';
 import 'package:hr_app/models/workout_model.dart';
 import 'package:hr_app/models/workout_set.dart';
+import 'package:hr_app/provider/log_provider.dart';
 import 'package:hr_app/provider/routine_provider.dart';
 import 'package:hr_app/provider/timer_provider.dart';
 import 'package:hr_app/widgets/topBar.dart';
@@ -88,6 +89,11 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
         _isNext = false;
       }
       if (_workoutCount == _selRoutine.workoutModelList.length) {
+        int totalTime = Provider.of<TimerProvider>(context, listen: false)
+            .routineTimer
+            .inSeconds;
+        Provider.of<LogProvider>(context, listen: false)
+            .add(_selRoutine, totalTime);
         Navigator.pushReplacementNamed(context, 'Routine_finish_page');
       } else {
         _selWorkout = _selRoutine.workoutModelList[_workoutCount];
@@ -191,6 +197,8 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
 
   @override
   void initState() {
+    Provider.of<LogProvider>(context, listen: false).load();
+
     _selRoutine =
         Provider.of<RoutineProvider>(context, listen: false).selRoutine;
     _color = Color(_selRoutine.color);
@@ -210,8 +218,8 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
     return MaterialApp(
       home: Material(
         child: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+          child: ListView(
+            // crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Container(
                 margin: EdgeInsets.only(bottom: 16.0),
@@ -245,9 +253,6 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
                         ),
                       ],
                     ),
-                    SizedBox(
-                      height: 8.0,
-                    ),
                     Row(
                       children: _tags
                           .map(
@@ -258,114 +263,118 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
                           )
                           .toList(),
                     ),
+                    Text(
+                      '휴식시간 : ${_selRoutine.restTime}초',
+                      style: kRoutineTagStyle,
+                    ),
                   ],
                 ),
               ),
-              Expanded(
-                child: Column(
+              Padding(
+                padding: kPagePadding,
+                child: Stack(
+                  alignment: AlignmentDirectional.center,
                   children: [
-                    Padding(
-                      padding: kPagePadding,
-                      child: Stack(
-                        alignment: AlignmentDirectional.center,
-                        children: [
-                          Center(
-                            child: Container(
-                              width: 300,
-                              height: 300,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(300)),
-                              child:
+                    Center(
+                      child: Container(
+                        width: 300,
+                        height: 300,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(300)),
+                        child: _selWorkout.type != WorkoutType.durationWeight
+                            ? repWidget()
+                            : timeWidget(),
+                      ),
+                    ),
+                    SfRadialGauge(
+                      axes: [
+                        RadialAxis(
+                          minimum: 0,
+                          maximum:
+                              _selWorkout.type != WorkoutType.durationWeight
+                                  ? _selWorkout.setData.length.ceilToDouble()
+                                  : Duration(seconds: _workoutSet.duration)
+                                      .inSeconds
+                                      .ceilToDouble(),
+                          startAngle: 270,
+                          endAngle: 270,
+                          axisLineStyle: AxisLineStyle(
+                              thickness: 0.15,
+                              thicknessUnit: GaugeSizeUnit.factor),
+                          showLabels: false,
+                          tickOffset: -0.15,
+                          offsetUnit: GaugeSizeUnit.factor,
+                          interval: 1,
+                          majorTickStyle: MajorTickStyle(
+                            thickness: 5,
+                            length: 0.15,
+                            color: Colors.white,
+                            lengthUnit: GaugeSizeUnit.factor,
+                          ),
+                          minorTickStyle: MinorTickStyle(length: 0),
+                          pointers: [
+                            RangePointer(
+                              value:
                                   _selWorkout.type != WorkoutType.durationWeight
-                                      ? repWidget()
-                                      : timeWidget(),
-                            ),
-                          ),
-                          SfRadialGauge(
-                            axes: [
-                              RadialAxis(
-                                minimum: 0,
-                                maximum: _selWorkout.type !=
-                                        WorkoutType.durationWeight
-                                    ? _selWorkout.setData.length.ceilToDouble()
-                                    : Duration(seconds: _workoutSet.duration)
-                                        .inSeconds
-                                        .ceilToDouble(),
-                                startAngle: 270,
-                                endAngle: 270,
-                                axisLineStyle: AxisLineStyle(
-                                    thickness: 0.15,
-                                    thicknessUnit: GaugeSizeUnit.factor),
-                                showLabels: false,
-                                tickOffset: -0.15,
-                                offsetUnit: GaugeSizeUnit.factor,
-                                interval: 1,
-                                majorTickStyle: MajorTickStyle(
-                                  thickness: 5,
-                                  length: 0.15,
-                                  color: Colors.white,
-                                  lengthUnit: GaugeSizeUnit.factor,
-                                ),
-                                minorTickStyle: MinorTickStyle(length: 0),
-                                pointers: [
-                                  RangePointer(
-                                    value: _selWorkout.type !=
-                                            WorkoutType.durationWeight
-                                        ? _setCount.ceilToDouble()
-                                        : _routineTimer.inSeconds
-                                            .ceilToDouble(),
-                                    enableAnimation: true,
-                                    animationDuration: 300,
-                                    width: 0.15,
-                                    sizeUnit: GaugeSizeUnit.factor,
-                                    gradient: SweepGradient(
-                                      colors: <Color>[
-                                        _color.withBlue(200).withOpacity(0.9),
-                                        _color,
-                                      ],
-                                      stops: <double>[0.25, 0.75],
-                                    ),
-                                  ),
+                                      ? _setCount.ceilToDouble()
+                                      : _routineTimer.inSeconds.ceilToDouble(),
+                              enableAnimation: true,
+                              animationDuration: 300,
+                              width: 0.15,
+                              sizeUnit: GaugeSizeUnit.factor,
+                              gradient: SweepGradient(
+                                colors: <Color>[
+                                  _color.withBlue(200).withOpacity(0.9),
+                                  _color,
                                 ],
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 12),
-                    Text(
-                      _isNext ? 'Next' : 'Finish',
-                      style: kRoutineTitleStyle.copyWith(
-                        color: Colors.black,
-                        fontSize: 24,
-                      ),
-                    ),
-                    Text(
-                      _isNext
-                          ? '${_selRoutine.workoutModelList[_workoutCount + 1].name}'
-                          : '',
-                      style: kRoutineTitleStyle.copyWith(
-                        color: Colors.black,
-                        fontSize: 20,
-                      ),
-                    ),
-                    SizedBox(height: 12),
-                    TextButton(
-                      child: Text(
-                        'Done',
-                        style: kDoneStyle,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          doneSet();
-                        });
-                      },
-                      style: TextButton.styleFrom(
-                          backgroundColor: Color(0xFF3161A6)),
+                                stops: <double>[0.25, 0.75],
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
                     ),
                   ],
+                ),
+              ),
+              SizedBox(height: 12),
+              Text(
+                _isNext ? 'Next' : 'Finish',
+                textAlign: TextAlign.center,
+                style: kRoutineTitleStyle.copyWith(
+                  color: Colors.black,
+                  fontSize: 24,
+                ),
+              ),
+              Text(
+                _isNext
+                    ? '${_selRoutine.workoutModelList[_workoutCount + 1].name}'
+                    : '',
+                textAlign: TextAlign.center,
+                style: kRoutineTitleStyle.copyWith(
+                  color: Colors.black,
+                  fontSize: 20,
+                ),
+              ),
+              SizedBox(height: 12),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 100),
+                child: Container(
+                  child: TextButton(
+                    child: Text(
+                      'Done',
+                      style: kDoneStyle,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        doneSet();
+                      });
+                    },
+                    style: TextButton.styleFrom(
+                      backgroundColor: Color(0xFF3161A6),
+                    ),
+                  ),
                 ),
               ),
             ],
