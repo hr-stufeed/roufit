@@ -13,7 +13,7 @@ class TimerProvider with ChangeNotifier {
   Timer _timer;
   Duration _routineTimer = Duration(seconds: 0);
 
-  get routineTimer => _routineTimer;
+  Duration get routineTimer => _routineTimer;
 
   timerState() {
     switch (playBtn) {

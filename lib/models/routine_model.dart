@@ -1,6 +1,7 @@
 import 'package:hive/hive.dart';
 import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/models/workout_model.dart';
+
 part 'routine_model.g.dart';
 
 @HiveType(typeId: 1)
@@ -17,13 +18,16 @@ class RoutineModel {
   List<WorkoutModel> workoutModelList;
   @HiveField(5)
   List<String> days;
+  @HiveField(6)
+  int restTime;
 
-  RoutineModel({
-    this.key,
-    this.name,
-    this.color,
-    this.isListUp = true,
-    this.workoutModelList,
-    this.days,
-  });
+  RoutineModel(
+      {this.key,
+      this.name,
+      this.color,
+      this.isListUp = true,
+      this.workoutModelList,
+      this.days,
+      this.restTime = 0,
+      });
 }
