@@ -9,6 +9,7 @@ import 'package:hr_app/provider/log_provider.dart';
 import 'package:hr_app/provider/routine_provider.dart';
 import 'package:hr_app/provider/timer_provider.dart';
 import 'package:hr_app/widgets/topBar.dart';
+import 'package:hr_app/widgets/workout.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
@@ -339,44 +340,69 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
                 ),
               ),
               SizedBox(height: 12),
-              Text(
-                _isNext ? 'Next' : 'Finish',
-                textAlign: TextAlign.center,
-                style: kRoutineTitleStyle.copyWith(
-                  color: Colors.black,
-                  fontSize: 24,
-                ),
-              ),
-              Text(
-                _isNext
-                    ? '${_selRoutine.workoutModelList[_workoutCount + 1].name}'
-                    : '',
-                textAlign: TextAlign.center,
-                style: kRoutineTitleStyle.copyWith(
-                  color: Colors.black,
-                  fontSize: 20,
-                ),
-              ),
               SizedBox(height: 12),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 100),
-                child: Container(
-                  child: TextButton(
-                    child: Text(
-                      'Done',
-                      style: kDoneStyle,
+                child: Column(
+                  children: [
+                    Container(
+                      child: IconButton(
+                        icon: Icon(Icons.check),
+                        color: Colors.green,
+                        iconSize: 60.0,
+                        onPressed: () {
+                          setState(() {
+                            doneSet();
+                          });
+                        },
+                      ),
+                      // child: TextButton(
+                      //   child: Text(
+                      //     'Done',
+                      //     style: kDoneStyle,
+                      //   ),
+                      //   onPressed: () {
+                      //     setState(() {
+                      //       doneSet();
+                      //     });
+                      //   },
+                      //   style: TextButton.styleFrom(
+                      //     backgroundColor: Color(0xFF3161A6),
+                      //   ),
+                      // ),
                     ),
-                    onPressed: () {
-                      setState(() {
-                        doneSet();
-                      });
-                    },
-                    style: TextButton.styleFrom(
-                      backgroundColor: Color(0xFF3161A6),
-                    ),
-                  ),
+                  ],
                 ),
               ),
+              Padding(
+                padding: kPagePadding,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      _isNext ? 'Next' : 'Finish',
+                      textAlign: TextAlign.start,
+                      style: kRoutineTitleStyle.copyWith(
+                        color: Colors.black,
+                        fontSize: 24,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Workout(
+                  workoutModel:
+                      _selRoutine.workoutModelList[_workoutCount + 1]),
+              // Text(
+              //   _isNext
+              //       ? '${_selRoutine.workoutModelList[_workoutCount + 1].name}'
+              //       : '',
+              //   textAlign: TextAlign.center,
+              //   style: kRoutineTitleStyle.copyWith(
+              //     color: Colors.black,
+              //     fontSize: 20,
+              //   ),
+              // ),
             ],
           ),
         ),
