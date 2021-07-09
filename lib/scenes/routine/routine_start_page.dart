@@ -10,6 +10,7 @@ import 'package:hr_app/provider/routine_provider.dart';
 import 'package:hr_app/provider/timer_provider.dart';
 import 'package:hr_app/widgets/topBar.dart';
 import 'package:hr_app/widgets/workout.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
@@ -32,6 +33,7 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
   Map<int, String> selectRoutine = {};
   Timer _timer;
   Duration _routineTimer = Duration(seconds: 0);
+  final player = AudioPlayer();
 
   get routineTimer => _routineTimer;
 
@@ -62,7 +64,15 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
   _tick(Timer timer) {
     _routineTimer += Duration(seconds: 1);
 
+    if (_workoutSet.duration - _routineTimer.inSeconds <= 3) {
+      player.setAsset('assets/sound/boop.mp3');
+      player.play();
+    }
+
     if (_routineTimer.inSeconds >= _workoutSet.duration) {
+      player.setAsset('assets/sound/pip.mp3');
+      player.play();
+
       setState(() {
         _setCount += 1;
       });
@@ -356,20 +366,6 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
                           });
                         },
                       ),
-                      // child: TextButton(
-                      //   child: Text(
-                      //     'Done',
-                      //     style: kDoneStyle,
-                      //   ),
-                      //   onPressed: () {
-                      //     setState(() {
-                      //       doneSet();
-                      //     });
-                      //   },
-                      //   style: TextButton.styleFrom(
-                      //     backgroundColor: Color(0xFF3161A6),
-                      //   ),
-                      // ),
                     ),
                   ],
                 ),
@@ -390,19 +386,11 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
                   ],
                 ),
               ),
-              Workout(
-                  workoutModel:
-                      _selRoutine.workoutModelList[_workoutCount + 1]),
-              // Text(
-              //   _isNext
-              //       ? '${_selRoutine.workoutModelList[_workoutCount + 1].name}'
-              //       : '',
-              //   textAlign: TextAlign.center,
-              //   style: kRoutineTitleStyle.copyWith(
-              //     color: Colors.black,
-              //     fontSize: 20,
-              //   ),
-              // ),
+              _isNext
+                  ? Workout(
+                      workoutModel:
+                          _selRoutine.workoutModelList[_workoutCount + 1])
+                  : SizedBox(),
             ],
           ),
         ),
