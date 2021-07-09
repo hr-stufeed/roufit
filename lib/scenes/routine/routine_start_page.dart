@@ -96,15 +96,19 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
     setState(() {
       _setCount = 0;
       _workoutCount += 1;
+
       if (_workoutCount == _selRoutine.workoutModelList.length - 1) {
         _isNext = false;
       }
       if (_workoutCount == _selRoutine.workoutModelList.length) {
+        _workoutCount = _selRoutine.workoutModelList.length;
         int totalTime = Provider.of<TimerProvider>(context, listen: false)
             .routineTimer
             .inSeconds;
         Provider.of<LogProvider>(context, listen: false)
             .add(_selRoutine, totalTime);
+        player.setAsset('assets/sound/pip.mp3');
+        player.play();
         Navigator.pushReplacementNamed(context, 'Routine_finish_page');
       } else {
         _selWorkout = _selRoutine.workoutModelList[_workoutCount];
@@ -113,6 +117,8 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
   }
 
   doneSet() {
+    player.setAsset('assets/sound/boop.mp3');
+    player.play();
     if (_selWorkout.type != WorkoutType.durationWeight) {
       setState(() {
         _setCount += 1;
@@ -349,8 +355,6 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
                   ],
                 ),
               ),
-              SizedBox(height: 12),
-              SizedBox(height: 12),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 100),
                 child: Column(
@@ -375,22 +379,36 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      _isNext ? 'Next' : 'Finish',
-                      textAlign: TextAlign.start,
-                      style: kRoutineTitleStyle.copyWith(
-                        color: Colors.black,
-                        fontSize: 24,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          _isNext ? 'Next' : 'Finish',
+                          textAlign: TextAlign.start,
+                          style: kRoutineTitleStyle.copyWith(
+                            color: Colors.black,
+                            fontSize: 24,
+                          ),
+                        ),
+                        Text(
+                            _isNext
+                                ? '(${_workoutCount + 1}/${_selRoutine.workoutModelList.length})'
+                                : '(${_selRoutine.workoutModelList.length}/${_selRoutine.workoutModelList.length})',
+                            textAlign: TextAlign.start,
+                            style: kPageSubTitleStyle.copyWith(
+                              fontSize: 16,
+                            )),
+                      ],
                     ),
+                    _isNext
+                        ? Workout(
+                            workoutModel:
+                                _selRoutine.workoutModelList[_workoutCount + 1])
+                        : SizedBox(),
+                    kSizedBoxBetweenItems,
                   ],
                 ),
               ),
-              _isNext
-                  ? Workout(
-                      workoutModel:
-                          _selRoutine.workoutModelList[_workoutCount + 1])
-                  : SizedBox(),
             ],
           ),
         ),
