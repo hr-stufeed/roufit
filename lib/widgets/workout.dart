@@ -118,7 +118,15 @@ class _WorkoutState extends State<Workout> {
         );
         break;
       case WorkoutState.onFront:
-        return SizedBox();
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              '${widget.setData.length} SET',
+              style: kPageSubTitleStyle,
+            ),
+          ],
+        );
         break;
       default:
     }
@@ -209,29 +217,3 @@ class _WorkoutState extends State<Workout> {
     );
   }
 }
-
-
-// Row(
-//           mainAxisSize: MainAxisSize.min,
-//           children: [
-//             IconButton(
-//               onPressed: () {
-//                 setState(() {
-//                   widget.isSelected = !widget.isSelected;
-//                   if (widget.isSelected) {
-//                     containerColor = Colors.blue;
-//                     titleColor = Colors.white;
-//                     subTitleColor = Colors.white;
-//                   } else {
-//                     containerColor = Colors.white;
-//                     titleColor = Colors.black;
-//                     subTitleColor = Colors.grey;
-//                   }
-//                 });
-//               },
-//               icon: Icon(Icons.playlist_add_rounded),
-//               color: Colors.black,
-//               iconSize: 35.0,
-//             ),
-//           ],
-//         );

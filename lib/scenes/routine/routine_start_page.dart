@@ -24,6 +24,7 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
   WorkoutModel _selWorkout;
   WorkoutSet _workoutSet;
   int _workoutCount = 0;
+  int _amountOfWorkout = 0;
   int _setCount = 0;
   bool _isNext = true;
   Color _color;
@@ -112,6 +113,7 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
         Navigator.pushReplacementNamed(context, 'Routine_finish_page');
       } else {
         _selWorkout = _selRoutine.workoutModelList[_workoutCount];
+        _workoutSet = _selWorkout.setData[_setCount];
       }
     });
   }
@@ -148,7 +150,7 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
           '${_selWorkout.name}',
           style: kRoutineTitleStyle.copyWith(
             color: Colors.black,
-            fontSize: 20,
+            fontSize: 28,
           ),
         ),
         Text(
@@ -160,14 +162,14 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
         ),
         Text(
           '${_workoutSet.repCount} REP',
-          style: kRoutineTitleStyle.copyWith(
+          style: kRoutineTagStyle.copyWith(
             color: Colors.black,
             fontSize: 20,
           ),
         ),
         Text(
           _workoutSet.weight != 0 ? '${_workoutSet.weight} KG' : '',
-          style: kRoutineTitleStyle.copyWith(
+          style: kRoutineTagStyle.copyWith(
             color: Colors.black,
             fontSize: 20,
           ),
@@ -221,6 +223,7 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
     _color = Color(_selRoutine.color);
     _selWorkout = _selRoutine.workoutModelList[_workoutCount];
     _workoutSet = _selWorkout.setData[_setCount];
+    _amountOfWorkout = _selRoutine.workoutModelList.length;
     _selRoutine.workoutModelList.forEach((workoutModel) {
       if (_tags.length <= 3) {
         _tags.addAll(workoutModel.tags);
@@ -393,17 +396,21 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
                         Text(
                             _isNext
                                 ? '(${_workoutCount + 1}/${_selRoutine.workoutModelList.length})'
-                                : '(${_selRoutine.workoutModelList.length}/${_selRoutine.workoutModelList.length})',
+                                : '($_amountOfWorkout/$_amountOfWorkout)',
                             textAlign: TextAlign.start,
                             style: kPageSubTitleStyle.copyWith(
                               fontSize: 16,
                             )),
                       ],
                     ),
-                    _isNext
+                    _isNext &&
+                            _amountOfWorkout !=
+                                1 // 루틴에 운동이 한개면 next가 finish가 되어야 한다
                         ? Workout(
                             workoutModel:
-                                _selRoutine.workoutModelList[_workoutCount + 1])
+                                _selRoutine.workoutModelList[_workoutCount + 1],
+                            workoutState: WorkoutState.onFront,
+                          )
                         : SizedBox(),
                     kSizedBoxBetweenItems,
                   ],
