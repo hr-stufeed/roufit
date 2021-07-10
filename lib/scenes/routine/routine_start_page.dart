@@ -140,6 +140,29 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
     }
   }
 
+  undoSet() {
+    player.setAsset('assets/sound/boop.mp3');
+    player.play();
+    if (_selWorkout.type != WorkoutType.durationWeight) {
+      setState(() {
+        //_setCount > 0 ? _setCount -= 1 : _setCount = 0;
+        _setCount = 1;
+      });
+
+      try {
+        _workoutSet = _selWorkout.setData[_setCount];
+      } catch (e) {}
+
+      // Future.delayed(const Duration(milliseconds: 300), () {
+      //   if (_setCount == _selWorkout.setData.length.abs()) {
+      //     changeWorkout();
+      //   }
+      // });
+    } else {
+      timerStop();
+    }
+  }
+
   timeSet() {}
 
   Widget repWidget() {
@@ -150,7 +173,7 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
           '${_selWorkout.name}',
           style: kRoutineTitleStyle.copyWith(
             color: Colors.black,
-            fontSize: 28,
+            fontSize: 32,
           ),
         ),
         Text(
@@ -160,20 +183,30 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
         SizedBox(
           height: 16,
         ),
-        Text(
-          '${_workoutSet.repCount} REP',
-          style: kRoutineTagStyle.copyWith(
-            color: Colors.black,
-            fontSize: 20,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              '${_workoutSet.repCount}',
+              style: kSetDataTextStyle.copyWith(fontSize: 24),
+            ),
+            Text(' REP'),
+          ],
         ),
-        Text(
-          _workoutSet.weight != 0 ? '${_workoutSet.weight} KG' : '',
-          style: kRoutineTagStyle.copyWith(
-            color: Colors.black,
-            fontSize: 20,
-          ),
-        ),
+        _workoutSet.weight != 0
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '${_workoutSet.weight}',
+                    style: kSetDataTextStyle.copyWith(fontSize: 24),
+                  ),
+                  Text(' KG'),
+                ],
+              )
+            : SizedBox(
+                height: 1,
+              ),
       ],
     );
   }
@@ -290,8 +323,28 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
                   ],
                 ),
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: IconButton(
+                      icon: Icon(Icons.undo),
+                      padding: EdgeInsets.zero,
+                      constraints: BoxConstraints(),
+                      color: Colors.redAccent,
+                      iconSize: 28.0,
+                      onPressed: () {
+                        setState(() {
+                          undoSet();
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
               Padding(
-                padding: kPagePadding,
+                padding: kPagePadding.copyWith(top: 16),
                 child: Stack(
                   alignment: AlignmentDirectional.center,
                   children: [
