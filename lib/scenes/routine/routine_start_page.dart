@@ -394,7 +394,10 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
                               thickness: 0.15,
                               thicknessUnit: GaugeSizeUnit.factor),
                           showLabels: false,
-                          // tickOffset: -0.15,
+                          tickOffset:
+                              _selWorkout.type != WorkoutType.durationWeight
+                                  ? -0.15
+                                  : 0,
                           offsetUnit: GaugeSizeUnit.factor,
                           interval: 1,
                           majorTickStyle: MajorTickStyle(
