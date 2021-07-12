@@ -14,6 +14,10 @@ import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
+const btnStart = 'start';
+const btnStop = 'stop';
+const btnCheck = 'check';
+
 class RoutineStartPage extends StatefulWidget {
   @override
   _RoutineStartPageState createState() => _RoutineStartPageState();
@@ -33,13 +37,10 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
   List<Map<int, String>> routineList = [];
   String playBtn = btnStart;
   Map<int, String> selectRoutine = {};
-  Timer _timer;
+
   Timer _workoutTimer;
   double _workoutTimerCounter = 0;
-  Duration _routineTimer = Duration(seconds: 0);
   final player = AudioPlayer();
-
-  get routineTimer => _routineTimer;
 
   timerState() {
     switch (playBtn) {
@@ -54,47 +55,40 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
 
   timerStop() {
     playBtn = btnStart;
-    _timer.cancel();
+    _workoutTimer.cancel();
   }
 
   timerStart() {
-    _routineTimer = Duration(seconds: 0);
-    _workoutTimerCounter = 0;
-    if (_timer.runtimeType != Null) {
-      _timer.cancel();
+    playBtn = btnStop;
+    _workoutTimerCounter = 1;
+
+    if (_workoutTimer.runtimeType != Null) {
+      _workoutTimer.cancel();
     }
-    //_timer = Timer.periodic(Duration(seconds: 1), _tick);
-    _workoutTimer = Timer.periodic(Duration(seconds: 1), _tick);
+    _duration = _workoutSet.duration;
+    _workoutTimer = Timer.periodic(Duration(seconds: _duration), _tick);
   }
 
   _tick(Timer timer) {
-    // _routineTimer += Duration(seconds: 1);
-    _workoutTimerCounter += 1.0;
-    if (_workoutSet.duration - _workoutTimerCounter <= 3) {
-      player.setAsset('assets/sound/boop.mp3');
-      player.play();
-    }
+    //알람 재생
+    player.setAsset('assets/sound/boop.mp3');
+    player.play();
 
-    if (_workoutTimerCounter >= _workoutSet.duration) {
-      setState(() {
-        _setCount += 1;
-      });
+    setState(() {
+      _setCount += 1;
+      _duration = 1;
+    });
 
-      try {
-        _workoutSet = _selWorkout.setData[_setCount];
-      } catch (e) {}
+    _workoutTimer.cancel();
+    _workoutTimerCounter = 0;
 
-      Future.delayed(const Duration(milliseconds: 100), () {
-        // _routineTimer = Duration(seconds: 0);
-        // _workoutTimerCounter = 0;
-        if (_workoutTimerCounter == _duration) {
-          _workoutTimer.cancel();
-          if (_setCount == _selWorkout.setData.length)
-            changeWorkout();
-          else
-            _workoutTimerCounter = 0;
-        }
-      });
+
+    try {
+      _workoutSet = _selWorkout.setData[_setCount];
+    } catch (e) {}
+
+    if (_setCount == _selWorkout.setData.length) {
+      changeWorkout();
     }
   }
 
@@ -102,11 +96,13 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
     setState(() {
       _setCount = 0;
       _workoutTimerCounter = 0;
+      _duration = 1;
       _workoutCount += 1;
 
       if (_workoutCount == _selRoutine.workoutModelList.length - 1) {
         _isNext = false;
       }
+
       if (_workoutCount == _selRoutine.workoutModelList.length) {
         _workoutCount = _selRoutine.workoutModelList.length;
         int totalTime = Provider.of<TimerProvider>(context, listen: false)
@@ -136,7 +132,7 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
         _workoutSet = _selWorkout.setData[_setCount];
       } catch (e) {}
 
-      Future.delayed(const Duration(milliseconds: 300), () {
+      Future.delayed(const Duration(milliseconds: 50), () {
         if (_setCount == _selWorkout.setData.length.abs()) {
           changeWorkout();
         }
@@ -151,25 +147,16 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
     player.play();
     if (_selWorkout.type != WorkoutType.durationWeight) {
       setState(() {
-        //_setCount > 0 ? _setCount -= 1 : _setCount = 0;
         _setCount = 1;
       });
 
       try {
         _workoutSet = _selWorkout.setData[_setCount];
       } catch (e) {}
-
-      // Future.delayed(const Duration(milliseconds: 300), () {
-      //   if (_setCount == _selWorkout.setData.length.abs()) {
-      //     changeWorkout();
-      //   }
-      // });
     } else {
       timerStop();
     }
   }
-
-  timeSet() {}
 
   Widget repWidget() {
     return Column(
@@ -303,7 +290,6 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                   ),
-                  //borderRadius: kBorderRadius,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -384,10 +370,7 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
                           maximum:
                               _selWorkout.type != WorkoutType.durationWeight
                                   ? _selWorkout.setData.length.ceilToDouble()
-                                  // : Duration(seconds: _workoutSet.duration)
-                                  //     .inSeconds
-                                  //     .ceilToDouble(),
-                                  : _duration.ceilToDouble(),
+                                  : 1,
                           startAngle: 270,
                           endAngle: 270,
                           axisLineStyle: AxisLineStyle(
@@ -409,13 +392,12 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
                           minorTickStyle: MinorTickStyle(length: 0),
                           pointers: [
                             RangePointer(
-                              value: _selWorkout.type !=
-                                      WorkoutType.durationWeight
-                                  ? _setCount.ceilToDouble()
-                                  // : _routineTimer.inSeconds.ceilToDouble(),
-                                  : _workoutTimerCounter,
+                              value:
+                                  _selWorkout.type != WorkoutType.durationWeight
+                                      ? _setCount.ceilToDouble()
+                                      : _workoutTimerCounter,
                               enableAnimation: true,
-                              animationDuration: 300,
+                              animationDuration: 1000 * _duration.toDouble(),
                               width: 0.15,
                               sizeUnit: GaugeSizeUnit.factor,
                               gradient: SweepGradient(
@@ -437,7 +419,7 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
                               markerHeight: 25,
                               markerWidth: 25,
                               enableAnimation: true,
-                              animationDuration: 300,
+                              animationDuration: 1000 * _duration.toDouble(),
                             )
                           ],
                         )

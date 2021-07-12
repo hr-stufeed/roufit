@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 
 const btnStart = 'start';
 const btnStop = 'stop';
+const btnCheck = 'check';
 
 class TimerProvider with ChangeNotifier {
   List<Map<int, String>> routineList = [];
