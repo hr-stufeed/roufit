@@ -404,6 +404,18 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
                                 stops: <double>[0.25, 0.75],
                               ),
                             ),
+                            MarkerPointer(
+                              value:
+                                  _selWorkout.type != WorkoutType.durationWeight
+                                      ? _setCount.ceilToDouble()
+                                      : _routineTimer.inSeconds.ceilToDouble(),
+                              markerType: MarkerType.circle,
+                              color: _color,
+                              markerHeight: 25,
+                              markerWidth: 25,
+                              enableAnimation: true,
+                              animationDuration: 300,
+                            )
                           ],
                         )
                       ],
