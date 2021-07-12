@@ -82,7 +82,6 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
     _workoutTimer.cancel();
     _workoutTimerCounter = 0;
 
-
     try {
       _workoutSet = _selWorkout.setData[_setCount];
     } catch (e) {}
@@ -123,16 +122,22 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
   doneSet() {
     player.setAsset('assets/sound/boop.mp3');
     player.play();
+
+    setState(() {
+      _duration = 2;
+    });
     if (_selWorkout.type != WorkoutType.durationWeight) {
       setState(() {
         _setCount += 1;
       });
+      print('_setCount ');
+      print(_setCount);
 
       try {
         _workoutSet = _selWorkout.setData[_setCount];
       } catch (e) {}
 
-      Future.delayed(const Duration(milliseconds: 50), () {
+      Future.delayed(const Duration(milliseconds: 2000), () {
         if (_setCount == _selWorkout.setData.length.abs()) {
           changeWorkout();
         }
@@ -260,7 +265,7 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
     _selWorkout = _selRoutine.workoutModelList[_workoutCount];
     _workoutSet = _selWorkout.setData[_setCount];
     _amountOfWorkout = _selRoutine.workoutModelList.length;
-    _duration = _workoutSet.duration;
+    _duration = 1;
     _selRoutine.workoutModelList.forEach((workoutModel) {
       if (_tags.length <= 3) {
         _tags.addAll(workoutModel.tags);
@@ -396,7 +401,7 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
                                   _selWorkout.type != WorkoutType.durationWeight
                                       ? _setCount.ceilToDouble()
                                       : _workoutTimerCounter,
-                              enableAnimation: true,
+                              enableAnimation: _duration == 1 ? false : true,
                               animationDuration: 1000 * _duration.toDouble(),
                               width: 0.15,
                               sizeUnit: GaugeSizeUnit.factor,
@@ -409,16 +414,12 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
                               ),
                             ),
                             MarkerPointer(
-                              value: _selWorkout.type !=
-                                      WorkoutType.durationWeight
-                                  ? _setCount.ceilToDouble()
-                                  // : _routineTimer.inSeconds.ceilToDouble(),
-                                  : _workoutTimerCounter,
+                              value: 0,
                               markerType: MarkerType.circle,
                               color: _color,
                               markerHeight: 25,
                               markerWidth: 25,
-                              enableAnimation: true,
+                              enableAnimation: _duration == 1 ? false : true,
                               animationDuration: 1000 * _duration.toDouble(),
                             )
                           ],
