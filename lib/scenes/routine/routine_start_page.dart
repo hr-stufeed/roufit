@@ -8,6 +8,7 @@ import 'package:hr_app/models/workout_set.dart';
 import 'package:hr_app/provider/log_provider.dart';
 import 'package:hr_app/provider/routine_provider.dart';
 import 'package:hr_app/provider/timer_provider.dart';
+import 'package:hr_app/widgets/radial_gauge/radial_gauge.dart';
 import 'package:hr_app/widgets/topBar.dart';
 import 'package:hr_app/widgets/workout.dart';
 import 'package:just_audio/just_audio.dart';
@@ -17,6 +18,8 @@ import 'package:syncfusion_flutter_gauges/gauges.dart';
 const btnStart = 'start';
 const btnStop = 'stop';
 const btnCheck = 'check';
+const restTime = 'rest';
+const setTime = 'set';
 
 class RoutineStartPage extends StatefulWidget {
   @override
@@ -36,58 +39,61 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
   Set<String> _tags = {};
   List<Map<int, String>> routineList = [];
   String playBtn = btnStart;
+  String timeStatus = restTime;
   Map<int, String> selectRoutine = {};
 
   Timer _workoutTimer;
   double _workoutTimerCounter = 0;
+
+  CountDownController _countDownController = CountDownController();
+
   final player = AudioPlayer();
 
-  timerState() {
+  btnState() {
     switch (playBtn) {
       case btnStart:
-        timerStart();
+        print('btnStart');
+        playBtn = btnStop;
+        _countDownController.resume();
         break;
       case btnStop:
-        timerStop();
+        print('btnStop');
+        playBtn = btnStart;
+        _countDownController.pause();
         break;
     }
   }
 
-  timerStop() {
-    playBtn = btnStart;
-    _workoutTimer.cancel();
-  }
-
-  timerStart() {
-    playBtn = btnStop;
-    _workoutTimerCounter = 1;
-
-    if (_workoutTimer.runtimeType != Null) {
-      _workoutTimer.cancel();
-    }
-    _duration = _workoutSet.duration;
-    _workoutTimer = Timer.periodic(Duration(seconds: _duration), _tick);
-  }
-
-  _tick(Timer timer) {
+  endTimer() {
+    print('endTimer');
     //알람 재생
     player.setAsset('assets/sound/boop.mp3');
     player.play();
 
-    setState(() {
-      _setCount += 1;
-      _duration = 1;
-    });
+    if (timeStatus == setTime) {
+      timeStatus = restTime;
 
-    _workoutTimer.cancel();
-    _workoutTimerCounter = 0;
+      setState(() {
+        _setCount += 1;
+      });
 
-    try {
-      _workoutSet = _selWorkout.setData[_setCount];
-    } catch (e) {}
+      _workoutTimerCounter = 0;
 
-    if (_setCount == _selWorkout.setData.length) {
-      changeWorkout();
+      try {
+        _workoutSet = _selWorkout.setData[_setCount];
+      } catch (e) {}
+
+      if (_setCount == _selWorkout.setData.length) {
+        changeWorkout();
+      }
+      _countDownController.restart(duration: _workoutSet.duration);
+    } else if (timeStatus == restTime) {
+      timeStatus = setTime;
+      if (_setCount == _selWorkout.setData.length - 1) {
+        changeWorkout();
+      } else {
+        _countDownController.restart(duration: _selRoutine.restTime);
+      }
     }
   }
 
@@ -95,7 +101,6 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
     setState(() {
       _setCount = 0;
       _workoutTimerCounter = 0;
-      _duration = 1;
       _workoutCount += 1;
 
       if (_workoutCount == _selRoutine.workoutModelList.length - 1) {
@@ -123,9 +128,6 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
     player.setAsset('assets/sound/boop.mp3');
     player.play();
 
-    setState(() {
-      _duration = 2;
-    });
     if (_selWorkout.type != WorkoutType.durationWeight) {
       setState(() {
         _setCount += 1;
@@ -143,7 +145,7 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
         }
       });
     } else {
-      timerStart();
+      btnState();
     }
   }
 
@@ -159,7 +161,7 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
         _workoutSet = _selWorkout.setData[_setCount];
       } catch (e) {}
     } else {
-      timerStop();
+      _countDownController.resume();
     }
   }
 
@@ -214,7 +216,7 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          '${_selWorkout.name}',
+          timeStatus != setTime ? '${_selWorkout.name}' : '휴식',
           style: kRoutineTitleStyle.copyWith(
             color: Colors.black,
             fontSize: 32,
@@ -231,7 +233,9 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              '$_duration',
+              timeStatus != setTime
+                  ? '${_workoutSet.duration}'
+                  : '${_selRoutine.restTime}',
               style: kSetDataTextStyle.copyWith(fontSize: 24),
             ),
             Text(' Sec'),
@@ -265,7 +269,6 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
     _selWorkout = _selRoutine.workoutModelList[_workoutCount];
     _workoutSet = _selWorkout.setData[_setCount];
     _amountOfWorkout = _selRoutine.workoutModelList.length;
-    _duration = 1;
     _selRoutine.workoutModelList.forEach((workoutModel) {
       if (_tags.length <= 3) {
         _tags.addAll(workoutModel.tags);
@@ -368,63 +371,40 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
                             : timeWidget(),
                       ),
                     ),
-                    SfRadialGauge(
-                      axes: [
-                        RadialAxis(
-                          minimum: 0,
-                          maximum:
-                              _selWorkout.type != WorkoutType.durationWeight
-                                  ? _selWorkout.setData.length.ceilToDouble()
-                                  : 1,
-                          startAngle: 270,
-                          endAngle: 270,
-                          axisLineStyle: AxisLineStyle(
-                              thickness: 0.15,
-                              thicknessUnit: GaugeSizeUnit.factor),
-                          showLabels: false,
-                          tickOffset:
-                              _selWorkout.type != WorkoutType.durationWeight
-                                  ? -0.15
-                                  : 0,
-                          offsetUnit: GaugeSizeUnit.factor,
-                          interval: 1,
-                          majorTickStyle: MajorTickStyle(
-                            thickness: 5,
-                            length: 0.15,
-                            color: Colors.white,
-                            lengthUnit: GaugeSizeUnit.factor,
-                          ),
-                          minorTickStyle: MinorTickStyle(length: 0),
-                          pointers: [
-                            RangePointer(
-                              value:
-                                  _selWorkout.type != WorkoutType.durationWeight
-                                      ? _setCount.ceilToDouble()
-                                      : _workoutTimerCounter,
-                              enableAnimation: _duration == 1 ? false : true,
-                              animationDuration: 1000 * _duration.toDouble(),
-                              width: 0.15,
-                              sizeUnit: GaugeSizeUnit.factor,
-                              gradient: SweepGradient(
-                                colors: <Color>[
-                                  _color.withBlue(200).withOpacity(0.9),
-                                  _color,
-                                ],
-                                stops: <double>[0.25, 0.75],
-                              ),
-                            ),
-                            MarkerPointer(
-                              value: 0,
-                              markerType: MarkerType.circle,
-                              color: _color,
-                              markerHeight: 25,
-                              markerWidth: 25,
-                              enableAnimation: _duration == 1 ? false : true,
-                              animationDuration: 1000 * _duration.toDouble(),
-                            )
-                          ],
-                        )
-                      ],
+                    RadialGauge(
+                      duration: _selWorkout.type != WorkoutType.durationWeight
+                          ? _selWorkout.setData.length
+                          : _workoutSet.duration,
+                      initialDuration: 0,
+                      split: _selWorkout.type != WorkoutType.durationWeight
+                          ? _selWorkout.setData.length.ceilToDouble()
+                          : 1,
+                      controller: _countDownController,
+                      width: MediaQuery.of(context).size.width / 1.5,
+                      height: MediaQuery.of(context).size.width / 1.5,
+                      ringColor: Colors.grey[300],
+                      fillColor: Colors.transparent,
+                      fillGradient: SweepGradient(
+                        startAngle: 3.14,
+                        tileMode: TileMode.mirror,
+                        colors: <Color>[
+                          _color.withBlue(300).withOpacity(0.9),
+                          _color,
+                        ],
+                      ),
+                      strokeWidth: 28.0,
+                      strokeCap: StrokeCap.round,
+                      isReverse: false,
+                      isReverseAnimation: false,
+                      isTimerTextShown: false,
+                      autoStart: false,
+                      onStart: () {
+                        print('Countdown onStart');
+                      },
+                      onComplete: () {
+                        print('Countdown onComplete');
+                        endTimer();
+                      },
                     ),
                   ],
                 ),
@@ -435,7 +415,11 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
                   children: [
                     Container(
                       child: IconButton(
-                        icon: Icon(Icons.check),
+                        icon: playBtn == btnCheck
+                            ? Icon(Icons.check)
+                            : playBtn == btnStart
+                                ? Icon(Icons.play_arrow)
+                                : Icon(Icons.pause),
                         color: Colors.green,
                         iconSize: 60.0,
                         onPressed: () {

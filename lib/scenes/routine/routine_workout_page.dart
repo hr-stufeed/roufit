@@ -45,7 +45,7 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
 
     restTimeController =
         TextEditingController(text: _selRoutine.restTime.toString());
-
+    restTime = _selRoutine.restTime;
     super.initState();
   }
 
