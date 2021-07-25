@@ -65,34 +65,38 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
   }
 
   endTimer() {
-    print('endTimer');
-    //알람 재생
-    player.setAsset('assets/sound/boop.mp3');
-    player.play();
+    if (_selWorkout.type == WorkoutType.durationWeight) {
+      print('endTimer');
+      //알람 재생
+      player.setAsset('assets/sound/boop.mp3');
+      player.play();
 
-    if (timeStatus == setTime) {
-      timeStatus = restTime;
+      if (timeStatus == setTime) {
+        print('setTime');
+        timeStatus = restTime;
 
-      setState(() {
-        _setCount += 1;
-      });
+        setState(() {
+          _setCount += 1;
+        });
 
-      _workoutTimerCounter = 0;
+        _workoutTimerCounter = 0;
 
-      try {
-        _workoutSet = _selWorkout.setData[_setCount];
-      } catch (e) {}
+        try {
+          _workoutSet = _selWorkout.setData[_setCount];
+        } catch (e) {}
 
-      if (_setCount == _selWorkout.setData.length) {
-        changeWorkout();
-      }
-      _countDownController.restart(duration: _workoutSet.duration);
-    } else if (timeStatus == restTime) {
-      timeStatus = setTime;
-      if (_setCount == _selWorkout.setData.length - 1) {
-        changeWorkout();
-      } else {
-        _countDownController.restart(duration: _selRoutine.restTime);
+        if (_setCount == _selWorkout.setData.length) {
+          changeWorkout();
+        }
+        _countDownController.restart(duration: _workoutSet.duration);
+      } else if (timeStatus == restTime) {
+        print('restTime');
+        timeStatus = setTime;
+        if (_setCount == _selWorkout.setData.length - 1) {
+          changeWorkout();
+        } else {
+          _countDownController.restart(duration: _selRoutine.restTime);
+        }
       }
     }
   }
@@ -125,10 +129,13 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
   }
 
   doneSet() {
+    print('doneSet');
     player.setAsset('assets/sound/boop.mp3');
     player.play();
 
     if (_selWorkout.type != WorkoutType.durationWeight) {
+      _countDownController.restart(duration: 0);
+
       setState(() {
         _setCount += 1;
       });
@@ -139,9 +146,11 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
         _workoutSet = _selWorkout.setData[_setCount];
       } catch (e) {}
 
-      Future.delayed(const Duration(milliseconds: 2000), () {
+      Future.delayed(const Duration(milliseconds: 100), () {
         if (_setCount == _selWorkout.setData.length.abs()) {
           changeWorkout();
+          _countDownController.reset(duration: _workoutSet.duration);
+          playBtn = btnStart;
         }
       });
     } else {
@@ -166,6 +175,7 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
   }
 
   Widget repWidget() {
+    playBtn = btnCheck;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -379,6 +389,9 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
                       split: _selWorkout.type != WorkoutType.durationWeight
                           ? _selWorkout.setData.length.ceilToDouble()
                           : 1,
+                      fillSplit: _selWorkout.type != WorkoutType.durationWeight
+                          ? _setCount.toDouble()
+                          : -1,
                       controller: _countDownController,
                       width: MediaQuery.of(context).size.width / 1.5,
                       height: MediaQuery.of(context).size.width / 1.5,

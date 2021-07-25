@@ -1,6 +1,69 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+
+// class RadialPainter extends StatefulWidget {
+//   final Animation<double> animation;
+//   final Color fillColor, ringColor, backgroundColor;
+//   final double strokeWidth;
+//   final StrokeCap strokeCap;
+//   final Gradient fillGradient, ringGradient, backgroundGradient;
+//
+//   double split;
+//   double fillSplit;
+//
+//   RadialPainter(
+//       {this.animation,
+//       this.split = 1,
+//       this.fillColor,
+//       this.fillGradient,
+//       this.ringColor,
+//       this.ringGradient,
+//       this.strokeWidth,
+//       this.strokeCap,
+//       this.backgroundColor,
+//       this.backgroundGradient,
+//       this.fillSplit = 0});
+//
+//   @override
+//   _RadialPainterState createState() => _RadialPainterState();
+// }
+//
+// class _RadialPainterState extends State<RadialPainter> with TickerProviderStateMixin {
+//
+//   AnimationController _controller;
+//   Animation<double> _countDownAnimation;
+//
+//   @override
+//   void initState() {
+//     _controller = AnimationController(
+//       vsync: this,
+//       duration: Duration(seconds: 1),
+//     );
+//     _countDownAnimation =
+//         Tween<double>(begin: 1, end: 0).animate(_controller);
+//
+//     super.initState();
+//   }
+//   @override
+//   Widget build(BuildContext context) {
+//     return CustomPaint(
+//       painter: Painter(
+//           split: widget.split,
+//           fillSplit: widget.fillSplit,
+//           animation: _countDownAnimation,
+//           fillColor: widget.fillColor,
+//           fillGradient: widget.fillGradient,
+//           ringColor: widget.ringColor,
+//           ringGradient: widget.ringGradient,
+//           strokeWidth: widget.strokeWidth,
+//           strokeCap: widget.strokeCap,
+//           backgroundColor: widget.backgroundColor,
+//           backgroundGradient: widget.backgroundGradient),
+//     );
+//   }
+// }
 
 class RadialPainter extends CustomPainter {
   RadialPainter(
@@ -13,7 +76,8 @@ class RadialPainter extends CustomPainter {
       this.strokeWidth,
       this.strokeCap,
       this.backgroundColor,
-      this.backgroundGradient})
+      this.backgroundGradient,
+      this.fillSplit = 0})
       : super(repaint: animation);
 
   final Animation<double> animation;
@@ -23,6 +87,7 @@ class RadialPainter extends CustomPainter {
   final Gradient fillGradient, ringGradient, backgroundGradient;
 
   double split;
+  double fillSplit;
 
   double get _emptyArcSize =>
       2 * math.pi / ((100 / (split == 1 ? 0 : split)) * split);
@@ -38,6 +103,12 @@ class RadialPainter extends CustomPainter {
       ..color = ringColor
       ..strokeWidth = strokeWidth
       ..style = PaintingStyle.stroke;
+    Paint fillPaint = Paint()
+      ..color = ringColor
+      ..strokeWidth = strokeWidth
+      ..shader = fillGradient.createShader(Rect.fromCircle(
+          center: size.center(Offset.zero), radius: size.width / 2))
+      ..style = PaintingStyle.stroke;
 
     if (ringGradient != null) {
       final rect = Rect.fromCircle(
@@ -47,6 +118,7 @@ class RadialPainter extends CustomPainter {
       paint..shader = null;
     }
 
+    //Split paint
     for (var i = 0; i < split; i++) {
       canvas.drawArc(
           Offset.zero & size, _startAngle(i), _fullArcSize, false, paint);
@@ -62,7 +134,24 @@ class RadialPainter extends CustomPainter {
       paint.color = fillColor;
     }
 
-    canvas.drawArc(Offset.zero & size, math.pi * 1.5, progress, false, paint);
+    //Split Fill
+    if (fillSplit != -1) {
+      for (var i = 0; i < fillSplit; i++) {
+        if (i >= fillSplit - 1) {
+          canvas.drawArc(
+              Offset.zero & size,
+              _startAngle(i),
+              animation.value * (((math.pi * 2) / split) - _emptyArcSize),
+              false,
+              fillPaint);
+        } else {
+          canvas.drawArc(Offset.zero & size, _startAngle(i),
+              1 * (((math.pi * 2) / split) - _emptyArcSize), false, fillPaint);
+        }
+      }
+    } else {
+      canvas.drawArc(Offset.zero & size, math.pi * 1.5, progress, false, paint);
+    }
 
     if (backgroundColor != null || backgroundGradient != null) {
       final backgroundPaint = Paint();

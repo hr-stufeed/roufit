@@ -71,6 +71,10 @@ class RadialGauge extends StatefulWidget {
 
   final double split;
 
+  final double fillSplit;
+
+  final bool isTime;
+
   RadialGauge(
       {@required this.width,
       @required this.height,
@@ -78,6 +82,7 @@ class RadialGauge extends StatefulWidget {
       @required this.fillColor,
       @required this.ringColor,
       this.split = 1,
+      this.fillSplit = 0,
       this.backgroundColor,
       this.fillGradient,
       this.ringGradient,
@@ -94,7 +99,8 @@ class RadialGauge extends StatefulWidget {
       this.isTimerTextShown = true,
       this.autoStart = true,
       this.textFormat,
-      this.controller})
+      this.controller,
+      this.isTime})
       : assert(width != null),
         assert(height != null),
         assert(duration != null),
@@ -258,6 +264,7 @@ class RadialGaugeState extends State<RadialGauge>
                       child: CustomPaint(
                         painter: RadialPainter(
                             split: widget.split,
+                            fillSplit: widget.fillSplit,
                             animation: _countDownAnimation ?? _controller,
                             fillColor: widget.fillColor,
                             fillGradient: widget.fillGradient,
@@ -340,18 +347,17 @@ class CountDownController {
       _state._controller?.forward(from: 0);
     }
   }
+
   /// This Method reset the Countdown Timer,
   /// Here optional int parameter **duration** is the updated duration for countdown timer
   void reset({int duration}) {
-    _state._controller.dispose();
+    _state._controller?.stop(canceled: false);
+
     _state._controller.duration =
         Duration(seconds: duration ?? _state._controller.duration.inSeconds);
-    if (_isReverse) {
-      _state._controller?.reverse(from: 1);
-    } else {
-      _state._controller?.forward(from: 0);
-    }
-
+    _state._controller?.value = 0.0;
+    print('_state._controller.status');
+    print(_state._controller.status);
   }
 
   /// This Method returns the **Current Time** of Countdown Timer i.e
