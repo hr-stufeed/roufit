@@ -24,6 +24,8 @@ class _RoutineFinishPageState extends State<RoutineFinishPage> {
   int _setCount = 0;
   int _totalTime = 0;
   Color _color;
+  var today = DateTime.now();
+
   Set<String> _tags = {};
   List<Map<int, String>> routineList = [];
 
@@ -79,7 +81,7 @@ class _RoutineFinishPageState extends State<RoutineFinishPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          _selRoutine.name,
+                          '${_selRoutine.name + ' 완료😁'}',
                           style: kRoutineTitleStyle,
                         ),
                       ],
@@ -94,9 +96,34 @@ class _RoutineFinishPageState extends State<RoutineFinishPage> {
                           )
                           .toList(),
                     ),
-                    Text(
-                      '운동시간 : ${Duration(seconds: _totalTime).toString().split('.').first.padLeft(8, "0")}',
-                      style: kRoutineTagStyle,
+                    kSizedBoxBetweenItems,
+                    Row(
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.date_range_outlined,
+                              color: Colors.white,
+                            ),
+                            Text(
+                              '${today.day.toString()}월 ${today.day.toString()}일 ',
+                              style: kRoutineTagStyle,
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.access_alarm_outlined,
+                              color: Colors.white,
+                            ),
+                            Text(
+                              ' ${Duration(seconds: _totalTime).toString().split('.').first.padLeft(8, "0")}',
+                              style: kRoutineTagStyle,
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -109,7 +136,7 @@ class _RoutineFinishPageState extends State<RoutineFinishPage> {
                       itemBuilder: (context, index) {
                         return Workout(
                           workoutModel: _selWorkout[index],
-                          workoutState: WorkoutState.onFront,
+                          workoutState: WorkoutState.onResult,
                           type: _selWorkout[index].type,
                         );
                       }),
