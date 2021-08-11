@@ -215,7 +215,9 @@ class RadialGaugeState extends State<RadialGauge>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: widget.duration),
+      duration: widget.isTime
+          ? Duration(seconds: widget.duration)
+          : Duration(milliseconds: widget.duration),
     );
 
     _controller.addStatusListener((status) {
@@ -339,8 +341,10 @@ class CountDownController {
   /// This Method Restarts the Countdown Timer,
   /// Here optional int parameter **duration** is the updated duration for countdown timer
   void restart({int duration}) {
-    _state._controller.duration =
-        Duration(seconds: duration ?? _state._controller.duration.inSeconds);
+    _state._controller.duration = _state.widget.isTime
+        ? Duration(seconds: duration ?? _state._controller.duration.inSeconds)
+        : Duration(
+            milliseconds: duration ?? _state._controller.duration.inSeconds);
     if (_isReverse) {
       _state._controller?.reverse(from: 1);
     } else {
@@ -353,8 +357,10 @@ class CountDownController {
   void reset({int duration}) {
     _state._controller?.stop(canceled: false);
 
-    _state._controller.duration =
-        Duration(seconds: duration ?? _state._controller.duration.inSeconds);
+    _state._controller.duration = _state.widget.isTime
+        ? Duration(seconds: duration ?? _state._controller.duration.inSeconds)
+        : Duration(
+            milliseconds: duration ?? _state._controller.duration.inSeconds);
     _state._controller?.value = 0.0;
     print('_state._controller.status');
     print(_state._controller.status);

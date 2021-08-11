@@ -134,7 +134,7 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
     player.play();
 
     if (_selWorkout.type != WorkoutType.durationWeight) {
-      _countDownController.restart(duration: 0);
+      _countDownController.restart(duration: 250);
 
       setState(() {
         _setCount += 1;
@@ -146,7 +146,7 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
         _workoutSet = _selWorkout.setData[_setCount];
       } catch (e) {}
 
-      Future.delayed(const Duration(milliseconds: 100), () {
+      Future.delayed(const Duration(milliseconds: 250), () {
         if (_setCount == _selWorkout.setData.length.abs()) {
           changeWorkout();
           _countDownController.reset(duration: _workoutSet.duration);
@@ -418,6 +418,7 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
                         print('Countdown onComplete');
                         endTimer();
                       },
+                      isTime: _selWorkout.type == WorkoutType.durationWeight ,
                     ),
                   ],
                 ),
