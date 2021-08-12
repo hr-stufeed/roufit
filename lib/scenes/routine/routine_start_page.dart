@@ -90,14 +90,18 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
         }
         _countDownController.restart(duration: _workoutSet.duration);
       } else if (timeStatus == restTime) {
-        print('restTime');
-        timeStatus = setTime;
-        if (_setCount == _selWorkout.setData.length - 1) {
-          changeWorkout();
-        } else {
-          _countDownController.restart(duration: _selRoutine.restTime);
-        }
+        restTimer();
       }
+    }
+  }
+
+  restTimer() {
+    print('restTime');
+    timeStatus = setTime;
+    if (_setCount == _selWorkout.setData.length - 1) {
+      changeWorkout();
+    } else {
+      _countDownController.restart(duration: _selRoutine.restTime);
     }
   }
 
@@ -148,6 +152,7 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
 
       Future.delayed(const Duration(milliseconds: 250), () {
         if (_setCount == _selWorkout.setData.length.abs()) {
+          _countDownController.restart(duration: _selRoutine.restTime);
           changeWorkout();
           _countDownController.reset(duration: _workoutSet.duration);
           playBtn = btnStart;
@@ -418,7 +423,7 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
                         print('Countdown onComplete');
                         endTimer();
                       },
-                      isTime: _selWorkout.type == WorkoutType.durationWeight ,
+                      isTime: _selWorkout.type == WorkoutType.durationWeight,
                     ),
                   ],
                 ),

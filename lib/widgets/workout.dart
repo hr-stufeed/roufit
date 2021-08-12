@@ -149,6 +149,7 @@ class _WorkoutState extends State<Workout> {
     if (widget.workoutState == WorkoutState.onResult) {
       return Container(
         child: ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: setData.length,
             itemBuilder: (context, index) {

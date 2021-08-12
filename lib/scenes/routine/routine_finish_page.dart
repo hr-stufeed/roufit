@@ -106,7 +106,7 @@ class _RoutineFinishPageState extends State<RoutineFinishPage> {
                               color: Colors.white,
                             ),
                             Text(
-                              '${today.day.toString()}월 ${today.day.toString()}일 ',
+                              ' ${today.month.toString()}월 ${today.day.toString()}일 ',
                               style: kRoutineTagStyle,
                             ),
                           ],
