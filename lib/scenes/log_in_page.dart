@@ -166,7 +166,8 @@ class _LoginWidgetState extends State<LoginWidget> {
                                     Icon(FontAwesomeIcons.google),
                                     Text(
                                       'SIGN IN WITH GOOGLE',
-                                      style: kBottomFixedButtonTextStyle1,
+                                      style: kBottomFixedButtonTextStyle1
+                                          .copyWith(fontSize: 20),
                                     ),
                                   ],
                                 ),
