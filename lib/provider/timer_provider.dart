@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 
 const btnStart = 'start';
 const btnStop = 'stop';
+const btnCheck = 'check';
 
 class TimerProvider with ChangeNotifier {
   List<Map<int, String>> routineList = [];
@@ -13,7 +14,7 @@ class TimerProvider with ChangeNotifier {
   Timer _timer;
   Duration _routineTimer = Duration(seconds: 0);
 
-  get routineTimer => _routineTimer;
+  Duration get routineTimer => _routineTimer;
 
   timerState() {
     switch (playBtn) {

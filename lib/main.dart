@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hr_app/data/constants.dart';
+import 'package:hr_app/models/log_model.dart';
+import 'package:hr_app/provider/log_provider.dart';
 import 'package:hr_app/provider/routine_provider.dart';
 import 'package:hr_app/provider/timer_provider.dart';
 import 'package:hr_app/provider/workout_provider.dart';
@@ -13,6 +15,8 @@ import 'package:hr_app/scenes/log_in_page.dart';
 import 'package:hr_app/scenes/home_page.dart';
 import 'package:hr_app/scenes/mypage.dart';
 import 'package:hr_app/scenes/profile_page.dart';
+import 'package:hr_app/scenes/routine/routine_finish_page.dart';
+
 import 'package:hr_app/scenes/routine/routine_input_page.dart';
 import 'package:hr_app/scenes/workout_add_set_page.dart';
 import 'package:hr_app/scenes/workout_list_page.dart';
@@ -35,6 +39,7 @@ void main() async {
   Hive.registerAdapter(WorkoutModelAdapter());
   Hive.registerAdapter(WorkoutTypeAdapter());
   Hive.registerAdapter(WorkoutSetAdapter());
+  Hive.registerAdapter(LogModelAdapter());
 
   runApp(MyApp());
 }
@@ -46,6 +51,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   TabController _tabController;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -74,6 +80,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
         ChangeNotifierProvider(create: (_) => WorkoutProvider()),
         ChangeNotifierProvider(create: (_) => TimerProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => LogProvider()),
       ],
       child: MaterialApp(
         routes: {
@@ -82,6 +89,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
           'Routine_input_page': (context) => RoutineInputPage(),
           'Routine_start_page': (context) => RoutineStartPage(),
           'Routine_workout_page': (context) => RoutineWorkoutPage(),
+          'Routine_finish_page': (context) => RoutineFinishPage(),
           'Workout_list_page': (context) => WorkoutListPage(),
           'Workout_create_page': (context) => WorkoutCreatePage(),
           'Workout_add_set_page': (context) => WorkoutAddSetPage(),

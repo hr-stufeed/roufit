@@ -1,4 +1,8 @@
+import 'dart:ui';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/models/routine_model.dart';
 import 'package:hr_app/provider/routine_provider.dart';
@@ -25,6 +29,8 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
   List<String> days;
   RoutineModel _selRoutine;
   Set<String> tags = {};
+  TextEditingController restTimeController;
+  int restTime;
 
   @override
   void initState() {
@@ -37,6 +43,9 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
     Provider.of<WorkoutProvider>(context, listen: false)
         .routineWorkout(_selRoutine.workoutModelList);
 
+    restTimeController =
+        TextEditingController(text: _selRoutine.restTime.toString());
+    restTime = _selRoutine.restTime;
     super.initState();
   }
 
@@ -114,6 +123,9 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
                                 Provider.of<RoutineProvider>(context,
                                         listen: false)
                                     .saveWorkout(autoKey, _workoutModelList);
+                                Provider.of<RoutineProvider>(context,
+                                        listen: false)
+                                    .saveRestTime(autoKey, restTime);
                                 Navigator.popUntil(
                                     context, (route) => route.isFirst);
                               }
@@ -172,6 +184,46 @@ class _RoutineWorkoutPageState extends State<RoutineWorkoutPage>
                   ],
                 ),
               ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 32),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'REST TIME',
+                        style: kSetTextStyle,
+                      ),
+                    ),
+                    Expanded(
+                      child: TextField(
+                        controller: restTimeController,
+                        keyboardType: TextInputType.number,
+                        style: kSetDataTextStyle.copyWith(fontSize: 24),
+                        onChanged: (value) {
+                          setState(() {
+                            restTime = int.parse(value);
+                          });
+                        },
+                        textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          disabledBorder: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      '초',
+                      style: kSetTextStyle,
+                      textAlign: TextAlign.start,
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  child: Divider(
+                    color: Colors.grey,
+                  )),
               Expanded(
                 child: Padding(
                   padding: kPagePaddingwithTopbar.copyWith(bottom: 16),

@@ -50,6 +50,11 @@ dependencies:
   firebase_auth: ^1.4.1
   google_sign_in: ^5.0.4
   cloud_firestore: ^2.2.2
+#  audioplayers: ^0.18.3
+
+  just_audio: ^0.8.0
+
+#  shared_preferences: ^2.0.5
 
 dev_dependencies:
   flutter_test:
@@ -68,17 +73,18 @@ flutter:
   fonts:
     - family: NotoSans
       fonts:
-        - asset: fonts/NotoSansKR-Regular.otf
-        - asset: fonts/NotoSansKR-Bold.otf
+        - asset: assets/fonts/NotoSansKR-Regular.otf
+        - asset: assets/fonts/NotoSansKR-Bold.otf
           weight: 700
-
-
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
 
+  assets:
+    - assets/sound/boop.mp3
+    - assets/sound/pip.mp3
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

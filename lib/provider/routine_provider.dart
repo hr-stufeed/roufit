@@ -68,6 +68,7 @@ class RoutineProvider with ChangeNotifier {
       color: color.value,
       days: days,
       workoutModelList: workoutModelList,
+      restTime: _box.get(autoKey).restTime,
     );
     _box.put(autoKey, _routineData);
 
@@ -86,6 +87,25 @@ class RoutineProvider with ChangeNotifier {
         .toList()[0];
   }
 
+  void saveRestTime(String autoKey, int restTime) async{
+    var _box = await Hive.openBox<RoutineModel>('routines');
+
+    RoutineModel _routineData = RoutineModel(
+      key: autoKey,
+      name: _box.get(autoKey).name,
+      color: _box.get(autoKey).color,
+      days: _box.get(autoKey).days,
+      workoutModelList: _box.get(autoKey).workoutModelList,
+      restTime: restTime,
+    );
+    _box.put(autoKey, _routineData);
+
+    for (int i = 0; i < _routineModels.length; i++) {
+      if (_routineModels[i].key == autoKey) _routineModels[i] = _routineData;
+    }
+    notifyListeners();
+  }
+
   void saveWorkout(String autoKey, List<WorkoutModel> workoutModelList) async {
     RoutineModel _routineData = RoutineModel(
       key: autoKey,
@@ -93,6 +113,7 @@ class RoutineProvider with ChangeNotifier {
       color: _box.get(autoKey).color,
       days: _box.get(autoKey).days,
       workoutModelList: workoutModelList,
+      restTime: _box.get(autoKey).restTime,
     );
     _box.put(autoKey, _routineData);
 

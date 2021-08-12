@@ -133,10 +133,7 @@ enum WorkoutState {
   onWorkoutList,
   onFront,
   onRoutine,
-}
-enum Cars {
-  hyundai,
-  toyota,
+  onResult,
 }
 
 class Day {

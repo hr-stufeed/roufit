@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -118,10 +119,84 @@ class _WorkoutState extends State<Workout> {
         );
         break;
       case WorkoutState.onFront:
-        return SizedBox();
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              '${widget.setData.length} SET',
+              style: kPageSubTitleStyle,
+            ),
+          ],
+        );
+        break;
+      case WorkoutState.onResult:
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              '${widget.setData.length} SET',
+              style: kPageSubTitleStyle,
+            ),
+          ],
+        );
         break;
       default:
     }
+  }
+
+  Widget workoutResult() {
+    var setData = widget.workoutModel.setData;
+    if (widget.workoutState == WorkoutState.onResult) {
+      return Container(
+        child: ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: setData.length,
+            itemBuilder: (context, index) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Text(
+                    'SET ${index + 1}',
+                    style: kSetTextStyle,
+                    textAlign: TextAlign.center,
+                  ),
+                  widget.workoutModel.type == WorkoutType.setWeight
+                      ? Row(
+                          children: [
+                            Text(
+                              setData[index].repCount.toString(),
+                              style: kSetDataTextStyle,
+                            ),
+                            Text('  회'),
+                          ],
+                        )
+                      : Row(
+                          children: [
+                            Text(
+                              setData[index].duration.toString(),
+                              style: kSetDataTextStyle,
+                            ),
+                            Text('  초'),
+                          ],
+                        ),
+                  Row(
+                    children: [
+                      Text(
+                        setData[index].weight.toString(),
+                        style: kSetDataTextStyle,
+                      ),
+                      Text('  KG'),
+                    ],
+                  ),
+                ],
+              );
+            }),
+      );
+    } else
+      return SizedBox(
+        height: 1,
+      );
   }
 
   @override
@@ -167,71 +242,50 @@ class _WorkoutState extends State<Workout> {
             ),
           ],
         ),
-        child: ListTile(
-          selected: widget.isSelected,
-          selectedTileColor: Colors.blue,
-          contentPadding: EdgeInsets.symmetric(vertical: 0),
-          isThreeLine: false,
-          leading: Text(
-            widget.emoji,
-            style: TextStyle(fontSize: 40),
-          ),
-          title: Text(
-            widget.name,
-            style: TextStyle(
-              fontSize: 20.0,
-              fontWeight: FontWeight.bold,
-              color: titleColor,
-            ),
-          ),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: widget.tags
-                    .map(
-                      (tag) => Text(
-                        '#$tag ',
-                        style: TextStyle(
-                          fontSize: 15.0,
-                          color: subTitleColor,
-                        ),
-                      ),
-                    )
-                    .toList(),
+        child: Column(
+          children: [
+            ListTile(
+              selected: widget.isSelected,
+              selectedTileColor: Colors.blue,
+              contentPadding: EdgeInsets.symmetric(vertical: 0),
+              isThreeLine: false,
+              leading: Text(
+                widget.emoji,
+                style: TextStyle(fontSize: 40),
               ),
-              workoutStateText(widget.type)
-            ],
-          ),
-          trailing: workoutIcon(),
+              title: Text(
+                widget.name,
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                  color: titleColor,
+                ),
+              ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: widget.tags
+                        .map(
+                          (tag) => Text(
+                            '#$tag ',
+                            style: TextStyle(
+                              fontSize: 15.0,
+                              color: subTitleColor,
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                  workoutStateText(widget.type)
+                ],
+              ),
+              trailing: workoutIcon(),
+            ),
+            workoutResult(),
+          ],
         ),
       ),
     );
   }
 }
-
-
-// Row(
-//           mainAxisSize: MainAxisSize.min,
-//           children: [
-//             IconButton(
-//               onPressed: () {
-//                 setState(() {
-//                   widget.isSelected = !widget.isSelected;
-//                   if (widget.isSelected) {
-//                     containerColor = Colors.blue;
-//                     titleColor = Colors.white;
-//                     subTitleColor = Colors.white;
-//                   } else {
-//                     containerColor = Colors.white;
-//                     titleColor = Colors.black;
-//                     subTitleColor = Colors.grey;
-//                   }
-//                 });
-//               },
-//               icon: Icon(Icons.playlist_add_rounded),
-//               color: Colors.black,
-//               iconSize: 35.0,
-//             ),
-//           ],
-//         );
