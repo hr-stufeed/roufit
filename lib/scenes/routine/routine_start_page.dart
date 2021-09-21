@@ -14,6 +14,7 @@ import 'package:hr_app/widgets/workout.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
+import 'package:hr_app/provider/user_provider.dart';
 
 const btnStart = 'start';
 const btnStop = 'stop';
@@ -34,6 +35,7 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
   int _duration = 0;
   int _amountOfWorkout = 0;
   int _setCount = 0;
+  int _totalWeight = 0;
   bool _isNext = true;
   Color _color;
   Set<String> _tags = {};
@@ -41,7 +43,6 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
   String playBtn = btnStart;
   String timeStatus = restTime;
   Map<int, String> selectRoutine = {};
-
   Timer _workoutTimer;
   double _workoutTimerCounter = 0;
 
@@ -122,6 +123,13 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
             .inSeconds;
         Provider.of<LogProvider>(context, listen: false)
             .add(_selRoutine, totalTime);
+
+        Provider.of<UserProvider>(context, listen: false)
+            .setWorkoutCount(_workoutCount);
+        Provider.of<UserProvider>(context, listen: false)
+            .setWorkoutTime(totalTime);
+        Provider.of<UserProvider>(context, listen: false)
+            .setWorkoutWeight(_totalWeight);
         player.setAsset('assets/sound/pip.mp3');
         player.play();
         Navigator.pushReplacementNamed(context, 'Routine_finish_page');
@@ -132,7 +140,7 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
     });
   }
 
-  doneSet() {
+  bool doneSet() {
     print('doneSet');
     player.setAsset('assets/sound/boop.mp3');
     player.play();
@@ -141,6 +149,8 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
       _countDownController.restart(duration: 250);
 
       setState(() {
+        _totalWeight += _selWorkout.setData[_setCount].weight *
+            _selWorkout.setData[_setCount].repCount;
         _setCount += 1;
       });
       print('_setCount ');
@@ -156,26 +166,13 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
           changeWorkout();
           _countDownController.reset(duration: _workoutSet.duration);
           playBtn = btnStart;
+          return true;
         }
       });
+      return false;
     } else {
       btnState();
-    }
-  }
-
-  undoSet() {
-    player.setAsset('assets/sound/boop.mp3');
-    player.play();
-    if (_selWorkout.type != WorkoutType.durationWeight) {
-      setState(() {
-        _setCount = 1;
-      });
-
-      try {
-        _workoutSet = _selWorkout.setData[_setCount];
-      } catch (e) {}
-    } else {
-      _countDownController.resume();
+      return false;
     }
   }
 
@@ -349,28 +346,8 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
                   ],
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: IconButton(
-                      icon: Icon(Icons.undo),
-                      padding: EdgeInsets.zero,
-                      constraints: BoxConstraints(),
-                      color: Colors.redAccent,
-                      iconSize: 28.0,
-                      onPressed: () {
-                        setState(() {
-                          undoSet();
-                        });
-                      },
-                    ),
-                  ),
-                ],
-              ),
               Padding(
-                padding: kPagePadding.copyWith(top: 16),
+                padding: kPagePadding.copyWith(top: 28),
                 child: Stack(
                   alignment: AlignmentDirectional.center,
                   children: [

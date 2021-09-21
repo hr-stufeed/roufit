@@ -1,17 +1,12 @@
-import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/models/routine_model.dart';
 import 'package:hr_app/provider/routine_provider.dart';
 import 'package:hr_app/models/workout_model.dart';
 import 'package:hr_app/provider/user_provider.dart';
-import 'package:hr_app/scenes/firebase_Init.dart';
-import 'package:hr_app/widgets/bottomFixedButton.dart';
 import 'package:hr_app/widgets/routine.dart';
 import 'package:hr_app/widgets/workout.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:scroll_snap_list/scroll_snap_list.dart';
 

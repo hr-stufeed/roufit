@@ -53,6 +53,7 @@ dependencies:
   audioplayers: ^0.18.3
   just_audio: ^0.8.0
   shared_preferences: ^2.0.5
+  fl_chart: ^0.40.0
 
 dev_dependencies:
   flutter_test:
@@ -68,6 +69,8 @@ dev_dependencies:
 flutter:
   assets:
     - assets/
+    - assets/sound/boop.mp3
+    - assets/sound/pip.mp3
   fonts:
     - family: NotoSans
       fonts:

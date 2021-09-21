@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -15,14 +16,20 @@ import 'package:hr_app/provider/routine_provider.dart';
 import 'package:provider/provider.dart';
 
 class UserProvider with ChangeNotifier {
+  // 로그인 관련된 변수
   User currentUser;
   String name = "";
   String email = "";
   String photoURL = "";
   bool isLoggedin = false;
   var _db;
-
   final GoogleSignIn googleSignIn = GoogleSignIn();
+
+  // 통계에 관련된 변수
+  var today = DateFormat('EEE').format(DateTime.now());
+  int thisWeekWorkoutCount = 0;
+  int thisWeekWorkoutTime = 0;
+  int thisWeekWorkoutWeight = 0;
 
   UserProvider() {
     _init();
@@ -32,6 +39,7 @@ class UserProvider with ChangeNotifier {
     _db = FirebaseFirestore.instance;
   }
 
+// 로그인 관련된 함수
   void signIn(User user) {
     currentUser = user;
     photoURL = user.photoURL;
@@ -243,6 +251,34 @@ class UserProvider with ChangeNotifier {
   bool getLoginState() {
     return isLoggedin;
   }
+
+// 통계 관련된 함수
+  void setWorkoutCount(int n) {
+    thisWeekWorkoutCount += n;
+    print("이번주 운동 카운트 : $thisWeekWorkoutCount");
+  }
+
+  int getWorkoutCount() {
+    return thisWeekWorkoutCount;
+  }
+
+  void setWorkoutTime(int n) {
+    thisWeekWorkoutTime += n;
+    print("이번 주 운동 시간 : $thisWeekWorkoutTime");
+  }
+
+  int getWorkoutTime() {
+    return thisWeekWorkoutTime;
+  }
+
+  void setWorkoutWeight(int n) {
+    thisWeekWorkoutWeight += n;
+    print("이번 주 운동 무게 : $thisWeekWorkoutWeight");
+  }
+
+  int getWorkoutWeight() {
+    return thisWeekWorkoutWeight;
+  }
 }
 
 class LoadedData {
@@ -270,6 +306,7 @@ class LoadedData {
           print('---- 회수 ${sd.repCount}');
           print('---- 시간 ${sd.duration}');
           print('---- 무게 ${sd.weight}');
+          print('=====================');
           set++;
         });
       });
