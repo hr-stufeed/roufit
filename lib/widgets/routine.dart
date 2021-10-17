@@ -202,6 +202,7 @@ class HomePageRoutine extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    print(size);
     widget.initTags(context);
     return InkWell(
       onTap: !widget.isSelected
@@ -218,7 +219,6 @@ class HomePageRoutine extends StatelessWidget {
         width: size.width - 64,
         padding: EdgeInsets.symmetric(
           horizontal: 24.0,
-          vertical: 24.0,
         ),
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -229,6 +229,7 @@ class HomePageRoutine extends StatelessWidget {
           borderRadius: kBorderRadius,
         ),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(

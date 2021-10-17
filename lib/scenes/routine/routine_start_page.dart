@@ -192,7 +192,7 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
           '${_selWorkout.name}',
           style: kRoutineTitleStyle.copyWith(
             color: Colors.black,
-            fontSize: 32,
+            fontSize: responsiveFontsize(context, 28),
           ),
         ),
         Text(
@@ -300,6 +300,12 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      builder: (context, child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
+          child: child,
+        );
+      },
       home: Material(
         child: SafeArea(
           child: ListView(

@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/provider/user_provider.dart';
-import 'package:hr_app/scenes/init_page.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -127,6 +126,12 @@ class _LoginWidgetState extends State<LoginWidget> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return MaterialApp(
+      builder: (context, child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
+          child: child,
+        );
+      },
       home: Scaffold(
         body: Stack(
           children: [
@@ -141,23 +146,26 @@ class _LoginWidgetState extends State<LoginWidget> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Icon(
-                              Icons.run_circle_outlined,
-                              size: 50,
-                            ),
-                            Text('roufit', style: kLoginTitleStyle),
-                            Text('로그인을 진행해주세요', style: kPageSubTitleStyle),
-                          ],
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Icon(
+                                Icons.run_circle_outlined,
+                                size: 50,
+                              ),
+                              Text('roufit', style: kLoginTitleStyle),
+                              Text('로그인을 진행해주세요', style: kPageSubTitleStyle),
+                            ],
+                          ),
                         ),
                         Column(
                           children: [
                             ElevatedButton(
                               onPressed: () => signInGoogle(context),
                               child: Container(
-                                width: size.width * 0.6,
+                                // width: size.width * 0.6,
                                 padding: EdgeInsets.symmetric(vertical: 24.0),
                                 child: Row(
                                   mainAxisAlignment:
