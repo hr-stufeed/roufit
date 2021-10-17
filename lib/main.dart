@@ -62,13 +62,6 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    //return FirebaseInit();
-    // return FutureBuilder(
-    //     future: Future.delayed(Duration(seconds: 2)),
-    //     builder: (context, AsyncSnapshot snapshot) {
-    //       if (snapshot.connectionState == ConnectionState.waiting) {
-    //         return MaterialApp(home: Splash());
-    //       } else {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => RoutineProvider()),
@@ -83,6 +76,12 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
         ChangeNotifierProvider(create: (_) => LogProvider()),
       ],
       child: MaterialApp(
+        builder: (context, child) {
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
+            child: child,
+          );
+        },
         routes: {
           'Home_page': (context) => HomePage(),
           'Routine_page': (context) => RoutineListPage(),
@@ -139,8 +138,8 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                     text: 'Routine',
                   ),
                   Tab(
-                    icon: FaIcon(FontAwesomeIcons.userAlt),
-                    text: 'My Page',
+                    icon: FaIcon(FontAwesomeIcons.chartLine),
+                    text: 'Statistics',
                   )
                 ],
               ),

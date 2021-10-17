@@ -14,6 +14,8 @@ import 'package:hr_app/models/workout_model.dart';
 import 'package:hr_app/models/workout_set.dart';
 import 'package:hr_app/provider/routine_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:hr_app/models/log_model.dart';
+import 'package:hr_app/provider/log_provider.dart';
 
 class UserProvider with ChangeNotifier {
   // 로그인 관련된 변수
@@ -27,6 +29,8 @@ class UserProvider with ChangeNotifier {
 
   // 통계에 관련된 변수
   var today = DateFormat('EEE').format(DateTime.now());
+  LogModel _selLog;
+
   int thisWeekWorkoutCount = 0;
   int thisWeekWorkoutTime = 0;
   int thisWeekWorkoutWeight = 0;
@@ -253,6 +257,10 @@ class UserProvider with ChangeNotifier {
   }
 
 // 통계 관련된 함수
+  void setLog(LogModel model) {
+    _selLog = model;
+  }
+
   void setWorkoutCount(int n) {
     thisWeekWorkoutCount += n;
     print("이번주 운동 카운트 : $thisWeekWorkoutCount");

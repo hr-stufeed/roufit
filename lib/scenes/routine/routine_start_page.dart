@@ -15,6 +15,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:hr_app/provider/user_provider.dart';
+import 'package:hr_app/models/log_model.dart';
 
 const btnStart = 'start';
 const btnStop = 'stop';
@@ -124,6 +125,12 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
         Provider.of<LogProvider>(context, listen: false)
             .add(_selRoutine, totalTime);
 
+        LogModel _logData = LogModel(
+            dateTime: DateTime.now(),
+            totalTime: totalTime,
+            routineModel: _selRoutine);
+
+        Provider.of<UserProvider>(context, listen: false).setLog(_logData);
         Provider.of<UserProvider>(context, listen: false)
             .setWorkoutCount(_workoutCount);
         Provider.of<UserProvider>(context, listen: false)
