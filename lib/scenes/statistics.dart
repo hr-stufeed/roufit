@@ -4,7 +4,12 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:provider/provider.dart';
 import 'package:hr_app/provider/user_provider.dart';
 
-class MyPage extends StatelessWidget {
+class MyPage extends StatefulWidget {
+  @override
+  _MyPageState createState() => _MyPageState();
+}
+
+class _MyPageState extends State<MyPage> {
   final List<Color> lineColors = [
     const Color(0xff23b6ed),
     const Color(0xff02d39a),
@@ -31,9 +36,11 @@ class MyPage extends StatelessWidget {
                   icon: Icon(Icons.settings),
                   iconSize: 40.0,
                   onPressed: () {
-                    workoutCount = 0;
-                    workoutTime = 0;
-                    workoutWeight = 0;
+                    setState(() {
+                      workoutCount = 0;
+                      workoutTime = 0;
+                      workoutWeight = 0;
+                    });
                   },
                 ),
               ],
@@ -41,7 +48,6 @@ class MyPage extends StatelessWidget {
             kSizedBoxBetweenItems,
             Text('이번 주 활동', style: kPageSubTitleStyle),
             kSizedBoxBetweenItems,
-
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -107,44 +113,20 @@ class MyPage extends StatelessWidget {
                 ),
               ],
             ),
-            // Expanded(
-            //   child: LineChart(
-            //     LineChartData(
-            //         minX: 0,
-            //         maxX: 12,
-            //         minY: 0,
-            //         maxY: 12,
-            //         lineBarsData: [
-            //           LineChartBarData(
-            //               spots: [
-            //                 FlSpot(0, 3),
-            //                 FlSpot(3, 4),
-            //                 FlSpot(5, 7),
-            //                 FlSpot(5, 2),
-            //               ],
-            //               isCurved: true,
-            //               colors: lineColors,
-            //               barWidth: 5,
-            //               dotData: FlDotData(show: false),
-            //               belowBarData: BarAreaData(
-            //                 show: true,
-            //                 colors: lineColors
-            //                     .map((c) => c.withOpacity(0.8))
-            //                     .toList(),
-            //               ))
-            //         ]),
-            //     swapAnimationDuration: Duration(milliseconds: 150), // Optional
-            //     swapAnimationCurve: Curves.linear, // Optional
-            //   ),
-            // ),
             kSizedBoxBetweenItems,
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('루틴 기록', style: kPageSubTitleStyle),
-                Text('전체보기',
-                    style: kPageSubTitleStyle.copyWith(
-                        fontSize: 16, color: ThemeData().accentColor)),
+                InkWell(
+                  onTap: () => print('dd'),
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text('전체보기',
+                        style: kPageSubTitleStyle.copyWith(
+                            fontSize: 16, color: ThemeData().accentColor)),
+                  ),
+                ),
               ],
             ),
             kSizedBoxBetweenItems,
@@ -153,7 +135,41 @@ class MyPage extends StatelessWidget {
                 BarChartData(
                   minY: 0,
                   maxY: 10,
-                  groupsSpace: 12,
+                  titlesData: FlTitlesData(
+                    show: true,
+                    topTitles: SideTitles(
+                      showTitles: false,
+                    ),
+                    leftTitles: SideTitles(
+                      showTitles: false,
+                    ),
+                    rightTitles: SideTitles(
+                      showTitles: false,
+                    ),
+                    bottomTitles: SideTitles(
+                      showTitles: true,
+                      getTitles: (value) {
+                        switch (value.toInt()) {
+                          case 1:
+                            return 'MON';
+                          case 2:
+                            return 'TUE';
+                          case 3:
+                            return 'WED';
+                          case 4:
+                            return 'THR';
+                          case 5:
+                            return 'FRI';
+                          case 6:
+                            return 'SAT';
+                          case 7:
+                            return 'SUN';
+                        }
+                        return '';
+                      },
+                    ),
+                  ),
+                  groupsSpace: 7,
                   barTouchData: BarTouchData(enabled: true),
                   barGroups: [
                     BarChartGroupData(x: 1, barRods: [
@@ -168,6 +184,51 @@ class MyPage extends StatelessWidget {
                     BarChartGroupData(x: 2, barRods: [
                       BarChartRodData(
                           y: 9,
+                          width: 12,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(6),
+                            topRight: Radius.circular(6),
+                          )),
+                    ]),
+                    BarChartGroupData(x: 3, barRods: [
+                      BarChartRodData(
+                          y: workoutCount.toDouble(),
+                          width: 12,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(6),
+                            topRight: Radius.circular(6),
+                          )),
+                    ]),
+                    BarChartGroupData(x: 4, barRods: [
+                      BarChartRodData(
+                          y: workoutCount.toDouble(),
+                          width: 12,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(6),
+                            topRight: Radius.circular(6),
+                          )),
+                    ]),
+                    BarChartGroupData(x: 5, barRods: [
+                      BarChartRodData(
+                          y: workoutCount.toDouble(),
+                          width: 12,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(6),
+                            topRight: Radius.circular(6),
+                          )),
+                    ]),
+                    BarChartGroupData(x: 6, barRods: [
+                      BarChartRodData(
+                          y: workoutCount.toDouble(),
+                          width: 12,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(6),
+                            topRight: Radius.circular(6),
+                          )),
+                    ]),
+                    BarChartGroupData(x: 7, barRods: [
+                      BarChartRodData(
+                          y: workoutCount.toDouble(),
                           width: 12,
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(6),

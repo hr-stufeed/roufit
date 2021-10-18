@@ -246,7 +246,7 @@ class _WorkoutState extends State<Workout> {
           children: [
             ListTile(
               selected: widget.isSelected,
-              selectedTileColor: Colors.blue,
+              tileColor: widget.isSelected ? Colors.blue : null,
               contentPadding: EdgeInsets.symmetric(vertical: 0),
               isThreeLine: false,
               leading: Text(

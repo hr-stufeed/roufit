@@ -7,6 +7,7 @@ part 'constants.g.dart';
 
 const kPagePadding = EdgeInsets.fromLTRB(16.0, 32.0, 16.0, 0.0);
 const kPagePaddingwithTopbar = EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0);
+
 double responsiveFontsize(BuildContext context, double size) {
   return (size / 845) * MediaQuery.of(context).size.height;
 }

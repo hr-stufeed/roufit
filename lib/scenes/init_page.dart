@@ -12,7 +12,7 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'package:hr_app/scenes/home_page.dart';
 import 'package:hr_app/scenes/log_in_page.dart';
-import 'package:hr_app/scenes/mypage.dart';
+import 'package:hr_app/scenes/statistics.dart';
 import 'package:hr_app/scenes/routine/routine_input_page.dart';
 import 'package:hr_app/scenes/workout_add_set_page.dart';
 import 'package:hr_app/scenes/workout_list_page.dart';

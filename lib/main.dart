@@ -13,7 +13,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:hr_app/scenes/log_in_page.dart';
 
 import 'package:hr_app/scenes/home_page.dart';
-import 'package:hr_app/scenes/mypage.dart';
+import 'package:hr_app/scenes/statistics.dart';
 import 'package:hr_app/scenes/profile_page.dart';
 import 'package:hr_app/scenes/routine/routine_finish_page.dart';
 
