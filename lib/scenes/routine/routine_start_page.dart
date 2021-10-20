@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/models/routine_model.dart';
@@ -11,11 +11,6 @@ import 'package:hr_app/provider/timer_provider.dart';
 import 'package:hr_app/widgets/radial_gauge/radial_gauge.dart';
 import 'package:hr_app/widgets/topBar.dart';
 import 'package:hr_app/widgets/workout.dart';
-<<<<<<< HEAD
-import 'package:intl/intl.dart';
-import 'package:just_audio/just_audio.dart';
-=======
->>>>>>> 4ea2848e1a37eb8173e388ca73b2d8f460c7113f
 import 'package:provider/provider.dart';
 import 'package:hr_app/provider/user_provider.dart';
 import 'package:hr_app/models/log_model.dart';
@@ -76,16 +71,11 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
       if (_workoutCount == _selRoutine.workoutModelList.length - 1) {
         _isNext = false;
       }
-<<<<<<< HEAD
-      //루틴 종료
-      if (_workoutCount == _selRoutine.workoutModelList.length) {
-=======
 
       if (_workoutCount != _selRoutine.workoutModelList.length) {
         _selWorkout = _selRoutine.workoutModelList[_workoutCount];
         _workoutSet = _selWorkout.setData[_setCount];
       } else {
->>>>>>> 4ea2848e1a37eb8173e388ca73b2d8f460c7113f
         _workoutCount = _selRoutine.workoutModelList.length;
         int totalTime = Provider.of<TimerProvider>(context, listen: false)
             .routineTimer
@@ -97,7 +87,7 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
             dateTime: DateTime.now(),
             totalTime: totalTime,
             routineModel: _selRoutine);
-
+//루틴 종료
         Provider.of<UserProvider>(context, listen: false).setLog(_logData);
         Provider.of<UserProvider>(context, listen: false)
             .setWorkoutCount(_workoutCount);
@@ -105,14 +95,8 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
             .setWorkoutTime(totalTime);
         Provider.of<UserProvider>(context, listen: false)
             .setWorkoutWeight(_totalWeight);
-<<<<<<< HEAD
         Provider.of<UserProvider>(context, listen: false).addRoutineHistory(
             DateFormat('yyyy-MM-dd').format(DateTime.now()), _selRoutine);
-
-        player.setAsset('assets/sound/pip.mp3');
-        player.play();
-=======
->>>>>>> 4ea2848e1a37eb8173e388ca73b2d8f460c7113f
         Navigator.pushReplacementNamed(context, 'Routine_finish_page');
       }
     });
