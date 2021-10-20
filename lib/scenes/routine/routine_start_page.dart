@@ -11,16 +11,15 @@ import 'package:hr_app/provider/timer_provider.dart';
 import 'package:hr_app/widgets/radial_gauge/radial_gauge.dart';
 import 'package:hr_app/widgets/topBar.dart';
 import 'package:hr_app/widgets/workout.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
-import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:hr_app/provider/user_provider.dart';
 import 'package:hr_app/models/log_model.dart';
 
-const btnStart = 'start';
-const btnStop = 'stop';
-const btnCheck = 'check';
+const btnStart = Icons.play_arrow;
+const btnStop = Icons.pause;
+const btnCheck = Icons.check;
 const restTime = 'rest';
+const setRestTime = 'setRest';
 const setTime = 'set';
 
 class RoutineStartPage extends StatefulWidget {
@@ -41,74 +40,30 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
   Color _color;
   Set<String> _tags = {};
   List<Map<int, String>> routineList = [];
-  String playBtn = btnStart;
+  IconData playBtn = btnStart;
   String timeStatus = restTime;
   Map<int, String> selectRoutine = {};
+  WorkoutType type;
   Timer _workoutTimer;
   double _workoutTimerCounter = 0;
 
   CountDownController _countDownController = CountDownController();
 
-  final player = AudioPlayer();
-
   btnState() {
-    switch (playBtn) {
-      case btnStart:
-        print('btnStart');
-        playBtn = btnStop;
-        _countDownController.resume();
-        break;
-      case btnStop:
-        print('btnStop');
-        playBtn = btnStart;
-        _countDownController.pause();
-        break;
-    }
-  }
-
-  endTimer() {
-    if (_selWorkout.type == WorkoutType.durationWeight) {
-      print('endTimer');
-      //알람 재생
-      player.setAsset('assets/sound/boop.mp3');
-      player.play();
-
-      if (timeStatus == setTime) {
-        print('setTime');
-        timeStatus = restTime;
-
-        setState(() {
-          _setCount += 1;
-        });
-
-        _workoutTimerCounter = 0;
-
-        try {
-          _workoutSet = _selWorkout.setData[_setCount];
-        } catch (e) {}
-
-        if (_setCount == _selWorkout.setData.length) {
-          changeWorkout();
-        }
-        _countDownController.restart(duration: _workoutSet.duration);
-      } else if (timeStatus == restTime) {
-        restTimer();
-      }
-    }
-  }
-
-  restTimer() {
-    print('restTime');
-    timeStatus = setTime;
-    if (_setCount == _selWorkout.setData.length - 1) {
-      changeWorkout();
-    } else {
-      _countDownController.restart(duration: _selRoutine.restTime);
+    if (playBtn == btnStart) {
+      print('btnStart');
+      playBtn = btnStop;
+      _countDownController.resume();
+    } else if (playBtn == btnStop) {
+      print('btnStop');
+      playBtn = btnStart;
+      _countDownController.pause();
     }
   }
 
   changeWorkout() {
     setState(() {
+      type = _selWorkout.type;
       _setCount = 0;
       _workoutTimerCounter = 0;
       _workoutCount += 1;
@@ -117,7 +72,10 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
         _isNext = false;
       }
 
-      if (_workoutCount == _selRoutine.workoutModelList.length) {
+      if (_workoutCount != _selRoutine.workoutModelList.length) {
+        _selWorkout = _selRoutine.workoutModelList[_workoutCount];
+        _workoutSet = _selWorkout.setData[_setCount];
+      } else {
         _workoutCount = _selRoutine.workoutModelList.length;
         int totalTime = Provider.of<TimerProvider>(context, listen: false)
             .routineTimer
@@ -137,22 +95,16 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
             .setWorkoutTime(totalTime);
         Provider.of<UserProvider>(context, listen: false)
             .setWorkoutWeight(_totalWeight);
-        player.setAsset('assets/sound/pip.mp3');
-        player.play();
         Navigator.pushReplacementNamed(context, 'Routine_finish_page');
-      } else {
-        _selWorkout = _selRoutine.workoutModelList[_workoutCount];
-        _workoutSet = _selWorkout.setData[_setCount];
       }
     });
   }
 
-  bool doneSet() {
+  doneSet() {
+    playBtn = btnCheck;
     print('doneSet');
-    player.setAsset('assets/sound/boop.mp3');
-    player.play();
 
-    if (_selWorkout.type != WorkoutType.durationWeight) {
+    if (_selWorkout.type == WorkoutType.setWeight) {
       _countDownController.restart(duration: 250);
 
       setState(() {
@@ -160,39 +112,29 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
             _selWorkout.setData[_setCount].repCount;
         _setCount += 1;
       });
-      print('_setCount ');
-      print(_setCount);
-
-      try {
-        _workoutSet = _selWorkout.setData[_setCount];
-      } catch (e) {}
-
+      print('_setCount${_setCount}');
       Future.delayed(const Duration(milliseconds: 250), () {
         if (_setCount == _selWorkout.setData.length.abs()) {
           _countDownController.restart(duration: _selRoutine.restTime);
           changeWorkout();
           _countDownController.reset(duration: _workoutSet.duration);
           playBtn = btnStart;
-          return true;
         }
       });
-      return false;
     } else {
       btnState();
-      return false;
     }
   }
 
-  Widget repWidget() {
-    playBtn = btnCheck;
+  Widget workoutTextWidget() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          '${_selWorkout.name}',
+          timeStatus != setRestTime ? '${_selWorkout.name}' : '휴식',
           style: kRoutineTitleStyle.copyWith(
             color: Colors.black,
-            fontSize: responsiveFontsize(context, 28),
+            fontSize: 24,
           ),
         ),
         Text(
@@ -206,58 +148,14 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              '${_workoutSet.repCount}',
+              type == WorkoutType.durationWeight
+                  ? '${_workoutSet.repCount}'
+                  : timeStatus != setTime
+                      ? '${_workoutSet.duration}'
+                      : '${_selRoutine.restTime}',
               style: kSetDataTextStyle.copyWith(fontSize: 24),
             ),
-            Text(' REP'),
-          ],
-        ),
-        _workoutSet.weight != 0
-            ? Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '${_workoutSet.weight}',
-                    style: kSetDataTextStyle.copyWith(fontSize: 24),
-                  ),
-                  Text(' KG'),
-                ],
-              )
-            : SizedBox(
-                height: 1,
-              ),
-      ],
-    );
-  }
-
-  Widget timeWidget() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          timeStatus != setTime ? '${_selWorkout.name}' : '휴식',
-          style: kRoutineTitleStyle.copyWith(
-            color: Colors.black,
-            fontSize: 32,
-          ),
-        ),
-        Text(
-          '${_selWorkout.emoji}',
-          style: kRoutineTitleStyle,
-        ),
-        SizedBox(
-          height: 16,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              timeStatus != setTime
-                  ? '${_workoutSet.duration}'
-                  : '${_selRoutine.restTime}',
-              style: kSetDataTextStyle.copyWith(fontSize: 24),
-            ),
-            Text(' Sec'),
+            Text(type == WorkoutType.durationWeight ? ' Sec' : ' Rep'),
           ],
         ),
         _workoutSet.weight != 0
@@ -288,6 +186,7 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
     _selWorkout = _selRoutine.workoutModelList[_workoutCount];
     _workoutSet = _selWorkout.setData[_setCount];
     _amountOfWorkout = _selRoutine.workoutModelList.length;
+    type = _selWorkout.type;
     _selRoutine.workoutModelList.forEach((workoutModel) {
       if (_tags.length <= 3) {
         _tags.addAll(workoutModel.tags);
@@ -309,7 +208,6 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
       home: Material(
         child: SafeArea(
           child: ListView(
-            // crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Container(
                 margin: EdgeInsets.only(bottom: 16.0),
@@ -371,20 +269,18 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
                         decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(300)),
-                        child: _selWorkout.type != WorkoutType.durationWeight
-                            ? repWidget()
-                            : timeWidget(),
+                        child: workoutTextWidget(),
                       ),
                     ),
                     RadialGauge(
-                      duration: _selWorkout.type != WorkoutType.durationWeight
+                      duration: type != WorkoutType.durationWeight
                           ? _selWorkout.setData.length
                           : _workoutSet.duration,
                       initialDuration: 0,
-                      split: _selWorkout.type != WorkoutType.durationWeight
+                      split: type != WorkoutType.durationWeight
                           ? _selWorkout.setData.length.ceilToDouble()
                           : 1,
-                      fillSplit: _selWorkout.type != WorkoutType.durationWeight
+                      fillSplit: type != WorkoutType.durationWeight
                           ? _setCount.toDouble()
                           : -1,
                       controller: _countDownController,
@@ -411,9 +307,8 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
                       },
                       onComplete: () {
                         print('Countdown onComplete');
-                        endTimer();
                       },
-                      isTime: _selWorkout.type == WorkoutType.durationWeight,
+                      isTime: type == WorkoutType.durationWeight,
                     ),
                   ],
                 ),
@@ -424,11 +319,7 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
                   children: [
                     Container(
                       child: IconButton(
-                        icon: playBtn == btnCheck
-                            ? Icon(Icons.check)
-                            : playBtn == btnStart
-                                ? Icon(Icons.play_arrow)
-                                : Icon(Icons.pause),
+                        icon: Icon(playBtn),
                         color: Colors.green,
                         iconSize: 60.0,
                         onPressed: () {
