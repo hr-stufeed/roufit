@@ -291,12 +291,6 @@ class UserProvider with ChangeNotifier {
 
   void addRoutineHistory(String date, RoutineModel rt) {
     routineHistory.putIfAbsent(date, () => <RoutineModel>[]).add(rt);
-    print("==routine history==\n");
-    routineHistory.forEach((key, value) {
-      value.forEach((element) {
-        print("$key : $value \n");
-      });
-    });
   }
 }
 
