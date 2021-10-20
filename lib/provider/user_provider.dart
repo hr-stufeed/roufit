@@ -31,6 +31,7 @@ class UserProvider with ChangeNotifier {
   var today = DateFormat('EEE').format(DateTime.now());
   LogModel _selLog;
 
+  Map<String, List<RoutineModel>> routineHistory = {};
   int thisWeekWorkoutCount = 0;
   int thisWeekWorkoutTime = 0;
   int thisWeekWorkoutWeight = 0;
@@ -286,6 +287,16 @@ class UserProvider with ChangeNotifier {
 
   int getWorkoutWeight() {
     return thisWeekWorkoutWeight;
+  }
+
+  void addRoutineHistory(String date, RoutineModel rt) {
+    routineHistory.putIfAbsent(date, () => <RoutineModel>[]).add(rt);
+    print("==routine history==\n");
+    routineHistory.forEach((key, value) {
+      value.forEach((element) {
+        print("$key : $value \n");
+      });
+    });
   }
 }
 

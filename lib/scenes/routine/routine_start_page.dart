@@ -11,6 +11,7 @@ import 'package:hr_app/provider/timer_provider.dart';
 import 'package:hr_app/widgets/radial_gauge/radial_gauge.dart';
 import 'package:hr_app/widgets/topBar.dart';
 import 'package:hr_app/widgets/workout.dart';
+import 'package:intl/intl.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
@@ -116,7 +117,7 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
       if (_workoutCount == _selRoutine.workoutModelList.length - 1) {
         _isNext = false;
       }
-
+      //루틴 종료
       if (_workoutCount == _selRoutine.workoutModelList.length) {
         _workoutCount = _selRoutine.workoutModelList.length;
         int totalTime = Provider.of<TimerProvider>(context, listen: false)
@@ -137,6 +138,9 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
             .setWorkoutTime(totalTime);
         Provider.of<UserProvider>(context, listen: false)
             .setWorkoutWeight(_totalWeight);
+        Provider.of<UserProvider>(context, listen: false).addRoutineHistory(
+            DateFormat('yyyy-MM-dd').format(DateTime.now()), _selRoutine);
+
         player.setAsset('assets/sound/pip.mp3');
         player.play();
         Navigator.pushReplacementNamed(context, 'Routine_finish_page');

@@ -119,7 +119,8 @@ class _MyPageState extends State<MyPage> {
               children: [
                 Text('루틴 기록', style: kPageSubTitleStyle),
                 InkWell(
-                  onTap: () => print('dd'),
+                  onTap: () =>
+                      Navigator.pushNamed(context, 'Routine_history_page'),
                   child: Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: Text('전체보기',

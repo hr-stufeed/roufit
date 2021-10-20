@@ -16,6 +16,7 @@ import 'package:hr_app/scenes/home_page.dart';
 import 'package:hr_app/scenes/statistics.dart';
 import 'package:hr_app/scenes/profile_page.dart';
 import 'package:hr_app/scenes/routine/routine_finish_page.dart';
+import 'package:hr_app/scenes/routine/routine_history_page.dart';
 
 import 'package:hr_app/scenes/routine/routine_input_page.dart';
 import 'package:hr_app/scenes/workout_add_set_page.dart';
@@ -89,6 +90,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
           'Routine_start_page': (context) => RoutineStartPage(),
           'Routine_workout_page': (context) => RoutineWorkoutPage(),
           'Routine_finish_page': (context) => RoutineFinishPage(),
+          'Routine_history_page': (context) => RoutineHistoryPage(),
           'Workout_list_page': (context) => WorkoutListPage(),
           'Workout_create_page': (context) => WorkoutCreatePage(),
           'Workout_add_set_page': (context) => WorkoutAddSetPage(),
