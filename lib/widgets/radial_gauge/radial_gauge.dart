@@ -223,11 +223,11 @@ class RadialGaugeState extends State<RadialGauge>
     _controller.addStatusListener((status) {
       switch (status) {
         case AnimationStatus.forward:
-          _onStart();
+          if (widget.isTime) _onStart();
           break;
 
         case AnimationStatus.reverse:
-          _onStart();
+          if (widget.isTime) _onStart();
           break;
 
         case AnimationStatus.dismissed:
@@ -237,7 +237,9 @@ class RadialGaugeState extends State<RadialGauge>
 
           /// [AnimationController]'s value is manually set to [1.0] that's why [AnimationStatus.completed] is invoked here this animation is [isReverse]
           /// Only call the [_onComplete] block when the animation is not reversed.
-          if (!widget.isReverse) _onComplete();
+          if (!widget.isReverse) {
+            if (widget.isTime) _onComplete();
+          }
           break;
         default:
         // Do nothing
@@ -341,10 +343,8 @@ class CountDownController {
   /// This Method Restarts the Countdown Timer,
   /// Here optional int parameter **duration** is the updated duration for countdown timer
   void restart({int duration}) {
-    _state._controller.duration = _state.widget.isTime
-        ? Duration(seconds: duration ?? _state._controller.duration.inSeconds)
-        : Duration(
-            milliseconds: duration ?? _state._controller.duration.inSeconds);
+    _state._controller.duration = Duration(
+        milliseconds: duration ?? _state._controller.duration.inSeconds);
     if (_isReverse) {
       _state._controller?.reverse(from: 1);
     } else {
