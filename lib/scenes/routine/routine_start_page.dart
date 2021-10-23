@@ -126,7 +126,6 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
     } else if (timeStatus == restTime) {
       doneSet();
     }
-
   }
 
   goFinishPage() {
@@ -278,181 +277,188 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      builder: (context, child) {
-        return MediaQuery(
-          data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
-          child: child,
-        );
+    return WillPopScope(
+      onWillPop: () {
+        Navigator.pop(context);
+        return;
       },
-      home: Material(
-        child: SafeArea(
-          child: ListView(
-            children: [
-              Container(
-                margin: EdgeInsets.only(bottom: 16.0),
-                padding: EdgeInsets.symmetric(
-                  horizontal: 24.0,
-                  vertical: 24.0,
-                ),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [_color, _color.withBlue(250)],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
+      child: MaterialApp(
+        builder: (context, child) {
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
+            child: child,
+          );
+        },
+        home: Material(
+          child: SafeArea(
+            child: ListView(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(bottom: 16.0),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 24.0,
+                    vertical: 24.0,
                   ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TopBar(
-                      title:
-                          '${Provider.of<TimerProvider>(context, listen: true).routineTimer.toString().split('.').first.padLeft(8, "0")}',
-                      hasMoreButton: false,
-                      color: Colors.white,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [_color, _color.withBlue(250)],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          _selRoutine.name,
-                          style: kRoutineTitleStyle,
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: _tags
-                          .map(
-                            (tag) => Text(
-                              '#$tag ',
-                              style: kRoutineTagStyle,
-                            ),
-                          )
-                          .toList(),
-                    ),
-                    Text(
-                      '휴식시간 : ${_selRoutine.restTime}초',
-                      style: kRoutineTagStyle,
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: kPagePadding.copyWith(top: 28),
-                child: Stack(
-                  alignment: AlignmentDirectional.center,
-                  children: [
-                    Center(
-                      child: Container(
-                        width: 300,
-                        height: 300,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(300)),
-                        child: workoutTextWidget(),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TopBar(
+                        ctx: context,
+                        title:
+                            '${Provider.of<TimerProvider>(context, listen: true).routineTimer.toString().split('.').first.padLeft(8, "0")}',
+                        hasMoreButton: false,
+                        color: Colors.white,
                       ),
-                    ),
-                    RadialGauge(
-                      duration: type == WorkoutType.setWeight
-                          ? _selWorkout.setData.length
-                          : _workoutSet.duration,
-                      initialDuration: 0,
-                      split: type == WorkoutType.setWeight
-                          ? _selWorkout.setData.length.ceilToDouble()
-                          : 1,
-                      fillSplit: type == WorkoutType.setWeight
-                          ? _setCount.toDouble()
-                          : -1,
-                      controller: _countDownController,
-                      width: MediaQuery.of(context).size.width / 1.5,
-                      height: MediaQuery.of(context).size.width / 1.5,
-                      ringColor: Colors.grey[300],
-                      fillColor: Colors.transparent,
-                      fillGradient: SweepGradient(
-                        startAngle: 3.14,
-                        tileMode: TileMode.mirror,
-                        colors: <Color>[
-                          _color.withBlue(300).withOpacity(0.9),
-                          _color,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            _selRoutine.name,
+                            style: kRoutineTitleStyle,
+                          ),
                         ],
                       ),
-                      strokeWidth: 28.0,
-                      strokeCap: StrokeCap.round,
-                      isReverse: false,
-                      isReverseAnimation: false,
-                      isTimerTextShown: false,
-                      autoStart: false,
-                      onStart: () {
-                        print('Countdown onStart');
-                      },
-                      onComplete: () {
-                        print('Countdown onComplete');
-                        onComplete();
-                      },
-                      isTime: type == WorkoutType.durationWeight,
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 100),
-                child: Column(
-                  children: [
-                    Container(
-                      child: IconButton(
-                        icon: Icon(playBtn),
-                        color: Colors.green,
-                        iconSize: 60.0,
-                        onPressed: () {
-                          setState(() {
-                            btnState();
-                          });
-                        },
+                      Row(
+                        children: _tags
+                            .map(
+                              (tag) => Text(
+                                '#$tag ',
+                                style: kRoutineTagStyle,
+                              ),
+                            )
+                            .toList(),
                       ),
-                    ),
-                  ],
+                      Text(
+                        '휴식시간 : ${_selRoutine.restTime}초',
+                        style: kRoutineTagStyle,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Padding(
-                padding: kPagePadding,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          _isNext ? 'Next' : 'Finish',
-                          textAlign: TextAlign.start,
-                          style: kRoutineTitleStyle.copyWith(
-                            color: Colors.black,
-                            fontSize: 24,
-                          ),
+                Padding(
+                  padding: kPagePadding.copyWith(top: 28),
+                  child: Stack(
+                    alignment: AlignmentDirectional.center,
+                    children: [
+                      Center(
+                        child: Container(
+                          width: 300,
+                          height: 300,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(300)),
+                          child: workoutTextWidget(),
                         ),
-                        Text(
-                            _isNext
-                                ? '(${_workoutCount + 1}/${_selRoutine.workoutModelList.length})'
-                                : '($_amountOfWorkout/$_amountOfWorkout)',
-                            textAlign: TextAlign.start,
-                            style: kPageSubTitleStyle.copyWith(
-                              fontSize: 16,
-                            )),
-                      ],
-                    ),
-                    _isNext &&
-                            _amountOfWorkout !=
-                                1 // 루틴에 운동이 한개면 next가 finish가 되어야 한다
-                        ? Workout(
-                            workoutModel:
-                                _selRoutine.workoutModelList[_workoutCount + 1],
-                            workoutState: WorkoutState.onFront,
-                          )
-                        : SizedBox(),
-                    kSizedBoxBetweenItems,
-                  ],
+                      ),
+                      RadialGauge(
+                        duration: type == WorkoutType.setWeight
+                            ? _selWorkout.setData.length
+                            : _workoutSet.duration,
+                        initialDuration: 0,
+                        split: type == WorkoutType.setWeight
+                            ? _selWorkout.setData.length.ceilToDouble()
+                            : 1,
+                        fillSplit: type == WorkoutType.setWeight
+                            ? _setCount.toDouble()
+                            : -1,
+                        controller: _countDownController,
+                        width: MediaQuery.of(context).size.width / 1.5,
+                        height: MediaQuery.of(context).size.width / 1.5,
+                        ringColor: Colors.grey[300],
+                        fillColor: Colors.transparent,
+                        fillGradient: SweepGradient(
+                          startAngle: 3.14,
+                          tileMode: TileMode.mirror,
+                          colors: <Color>[
+                            _color.withBlue(300).withOpacity(0.9),
+                            _color,
+                          ],
+                        ),
+                        strokeWidth: 28.0,
+                        strokeCap: StrokeCap.round,
+                        isReverse: false,
+                        isReverseAnimation: false,
+                        isTimerTextShown: false,
+                        autoStart: false,
+                        onStart: () {
+                          print('Countdown onStart');
+                        },
+                        onComplete: () {
+                          print('Countdown onComplete');
+                          onComplete();
+                        },
+                        isTime: type == WorkoutType.durationWeight,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 100),
+                  child: Column(
+                    children: [
+                      Container(
+                        child: IconButton(
+                          icon: Icon(playBtn),
+                          color: Colors.green,
+                          iconSize: 60.0,
+                          onPressed: () {
+                            setState(() {
+                              btnState();
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: kPagePadding,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            _isNext ? 'Next' : 'Finish',
+                            textAlign: TextAlign.start,
+                            style: kRoutineTitleStyle.copyWith(
+                              color: Colors.black,
+                              fontSize: 24,
+                            ),
+                          ),
+                          Text(
+                              _isNext
+                                  ? '(${_workoutCount + 1}/${_selRoutine.workoutModelList.length})'
+                                  : '($_amountOfWorkout/$_amountOfWorkout)',
+                              textAlign: TextAlign.start,
+                              style: kPageSubTitleStyle.copyWith(
+                                fontSize: 16,
+                              )),
+                        ],
+                      ),
+                      _isNext &&
+                              _amountOfWorkout !=
+                                  1 // 루틴에 운동이 한개면 next가 finish가 되어야 한다
+                          ? Workout(
+                              workoutModel: _selRoutine
+                                  .workoutModelList[_workoutCount + 1],
+                              workoutState: WorkoutState.onFront,
+                            )
+                          : SizedBox(),
+                      kSizedBoxBetweenItems,
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
 
 class TopBar extends StatelessWidget {
+  final BuildContext ctx;
   final String title;
   final bool hasMoreButton;
   final Widget extraButton;
@@ -12,6 +13,7 @@ class TopBar extends StatelessWidget {
     @required this.hasMoreButton,
     this.extraButton,
     this.color = Colors.black,
+    this.ctx
   }) : super(key: key);
 
   @override
@@ -24,7 +26,12 @@ class TopBar extends StatelessWidget {
           constraints: BoxConstraints(),
           icon: Icon(Icons.keyboard_backspace),
           color: color,
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            if(ctx == null)
+              Navigator.pop(context);
+            else
+              Navigator.pop(ctx);
+          },
         ),
         Text(title, style: kTopBarTextStyle.copyWith(color: color)),
         hasMoreButton
