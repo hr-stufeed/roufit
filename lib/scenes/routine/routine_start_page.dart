@@ -99,6 +99,8 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
   }
 
   onComplete() {
+    goFinishPage();
+
     print('onComplete ${timeStatus}');
 
     if (timeStatus == setRestTime) {
@@ -116,38 +118,50 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
         print('timeStatus = ${setRestTime}');
       }
 
-      restTimer();
-
+      if (_selRoutine.restTime == 0) {
+        onComplete();
+      } else {
+        restTimer();
+      }
     } else if (timeStatus == restTime) {
       doneSet();
+    }
+
+  }
+
+  goFinishPage() {
+    if (_workoutCount == _selRoutine.workoutModelList.length - 1 &&
+        _setCount >= _selWorkout.setData.length.abs()) {
+      _workoutCount = _selRoutine.workoutModelList.length;
+      int totalTime = Provider.of<TimerProvider>(context, listen: false)
+          .routineTimer
+          .inSeconds;
+      Provider.of<LogProvider>(context, listen: false)
+          .add(_selRoutine, totalTime);
+
+      LogModel _logData = LogModel(
+          dateTime: DateTime.now(),
+          totalTime: totalTime,
+          routineModel: _selRoutine);
+      //루틴 종료
+      Provider.of<UserProvider>(context, listen: false).setLog(_logData);
+      Provider.of<UserProvider>(context, listen: false)
+          .setWorkoutCount(_workoutCount);
+      Provider.of<UserProvider>(context, listen: false)
+          .setWorkoutTime(totalTime);
+      Provider.of<UserProvider>(context, listen: false)
+          .setWorkoutWeight(_totalWeight);
+      Provider.of<UserProvider>(context, listen: false).addRoutineHistory(
+          DateFormat('yyyy-MM-dd').format(DateTime.now()), _selRoutine);
+      Navigator.pushReplacementNamed(context, 'Routine_finish_page');
     }
   }
 
   restTimer() {
     setState(() {
-      if (_workoutCount == _selRoutine.workoutModelList.length - 1 && _setCount == _selWorkout.setData.length.abs()) {
-        _workoutCount = _selRoutine.workoutModelList.length;
-        int totalTime = Provider.of<TimerProvider>(context, listen: false)
-            .routineTimer
-            .inSeconds;
-        Provider.of<LogProvider>(context, listen: false)
-            .add(_selRoutine, totalTime);
-
-        LogModel _logData = LogModel(
-            dateTime: DateTime.now(),
-            totalTime: totalTime,
-            routineModel: _selRoutine);
-        //루틴 종료
-        Provider.of<UserProvider>(context, listen: false).setLog(_logData);
-        Provider.of<UserProvider>(context, listen: false)
-            .setWorkoutCount(_workoutCount);
-        Provider.of<UserProvider>(context, listen: false)
-            .setWorkoutTime(totalTime);
-        Provider.of<UserProvider>(context, listen: false)
-            .setWorkoutWeight(_totalWeight);
-        Provider.of<UserProvider>(context, listen: false).addRoutineHistory(
-            DateFormat('yyyy-MM-dd').format(DateTime.now()), _selRoutine);
-        Navigator.pushReplacementNamed(context, 'Routine_finish_page');
+      if (_workoutCount == _selRoutine.workoutModelList.length - 1 &&
+          _setCount >= _selWorkout.setData.length.abs()) {
+        goFinishPage();
       } else {
         playBtn = btnStop;
         type = WorkoutType.durationWeight;
@@ -175,7 +189,13 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
         if (_setCount == _selWorkout.setData.length.abs()) {
           _countDownController.reset(duration: _workoutSet.duration * 1000);
           timeStatus = setRestTime;
-          restTimer();
+
+          if (_selRoutine.restTime == 0) {
+            print('_selRoutine.restTime ${_selRoutine.restTime == 0}');
+            onComplete();
+          } else {
+            restTimer();
+          }
         }
       });
     } else {
