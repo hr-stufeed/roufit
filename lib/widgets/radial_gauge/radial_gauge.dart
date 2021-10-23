@@ -357,10 +357,8 @@ class CountDownController {
   void reset({int duration}) {
     _state._controller?.stop(canceled: false);
 
-    _state._controller.duration = _state.widget.isTime
-        ? Duration(seconds: duration ?? _state._controller.duration.inSeconds)
-        : Duration(
-            milliseconds: duration ?? _state._controller.duration.inSeconds);
+    _state._controller.duration = Duration(
+        milliseconds: duration ?? _state._controller.duration.inSeconds);
     _state._controller?.value = 0.0;
     print('_state._controller.status');
     print(_state._controller.status);
