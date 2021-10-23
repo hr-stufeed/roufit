@@ -17,6 +17,14 @@ class RoutineProvider with ChangeNotifier {
   RoutineProvider() {
     load();
   }
+  Future<void> load() async {
+    _box = await Hive.openBox<RoutineModel>('routines');
+    _box.toMap().forEach((key, _routineData) {
+      _routineModels.add(_routineData);
+    });
+
+    notifyListeners();
+  }
 
   int get routineCount {
     return _routineModels.length;
@@ -87,7 +95,7 @@ class RoutineProvider with ChangeNotifier {
         .toList()[0];
   }
 
-  void saveRestTime(String autoKey, int restTime) async{
+  void saveRestTime(String autoKey, int restTime) async {
     var _box = await Hive.openBox<RoutineModel>('routines');
 
     RoutineModel _routineData = RoutineModel(
@@ -133,15 +141,6 @@ class RoutineProvider with ChangeNotifier {
     _box.delete(autoKey);
 
     print('delete $autoKey');
-    notifyListeners();
-  }
-
-  Future<void> load() async {
-    _box = await Hive.openBox<RoutineModel>('routines');
-    _box.toMap().forEach((key, _routineData) {
-      _routineModels.add(_routineData);
-    });
-
     notifyListeners();
   }
 

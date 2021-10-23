@@ -37,7 +37,7 @@ class _RoutineHistoryPageState extends State<RoutineHistoryPage> {
   Widget build(BuildContext context) {
     init();
     var routineHistory =
-        Provider.of<UserProvider>(context, listen: true).routineHistory;
+        Provider.of<UserProvider>(context, listen: false).routineHistory;
     return SafeArea(
       child: Material(
         child: Padding(
@@ -57,16 +57,10 @@ class _RoutineHistoryPageState extends State<RoutineHistoryPage> {
                   kSizedBoxBetweenItems,
                   Expanded(
                       child: ListView.builder(
-                    itemCount: routineHistory.length,
+                    itemCount: routineHistory.keys.length,
                     itemBuilder: (context, index) {
                       String key = routineHistory.keys.elementAt(index);
-                      var ll = routineHistory[key].map((e) => Routine(
-                            autoKey: routineHistory[key][0].key,
-                            name: routineHistory[key][0].name,
-                            color: Color(routineHistory[key][0].color),
-                            isListUp: true,
-                            days: routineHistory[key][0].days,
-                          ));
+
                       return Column(
                         children: [
                           Text(
@@ -75,7 +69,7 @@ class _RoutineHistoryPageState extends State<RoutineHistoryPage> {
                           ),
                           Column(
                             children: routineHistory[key]
-                                .map((rt) => Routine(
+                                .map<Widget>((rt) => Routine(
                                       autoKey: rt.key,
                                       name: rt.name,
                                       color: Color(rt.color),

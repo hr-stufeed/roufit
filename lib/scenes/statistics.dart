@@ -41,6 +41,8 @@ class _MyPageState extends State<MyPage> {
                       workoutTime = 0;
                       workoutWeight = 0;
                     });
+                    Provider.of<UserProvider>(context, listen: false)
+                        .clearHistory();
                   },
                 ),
               ],

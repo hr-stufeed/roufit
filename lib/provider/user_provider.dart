@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:hive/hive.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -15,7 +16,6 @@ import 'package:hr_app/models/workout_set.dart';
 import 'package:hr_app/provider/routine_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:hr_app/models/log_model.dart';
-import 'package:hr_app/provider/log_provider.dart';
 
 class UserProvider with ChangeNotifier {
   // 로그인 관련된 변수
@@ -31,17 +31,39 @@ class UserProvider with ChangeNotifier {
   var today = DateFormat('EEE').format(DateTime.now());
   LogModel _selLog;
 
-  Map<String, List<RoutineModel>> routineHistory = {};
+  // Hive 저장 변수
+  var _routineHistoryBox;
+
+  Map<String, dynamic> routineHistory = {};
   int thisWeekWorkoutCount = 0;
   int thisWeekWorkoutTime = 0;
   int thisWeekWorkoutWeight = 0;
 
   UserProvider() {
+    _initHive().then((value) {
+      getHistory();
+    });
     _init();
   }
-  void _init() async {
+  Future<void> _init() async {
     await Firebase.initializeApp();
     _db = FirebaseFirestore.instance;
+
+    notifyListeners();
+  }
+
+  Future<void> _initHive() async {
+    _routineHistoryBox = await Hive.openBox<Map>('history');
+    notifyListeners();
+  }
+
+  void getHistory() {
+    routineHistory = _routineHistoryBox.get('history').cast<String, dynamic>();
+  }
+
+  void clearHistory() {
+    routineHistory = {};
+    _routineHistoryBox.clear();
   }
 
 // 로그인 관련된 함수
@@ -290,7 +312,13 @@ class UserProvider with ChangeNotifier {
   }
 
   void addRoutineHistory(String date, RoutineModel rt) {
-    routineHistory.putIfAbsent(date, () => <RoutineModel>[]).add(rt);
+    try {
+      routineHistory.putIfAbsent(date, () => <RoutineModel>[]).add(rt);
+    } catch (e) {
+      print(e);
+    }
+    _routineHistoryBox.put('history', routineHistory);
+    notifyListeners();
   }
 }
 
