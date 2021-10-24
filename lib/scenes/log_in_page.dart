@@ -92,6 +92,7 @@ class _LoginWidgetState extends State<LoginWidget> {
     User user = _auth.currentUser;
 
     var _db = FirebaseFirestore.instance;
+    //더미 루틴 데이터 생성
     _db
         .collection('users')
         .doc(currentUser.uid)

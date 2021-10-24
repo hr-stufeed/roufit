@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -29,12 +30,13 @@ class UserProvider with ChangeNotifier {
 
   // 통계에 관련된 변수
   var today = DateFormat('EEE').format(DateTime.now());
+  var currentTime = DateTime.now().toString();
   LogModel _selLog;
 
   // Hive 저장 변수
   var _routineHistoryBox;
-
-  Map<String, dynamic> routineHistory = {};
+  Map<dynamic, dynamic> routineHistory = {};
+  String todayDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
   int thisWeekWorkoutCount = 0;
   int thisWeekWorkoutTime = 0;
   int thisWeekWorkoutWeight = 0;
@@ -58,7 +60,7 @@ class UserProvider with ChangeNotifier {
   }
 
   void getHistory() {
-    routineHistory = _routineHistoryBox.get('history').cast<String, dynamic>();
+    routineHistory = _routineHistoryBox.get('history').cast<dynamic, dynamic>();
   }
 
   void clearHistory() {
@@ -111,7 +113,8 @@ class UserProvider with ChangeNotifier {
 
       // 유저의 모든 루틴 정보를 firebase에 저장한다
       routineList.forEach((routine) {
-        var routineDocID = routineDB.doc(routine.name);
+        var routineDocID =
+            routineDB.doc(routine.name + " " + random().toString());
         routineDocID.set({
           'key': routine.key,
           'name': routine.name,
@@ -145,6 +148,9 @@ class UserProvider with ChangeNotifier {
           });
         });
       });
+
+      //루틴 기록 저장
+      await saveHistory(context);
 
       print("routine data is saved in firestore");
       return true;
@@ -319,6 +325,62 @@ class UserProvider with ChangeNotifier {
     }
     _routineHistoryBox.put('history', routineHistory);
     notifyListeners();
+  }
+
+  int random() {
+    return Random().nextInt(1000000);
+  }
+
+  Future<bool> saveHistory(BuildContext context) async {
+    Map<dynamic, dynamic> history = routineHistory;
+    final routineDB = await _db.collection('users').doc(currentUser.uid);
+
+    var snapshots = await routineDB.collection(todayDate).get();
+    for (var doc in snapshots.docs) {
+      await doc.reference.delete();
+    }
+    // 루틴 기록을 firebase에 저장한다
+
+    history.forEach((key, value) {
+      var date = routineDB.collection(key);
+
+      value.forEach((rt) {
+        var routine = date.doc(rt.name + ' ' + random().toString());
+        routine.set({
+          'key': rt.key,
+          'name': rt.name,
+          'color': rt.color,
+          'days': rt.days,
+        });
+        rt.workoutModelList.forEach((workout) {
+          routine.collection('workoutList').doc(workout.name).set(
+            {
+              'key': workout.autoKey,
+              'name': workout.name,
+              'tags': workout.tags,
+              'emoji': workout.emoji,
+              'type': workout.type.toString(),
+            },
+          );
+          int setIndex = 1;
+
+          workout.setData.forEach((setData) {
+            routine
+                .collection('workoutList')
+                .doc(workout.name)
+                .collection('setData')
+                .doc((setIndex++).toString())
+                .set({
+              'setCount': setData.setCount,
+              'repCount': setData.repCount,
+              'weight': setData.weight,
+              'duration': setData.duration,
+            });
+          });
+        });
+      });
+    });
+    return true;
   }
 }
 
