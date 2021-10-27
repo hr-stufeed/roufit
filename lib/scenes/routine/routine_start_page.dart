@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
@@ -21,6 +22,8 @@ const btnCheck = Icons.check;
 const restTime = 'restTime';
 const setRestTime = 'setRestTime';
 const setTime = 'setTime';
+
+AudioPlayer audioPlayer = AudioPlayer();
 
 class RoutineStartPage extends StatefulWidget {
   @override
@@ -48,6 +51,13 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
   double _workoutTimerCounter = 0;
 
   CountDownController _countDownController = CountDownController();
+
+  playLocal() async {
+    final player= AudioCache();
+    await player.play('sound/boop.wav');
+
+    // int result = await audioPlayer.play('assets/sound/boop.mp3', );
+  }
 
   changeWorkout() {
     print('changeWorkout');
@@ -99,6 +109,8 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
   }
 
   onComplete() {
+    playLocal();
+
     goFinishPage();
 
     print('onComplete ${timeStatus}');
@@ -157,6 +169,7 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
   }
 
   restTimer() {
+
     setState(() {
       if (_workoutCount == _selRoutine.workoutModelList.length - 1 &&
           _setCount >= _selWorkout.setData.length.abs()) {
@@ -173,6 +186,8 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
 
   doneSet() {
     print('doneSet');
+    playLocal();
+
     setState(() {
       _totalWeight += _selWorkout.setData[_setCount].weight *
           _selWorkout.setData[_setCount].repCount;

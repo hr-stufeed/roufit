@@ -50,8 +50,7 @@ dependencies:
   firebase_auth: ^1.4.1
   google_sign_in: ^5.0.4
   cloud_firestore: ^2.2.2
-  audioplayers: ^0.18.3
-  just_audio: ^0.8.0
+  audioplayers: ^0.20.1
   shared_preferences: ^2.0.5
   fl_chart: ^0.40.0
 
@@ -69,7 +68,7 @@ dev_dependencies:
 flutter:
   assets:
     - assets/
-    - assets/sound/boop.mp3
+    - assets/sound/boop.wav
     - assets/sound/pip.mp3
   fonts:
     - family: NotoSans
