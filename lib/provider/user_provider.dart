@@ -36,6 +36,7 @@ class UserProvider with ChangeNotifier {
 
   // Hive 저장 변수
   var _routineHistoryBox;
+  List<String> dates = [];
   Map<dynamic, dynamic> routineHistory = {};
   String todayDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
   int thisWeekWorkoutCount = 0;
@@ -46,6 +47,7 @@ class UserProvider with ChangeNotifier {
     _initHive().then((value) {
       routineHistory =
           _routineHistoryBox.get('history').cast<dynamic, dynamic>();
+      dates = routineHistory.keys;
     });
     _init();
   }
@@ -169,7 +171,7 @@ class UserProvider with ChangeNotifier {
       final routineDB =
           _db.collection('users').doc(currentUser.uid).collection('routines');
 
-      routineDB.doc('delete this').delete();
+      await routineDB.doc('delete this').delete();
       //DB의 루틴 컬렉션을 스냅샷으로 얻는다
       QuerySnapshot routineSnapshot = await routineDB.get();
       LoadedData loadedData = LoadedData();
@@ -180,7 +182,7 @@ class UserProvider with ChangeNotifier {
           var rt = routineSnapshot.docs[i];
           var rtName;
           try {
-            rtName = rt.get('name');
+            rtName = rt.id;
           } catch (e) {
             continue;
           }
@@ -241,6 +243,7 @@ class UserProvider with ChangeNotifier {
 
       loadedData.show();
       loadedData.overwrite(context);
+      await loadHistory(context);
       return true;
     } else {
       return false;
@@ -327,6 +330,7 @@ class UserProvider with ChangeNotifier {
   void addRoutineHistory(String date, RoutineModel rt) {
     try {
       routineHistory.putIfAbsent(date, () => <RoutineModel>[]).add(rt);
+      if (!dates.contains(date)) dates.add(date);
     } catch (e) {
       print(e);
     }
@@ -338,37 +342,179 @@ class UserProvider with ChangeNotifier {
     return Random().nextInt(1000000);
   }
 
+  Future<bool> loadHistory(BuildContext context) async {
+    if (isLoggedin) {
+      DocumentReference<Map<String, dynamic>> routineDB =
+          _db.collection('users').doc(currentUser.uid);
+      Map<dynamic, dynamic> newHistory = {};
+      //  var fromDate = DateFormat('yyyy-MM-dd')
+      //     .format(DateTime.now().subtract(Duration(days: 1)));
+      DateTime rawDate = DateTime.now();
+      for (int i = 0; i < 15; i++) {
+        String date = DateFormat('yyyy-MM-dd').format(rawDate);
+        var snapshots = await routineDB.collection(date).get();
+        var dateKey = routineDB.collection(date);
+        for (QueryDocumentSnapshot rt in snapshots.docs) {
+          var rtName;
+          try {
+            rtName = rt.id;
+          } catch (e) {
+            continue;
+          }
+          List<WorkoutModel> workoutList = [];
+          //루틴 내부의 운동 리스트 하위 컬렉션을 얻는다.
+          var workoutSnapshot =
+              await dateKey.doc(rtName).collection('workoutList').get();
+
+          //운동 리스트를 순회한다.
+          for (int i = 0; i < workoutSnapshot.size; i++) {
+            //컬렉션의 운동 데이터
+            var wk = workoutSnapshot.docs[i];
+            var wkName = wk.get('name');
+
+            //컬렉션의 운동 세트 데이터
+            var setDataSnapshot = await dateKey
+                .doc(rtName)
+                .collection('workoutList')
+                .doc(wkName)
+                .collection('setData')
+                .get();
+            List<WorkoutSet> setData = [];
+            //setData를 뽑아낸다
+            for (int i = 0; i < setDataSnapshot.size; i++) {
+              var sd = setDataSnapshot.docs[i];
+
+              setData.add(WorkoutSet(
+                setCount: sd.get('setCount'),
+                repCount: sd.get('repCount'),
+                duration: sd.get('duration'),
+                weight: sd.get('weight'),
+              ));
+            }
+
+            List<String> tags = List<String>.from(wk.get('tags'));
+            //workdoutModel을 생성하여 workoutList에 삽입한다
+            workoutList.add(WorkoutModel(
+              autoKey: wk.get('key'),
+              name: wk.get('name'),
+              emoji: wk.get('emoji'),
+              tags: tags,
+              type: converter(wk.get('type')),
+              setData: setData,
+            ));
+          }
+          //운동 리스트를 만든 후 루틴 모델을 생성하여 loadedData에 삽입한다
+          List<String> days = List<String>.from(rt.get('days'));
+
+          newHistory.putIfAbsent(date, () => <RoutineModel>[]).add(RoutineModel(
+                key: rt.get('key'),
+                name: rt.get('name'),
+                color: rt.get('color'),
+                days: days,
+                workoutModelList: workoutList,
+              ));
+        }
+        rawDate = rawDate.subtract(Duration(days: 1));
+      }
+      // dates.forEach((date) async {
+      //   var snapshots = await routineDB.collection(date).get();
+      //   var dateKey = routineDB.collection(date);
+      //   for (QueryDocumentSnapshot rt in snapshots.docs) {
+      //     var rtName;
+      //     try {
+      //       rtName = rt.id;
+      //     } catch (e) {
+      //       continue;
+      //     }
+      //     List<WorkoutModel> workoutList = [];
+      //     //루틴 내부의 운동 리스트 하위 컬렉션을 얻는다.
+      //     var workoutSnapshot =
+      //         await dateKey.doc(rtName).collection('workoutList').get();
+
+      //     //운동 리스트를 순회한다.
+      //     for (int i = 0; i < workoutSnapshot.size; i++) {
+      //       //컬렉션의 운동 데이터
+      //       var wk = workoutSnapshot.docs[i];
+      //       var wkName = wk.get('name');
+
+      //       //컬렉션의 운동 세트 데이터
+      //       var setDataSnapshot = await dateKey
+      //           .doc(rtName)
+      //           .collection('workoutList')
+      //           .doc(wkName)
+      //           .collection('setData')
+      //           .get();
+      //       List<WorkoutSet> setData = [];
+      //       //setData를 뽑아낸다
+      //       for (int i = 0; i < setDataSnapshot.size; i++) {
+      //         var sd = setDataSnapshot.docs[i];
+
+      //         setData.add(WorkoutSet(
+      //           setCount: sd.get('setCount'),
+      //           repCount: sd.get('repCount'),
+      //           duration: sd.get('duration'),
+      //           weight: sd.get('weight'),
+      //         ));
+      //       }
+
+      //       List<String> tags = List<String>.from(wk.get('tags'));
+      //       //workdoutModel을 생성하여 workoutList에 삽입한다
+      //       workoutList.add(WorkoutModel(
+      //         autoKey: wk.get('key'),
+      //         name: wk.get('name'),
+      //         emoji: wk.get('emoji'),
+      //         tags: tags,
+      //         type: converter(wk.get('type')),
+      //         setData: setData,
+      //       ));
+      //     }
+      //     //운동 리스트를 만든 후 루틴 모델을 생성하여 loadedData에 삽입한다
+      //     List<String> days = List<String>.from(rt.get('days'));
+
+      //     newHistory.putIfAbsent(date, () => <RoutineModel>[]).add(RoutineModel(
+      //           key: rt.get('key'),
+      //           name: rt.get('name'),
+      //           color: rt.get('color'),
+      //           days: days,
+      //           workoutModelList: workoutList,
+      //         ));
+      //   }
+      // });
+
+      routineHistory = newHistory;
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Future<bool> saveHistory(BuildContext context) async {
     Map<dynamic, dynamic> history = routineHistory;
-    var routineDB = await _db.collection('users').doc(currentUser.uid);
+    var routineDB = _db.collection('users').doc(currentUser.uid);
 
     //모든 히스토리를 다 지우고 다시 저장한다
-    FirebaseFirestore.instance
-        .collection(todayDate)
-        .snapshots()
-        .forEach((querySnapshot) {
-      for (QueryDocumentSnapshot docSnapshot in querySnapshot.docs) {
-        print(docSnapshot.reference);
-        docSnapshot.reference.delete();
-      }
-    });
-    // routineDB.collection(todayDate).get().then((querySnapshot) {
-    //   querySnapshot.docs.forEach((doc) async {
-    //     print(doc.reference);
-    //     await doc.reference.delete();
+    // if (dates.isNotEmpty) {
+    //   dates.forEach((date) async {
+    //     var snapshots = await routineDB.collection(date).get();
+    //     for (QueryDocumentSnapshot doc in snapshots.docs) {
+    //       await doc.reference.delete();
+    //     }
     //   });
+    // }
+    // dates.forEach((date) async {
+    //   var snapshots = await routineDB.collection(date).get();
+    //   for (QueryDocumentSnapshot doc in snapshots.docs) {
+    //     await doc.reference.delete();
+    //   }
     // });
 
-    // final collectionRef = FirebaseFirestore.instance.collection(todayDate);
-    // final futureQuery = collectionRef.get();
-    // await futureQuery.then((value) => value.docs.forEach((element) {
-    //       element.reference.delete();
-    //     }));
-    // 루틴 기록을 firebase에 저장한다
-
-    history.forEach((key, value) {
+    history.forEach((key, value) async {
+      var dateKeys = await routineDB.collection(key).get();
       var date = routineDB.collection(key);
 
+      for (QueryDocumentSnapshot doc in dateKeys.docs) {
+        await doc.reference.delete();
+      }
       value.forEach((rt) {
         var routine = date.doc(rt.name + ' ' + random().toString());
         routine.set({
@@ -405,6 +551,7 @@ class UserProvider with ChangeNotifier {
         });
       });
     });
+
     return true;
   }
 }
