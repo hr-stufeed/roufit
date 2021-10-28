@@ -94,6 +94,7 @@ class _HomePageState extends State<HomePage> {
         color: Color(_todayRoutines[index].color),
         isListUp: false,
         days: _todayRoutines[index].days,
+        workoutModelList: _todayRoutines[index].workoutModelList,
       ),
     );
   }

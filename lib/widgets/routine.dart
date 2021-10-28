@@ -56,19 +56,23 @@ class Routine extends StatefulWidget {
       );
 
   void initTags(BuildContext context) {
-    workoutModelList = Provider.of<RoutineProvider>(context, listen: false)
-        .find(autoKey)
-        .workoutModelList;
+    // workoutModelList = Provider.of<RoutineProvider>(context, listen: false)
+    //     .find(autoKey)
+    //     .workoutModelList;
     tags = {};
-
-    workoutModelList.forEach((workoutModel) {
-      if (tags.length <= 3) {
-        tags.addAll(workoutModel.tags);
-      }
-    });
-    if (tags.length == 0) {
+    try {
+      workoutModelList.forEach((workoutModel) {
+        if (tags.length <= 3) {
+          tags.addAll(workoutModel.tags);
+        }
+      });
+    } catch (e) {
       tags.add("운동을 추가해주세요");
     }
+
+    // if (tags.length == 0) {
+
+    // }
   }
 
   @override

@@ -37,7 +37,7 @@ class _RoutineHistoryPageState extends State<RoutineHistoryPage> {
   Widget build(BuildContext context) {
     init();
     var routineHistory =
-        Provider.of<UserProvider>(context, listen: false).routineHistory;
+        Provider.of<UserProvider>(context, listen: false).getHistory();
     return SafeArea(
       child: Material(
         child: Padding(
@@ -55,76 +55,82 @@ class _RoutineHistoryPageState extends State<RoutineHistoryPage> {
                     ],
                   ),
                   kSizedBoxBetweenItems,
-                  Expanded(
-                      child: ListView.builder(
-                    itemCount: routineHistory.keys.length,
-                    itemBuilder: (context, index) {
-                      String key = routineHistory.keys.elementAt(index);
+                  routineHistory.keys.length == 0
+                      ? Expanded(
+                          flex: 2,
+                          child: Center(child: Text('오늘의 루틴을 추가해주세요.')))
+                      : Expanded(
+                          child: ListView.builder(
+                          itemCount: routineHistory.keys.length,
+                          itemBuilder: (context, index) {
+                            String key = routineHistory.keys.elementAt(index);
 
-                      return Column(
-                        children: [
-                          Text(
-                            key,
-                            style: kPageSubTitleStyle,
+                            return Column(
+                              children: [
+                                Text(
+                                  key,
+                                  style: kPageSubTitleStyle,
+                                ),
+                                Column(
+                                  children: routineHistory[key]
+                                      .map<Widget>((rt) => Routine(
+                                            autoKey: rt.key,
+                                            name: rt.name,
+                                            color: Color(rt.color),
+                                            isListUp: true,
+                                            days: rt.days,
+                                            workoutModelList:
+                                                rt.workoutModelList,
+                                          ))
+                                      .toList(),
+                                ),
+                              ],
+                            );
+                            // return Routine(
+                            //   autoKey: routineHistory[key][0].key,
+                            //   name: routineHistory[key][0].name,
+                            //   color: Color(routineHistory[key][0].color),
+                            //   isListUp: true,
+                            //   days: routineHistory[key][0].days,
+                            // );
+                            // return Routine(
+                            //   autoKey: routineHistory["2021-10-20"][0].key,
+                            //   name: routineHistory["2021-10-20"][0].name,
+                            //   color: Color(routineHistory["2021-10-20"][0].color),
+                            //   isListUp: true,
+                            //   days: routineHistory["2021-10-20"][0].days,
+                            // );
+                          },
+                        )
+                          // child: ReorderableColumn(
+                          //   scrollController: _scrollController,
+                          //   enabled: true,
+                          //   onReorder:
+                          //       Provider.of<RoutineProvider>(context, listen: false)
+                          //           .reorder,
+                          //   draggingWidgetOpacity: 0,
+                          //   onNoReorder: (int index) {
+                          //     //this callback is optional
+                          //     debugPrint(
+                          //         '${DateTime.now().toString().substring(5, 22)} reorder cancelled. index:$index');
+                          //   },
+                          //   children:
+                          //       Provider.of<RoutineProvider>(context, listen: true)
+                          //           .routineModels
+                          //           .map((_routine) {
+                          //     return Container(
+                          //       key: UniqueKey(),
+                          //       child: Routine(
+                          //         autoKey: _routine.key,
+                          //         name: _routine.name,
+                          //         color: Color(_routine.color),
+                          //         isListUp: true,
+                          //         days: _routine.days,
+                          //       ),
+                          //     );
+                          //   }).toList(),
+                          // ),
                           ),
-                          Column(
-                            children: routineHistory[key]
-                                .map<Widget>((rt) => Routine(
-                                      autoKey: rt.key,
-                                      name: rt.name,
-                                      color: Color(rt.color),
-                                      isListUp: true,
-                                      days: rt.days,
-                                    ))
-                                .toList(),
-                          ),
-                        ],
-                      );
-                      // return Routine(
-                      //   autoKey: routineHistory[key][0].key,
-                      //   name: routineHistory[key][0].name,
-                      //   color: Color(routineHistory[key][0].color),
-                      //   isListUp: true,
-                      //   days: routineHistory[key][0].days,
-                      // );
-                      // return Routine(
-                      //   autoKey: routineHistory["2021-10-20"][0].key,
-                      //   name: routineHistory["2021-10-20"][0].name,
-                      //   color: Color(routineHistory["2021-10-20"][0].color),
-                      //   isListUp: true,
-                      //   days: routineHistory["2021-10-20"][0].days,
-                      // );
-                    },
-                  )
-                      // child: ReorderableColumn(
-                      //   scrollController: _scrollController,
-                      //   enabled: true,
-                      //   onReorder:
-                      //       Provider.of<RoutineProvider>(context, listen: false)
-                      //           .reorder,
-                      //   draggingWidgetOpacity: 0,
-                      //   onNoReorder: (int index) {
-                      //     //this callback is optional
-                      //     debugPrint(
-                      //         '${DateTime.now().toString().substring(5, 22)} reorder cancelled. index:$index');
-                      //   },
-                      //   children:
-                      //       Provider.of<RoutineProvider>(context, listen: true)
-                      //           .routineModels
-                      //           .map((_routine) {
-                      //     return Container(
-                      //       key: UniqueKey(),
-                      //       child: Routine(
-                      //         autoKey: _routine.key,
-                      //         name: _routine.name,
-                      //         color: Color(_routine.color),
-                      //         isListUp: true,
-                      //         days: _routine.days,
-                      //       ),
-                      //     );
-                      //   }).toList(),
-                      // ),
-                      ),
                 ],
               ),
             ],

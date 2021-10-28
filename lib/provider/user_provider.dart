@@ -17,6 +17,7 @@ import 'package:hr_app/models/workout_set.dart';
 import 'package:hr_app/provider/routine_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:hr_app/models/log_model.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class UserProvider with ChangeNotifier {
   // 로그인 관련된 변수
@@ -43,7 +44,8 @@ class UserProvider with ChangeNotifier {
 
   UserProvider() {
     _initHive().then((value) {
-      getHistory();
+      routineHistory =
+          _routineHistoryBox.get('history').cast<dynamic, dynamic>();
     });
     _init();
   }
@@ -59,8 +61,9 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void getHistory() {
-    routineHistory = _routineHistoryBox.get('history').cast<dynamic, dynamic>();
+  Map<dynamic, dynamic> getHistory() {
+    if (routineHistory == null) clearHistory();
+    return routineHistory;
   }
 
   void clearHistory() {
@@ -170,67 +173,71 @@ class UserProvider with ChangeNotifier {
       //DB의 루틴 컬렉션을 스냅샷으로 얻는다
       QuerySnapshot routineSnapshot = await routineDB.get();
       LoadedData loadedData = LoadedData();
-      for (int i = 0; i < routineSnapshot.size; i++) {
-        //컬렉션의 루틴 데이터
-        var rt = routineSnapshot.docs[i];
-        var rtName;
-        try {
-          rtName = rt.get('name');
-        } catch (e) {
-          continue;
-        }
-        List<WorkoutModel> workoutList = [];
-        //루틴 내부의 운동 리스트 하위 컬렉션을 얻는다.
-        var workoutSnapshot =
-            await routineDB.doc(rtName).collection('workoutList').get();
 
-        //운동 리스트를 순회한다.
-        for (int i = 0; i < workoutSnapshot.size; i++) {
-          //컬렉션의 운동 데이터
-          var wk = workoutSnapshot.docs[i];
-          var wkName = wk.get('name');
+      if (routineSnapshot.docs.isNotEmpty) {
+        for (int i = 0; i < routineSnapshot.size; i++) {
+          //컬렉션의 루틴 데이터
+          var rt = routineSnapshot.docs[i];
+          var rtName;
+          try {
+            rtName = rt.get('name');
+          } catch (e) {
+            continue;
+          }
+          List<WorkoutModel> workoutList = [];
+          //루틴 내부의 운동 리스트 하위 컬렉션을 얻는다.
+          var workoutSnapshot =
+              await routineDB.doc(rtName).collection('workoutList').get();
 
-          //컬렉션의 운동 세트 데이터
-          var setDataSnapshot = await routineDB
-              .doc(rtName)
-              .collection('workoutList')
-              .doc(wkName)
-              .collection('setData')
-              .get();
-          List<WorkoutSet> setData = [];
-          //setData를 뽑아낸다
-          for (int i = 0; i < setDataSnapshot.size; i++) {
-            var sd = setDataSnapshot.docs[i];
+          //운동 리스트를 순회한다.
+          for (int i = 0; i < workoutSnapshot.size; i++) {
+            //컬렉션의 운동 데이터
+            var wk = workoutSnapshot.docs[i];
+            var wkName = wk.get('name');
 
-            setData.add(WorkoutSet(
-              setCount: sd.get('setCount'),
-              repCount: sd.get('repCount'),
-              duration: sd.get('duration'),
-              weight: sd.get('weight'),
+            //컬렉션의 운동 세트 데이터
+            var setDataSnapshot = await routineDB
+                .doc(rtName)
+                .collection('workoutList')
+                .doc(wkName)
+                .collection('setData')
+                .get();
+            List<WorkoutSet> setData = [];
+            //setData를 뽑아낸다
+            for (int i = 0; i < setDataSnapshot.size; i++) {
+              var sd = setDataSnapshot.docs[i];
+
+              setData.add(WorkoutSet(
+                setCount: sd.get('setCount'),
+                repCount: sd.get('repCount'),
+                duration: sd.get('duration'),
+                weight: sd.get('weight'),
+              ));
+            }
+
+            List<String> tags = List<String>.from(wk.get('tags'));
+            //workdoutModel을 생성하여 workoutList에 삽입한다
+            workoutList.add(WorkoutModel(
+              autoKey: wk.get('key'),
+              name: wk.get('name'),
+              emoji: wk.get('emoji'),
+              tags: tags,
+              type: converter(wk.get('type')),
+              setData: setData,
             ));
           }
-
-          List<String> tags = List<String>.from(wk.get('tags'));
-          //workdoutModel을 생성하여 workoutList에 삽입한다
-          workoutList.add(WorkoutModel(
-            autoKey: wk.get('key'),
-            name: wk.get('name'),
-            emoji: wk.get('emoji'),
-            tags: tags,
-            type: converter(wk.get('type')),
-            setData: setData,
+          //운동 리스트를 만든 후 루틴 모델을 생성하여 loadedData에 삽입한다
+          List<String> days = List<String>.from(rt.get('days'));
+          loadedData.add(RoutineModel(
+            key: rt.get('key'),
+            name: rt.get('name'),
+            color: rt.get('color'),
+            days: days,
+            workoutModelList: workoutList,
           ));
         }
-        //운동 리스트를 만든 후 루틴 모델을 생성하여 loadedData에 삽입한다
-        List<String> days = List<String>.from(rt.get('days'));
-        loadedData.add(RoutineModel(
-          key: rt.get('key'),
-          name: rt.get('name'),
-          color: rt.get('color'),
-          days: days,
-          workoutModelList: workoutList,
-        ));
-      }
+      } else
+        print('');
 
       loadedData.show();
       loadedData.overwrite(context);
@@ -333,12 +340,30 @@ class UserProvider with ChangeNotifier {
 
   Future<bool> saveHistory(BuildContext context) async {
     Map<dynamic, dynamic> history = routineHistory;
-    final routineDB = await _db.collection('users').doc(currentUser.uid);
+    var routineDB = await _db.collection('users').doc(currentUser.uid);
 
-    var snapshots = await routineDB.collection(todayDate).get();
-    for (var doc in snapshots.docs) {
-      await doc.reference.delete();
-    }
+    //모든 히스토리를 다 지우고 다시 저장한다
+    FirebaseFirestore.instance
+        .collection(todayDate)
+        .snapshots()
+        .forEach((querySnapshot) {
+      for (QueryDocumentSnapshot docSnapshot in querySnapshot.docs) {
+        print(docSnapshot.reference);
+        docSnapshot.reference.delete();
+      }
+    });
+    // routineDB.collection(todayDate).get().then((querySnapshot) {
+    //   querySnapshot.docs.forEach((doc) async {
+    //     print(doc.reference);
+    //     await doc.reference.delete();
+    //   });
+    // });
+
+    // final collectionRef = FirebaseFirestore.instance.collection(todayDate);
+    // final futureQuery = collectionRef.get();
+    // await futureQuery.then((value) => value.docs.forEach((element) {
+    //       element.reference.delete();
+    //     }));
     // 루틴 기록을 firebase에 저장한다
 
     history.forEach((key, value) {
