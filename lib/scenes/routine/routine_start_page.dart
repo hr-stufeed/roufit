@@ -268,6 +268,12 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
     );
   }
 
+  void deactivate() {
+    Provider.of<RoutineProvider>(context, listen: false).selInit();
+
+    super.deactivate();
+  }
+
   @override
   void initState() {
     Provider.of<LogProvider>(context, listen: false).load();
