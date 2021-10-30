@@ -140,6 +140,12 @@ enum WorkoutState {
   onResult,
 }
 
+enum RoutineType {
+  onHomePage,
+  onList,
+  onHistory,
+}
+
 class Day {
   String day;
   int order;

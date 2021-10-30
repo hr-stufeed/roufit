@@ -90,7 +90,7 @@ class _RoutineHistoryPageState extends State<RoutineHistoryPage> {
                                               autoKey: rt.key,
                                               name: rt.name,
                                               color: Color(rt.color),
-                                              isListUp: true,
+                                              type: RoutineType.onHistory,
                                               days: rt.days,
                                               workoutModelList:
                                                   rt.workoutModelList,

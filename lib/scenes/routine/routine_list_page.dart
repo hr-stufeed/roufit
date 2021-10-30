@@ -75,7 +75,7 @@ class _RoutineListPageState extends State<RoutineListPage> {
                           autoKey: _routine.key,
                           name: _routine.name,
                           color: Color(_routine.color),
-                          isListUp: true,
+                          type: RoutineType.onList,
                           days: _routine.days,
                           workoutModelList: _routine.workoutModelList,
                         ),

@@ -92,8 +92,8 @@ class _HomePageState extends State<HomePage> {
         autoKey: _todayRoutines[index].key,
         name: _todayRoutines[index].name,
         color: Color(_todayRoutines[index].color),
-        isListUp: false,
         days: _todayRoutines[index].days,
+        type: RoutineType.onHomePage,
         workoutModelList: _todayRoutines[index].workoutModelList,
       ),
     );
