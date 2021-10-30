@@ -77,6 +77,7 @@ class _RoutineListPageState extends State<RoutineListPage> {
                           color: Color(_routine.color),
                           isListUp: true,
                           days: _routine.days,
+                          workoutModelList: _routine.workoutModelList,
                         ),
                       );
                     }).toList(),
