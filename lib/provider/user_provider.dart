@@ -350,6 +350,7 @@ class UserProvider with ChangeNotifier {
       //  var fromDate = DateFormat('yyyy-MM-dd')
       //     .format(DateTime.now().subtract(Duration(days: 1)));
       DateTime rawDate = DateTime.now();
+      rawDate = rawDate.subtract(Duration(days: 14));
       for (int i = 0; i < 15; i++) {
         String date = DateFormat('yyyy-MM-dd').format(rawDate);
         var snapshots = await routineDB.collection(date).get();
@@ -403,7 +404,6 @@ class UserProvider with ChangeNotifier {
               setData: setData,
             ));
           }
-          //운동 리스트를 만든 후 루틴 모델을 생성하여 loadedData에 삽입한다
           List<String> days = List<String>.from(rt.get('days'));
 
           newHistory.putIfAbsent(date, () => <RoutineModel>[]).add(RoutineModel(
@@ -414,7 +414,7 @@ class UserProvider with ChangeNotifier {
                 workoutModelList: workoutList,
               ));
         }
-        rawDate = rawDate.subtract(Duration(days: 1));
+        rawDate = rawDate.add(Duration(days: 1));
       }
 
       routineHistory = newHistory;

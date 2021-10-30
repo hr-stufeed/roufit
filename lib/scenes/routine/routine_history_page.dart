@@ -57,50 +57,64 @@ class _RoutineHistoryPageState extends State<RoutineHistoryPage> {
                   kSizedBoxBetweenItems,
                   routineHistory.keys.length == 0
                       ? Expanded(
-                          flex: 2,
-                          child: Center(child: Text('오늘의 루틴을 추가해주세요.')))
+                          flex: 2, child: Center(child: Text('루틴 기록이 없습니다')))
                       : Expanded(
+                          child: Align(
+                          alignment: Alignment.topCenter,
                           child: ListView.builder(
-                          itemCount: routineHistory.keys.length,
-                          itemBuilder: (context, index) {
-                            String key = routineHistory.keys.elementAt(index);
+                            shrinkWrap: true,
+                            reverse: true,
+                            itemCount: routineHistory.keys.length,
+                            itemBuilder: (context, index) {
+                              String key = routineHistory.keys.elementAt(index);
+                              String date = key.split('-')[0] +
+                                  "년 " +
+                                  key.split('-')[1] +
+                                  "월 " +
+                                  key.split('-')[2] +
+                                  "일";
 
-                            return Column(
-                              children: [
-                                Text(
-                                  key,
-                                  style: kPageSubTitleStyle,
-                                ),
-                                Column(
-                                  children: routineHistory[key]
-                                      .map<Widget>((rt) => Routine(
-                                            autoKey: rt.key,
-                                            name: rt.name,
-                                            color: Color(rt.color),
-                                            isListUp: true,
-                                            days: rt.days,
-                                            workoutModelList:
-                                                rt.workoutModelList,
-                                          ))
-                                      .toList(),
-                                ),
-                              ],
-                            );
-                            // return Routine(
-                            //   autoKey: routineHistory[key][0].key,
-                            //   name: routineHistory[key][0].name,
-                            //   color: Color(routineHistory[key][0].color),
-                            //   isListUp: true,
-                            //   days: routineHistory[key][0].days,
-                            // );
-                            // return Routine(
-                            //   autoKey: routineHistory["2021-10-20"][0].key,
-                            //   name: routineHistory["2021-10-20"][0].name,
-                            //   color: Color(routineHistory["2021-10-20"][0].color),
-                            //   isListUp: true,
-                            //   days: routineHistory["2021-10-20"][0].days,
-                            // );
-                          },
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      date,
+                                      style: kPageSubTitleStyle,
+                                    ),
+                                  ),
+                                  Column(
+                                    children: routineHistory[key]
+                                        .map<Widget>((rt) => Routine(
+                                              autoKey: rt.key,
+                                              name: rt.name,
+                                              color: Color(rt.color),
+                                              isListUp: true,
+                                              days: rt.days,
+                                              workoutModelList:
+                                                  rt.workoutModelList,
+                                            ))
+                                        .toList(),
+                                  ),
+                                ],
+                              );
+                              // return Routine(
+                              //   autoKey: routineHistory[key][0].key,
+                              //   name: routineHistory[key][0].name,
+                              //   color: Color(routineHistory[key][0].color),
+                              //   isListUp: true,
+                              //   days: routineHistory[key][0].days,
+                              // );
+                              // return Routine(
+                              //   autoKey: routineHistory["2021-10-20"][0].key,
+                              //   name: routineHistory["2021-10-20"][0].name,
+                              //   color: Color(routineHistory["2021-10-20"][0].color),
+                              //   isListUp: true,
+                              //   days: routineHistory["2021-10-20"][0].days,
+                              // );
+                            },
+                          ),
                         )
                           // child: ReorderableColumn(
                           //   scrollController: _scrollController,
