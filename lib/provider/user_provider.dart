@@ -413,6 +413,7 @@ class UserProvider with ChangeNotifier {
                 color: rt.get('color'),
                 days: days,
                 workoutModelList: workoutList,
+                finishedTime: rt.get('finishedTime'),
               ));
         }
         rawDate = rawDate.add(Duration(days: 1));
@@ -429,22 +430,6 @@ class UserProvider with ChangeNotifier {
     Map<dynamic, dynamic> history = routineHistory;
     var routineDB = _db.collection('users').doc(currentUser.uid);
 
-    //모든 히스토리를 다 지우고 다시 저장한다
-    // if (dates.isNotEmpty) {
-    //   dates.forEach((date) async {
-    //     var snapshots = await routineDB.collection(date).get();
-    //     for (QueryDocumentSnapshot doc in snapshots.docs) {
-    //       await doc.reference.delete();
-    //     }
-    //   });
-    // }
-    // dates.forEach((date) async {
-    //   var snapshots = await routineDB.collection(date).get();
-    //   for (QueryDocumentSnapshot doc in snapshots.docs) {
-    //     await doc.reference.delete();
-    //   }
-    // });
-
     history.forEach((key, value) async {
       var dateKeys = await routineDB.collection(key).get();
       var date = routineDB.collection(key);
@@ -459,6 +444,7 @@ class UserProvider with ChangeNotifier {
           'name': rt.name,
           'color': rt.color,
           'days': rt.days,
+          'finishedTime': rt.finishedTime,
         });
         rt.workoutModelList.forEach((workout) {
           routine.collection('workoutList').doc(workout.name).set(
