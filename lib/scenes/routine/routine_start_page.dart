@@ -53,7 +53,7 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
   CountDownController _countDownController = CountDownController();
 
   playLocal() async {
-    final player= AudioCache();
+    final player = AudioCache();
     await player.play('sound/boop.wav');
 
     // int result = await audioPlayer.play('assets/sound/boop.mp3', );
@@ -154,6 +154,7 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
           dateTime: DateTime.now(),
           totalTime: totalTime,
           routineModel: _selRoutine);
+      _selRoutine.finishedTime = totalTime;
       //루틴 종료
       Provider.of<UserProvider>(context, listen: false).setLog(_logData);
       Provider.of<UserProvider>(context, listen: false)
@@ -162,14 +163,13 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
           .setWorkoutTime(totalTime);
       Provider.of<UserProvider>(context, listen: false)
           .setWorkoutWeight(_totalWeight);
-      Provider.of<UserProvider>(context, listen: false).addRoutineHistory(
-          DateFormat('yyyy-MM-dd').format(DateTime.now()), _selRoutine);
+      Provider.of<UserProvider>(context, listen: false)
+          .addRoutineHistory(DateTime.now(), _selRoutine);
       Navigator.pushReplacementNamed(context, 'Routine_finish_page');
     }
   }
 
   restTimer() {
-
     setState(() {
       if (_workoutCount == _selRoutine.workoutModelList.length - 1 &&
           _setCount >= _selWorkout.setData.length.abs()) {

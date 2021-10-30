@@ -327,8 +327,9 @@ class UserProvider with ChangeNotifier {
     return thisWeekWorkoutWeight;
   }
 
-  void addRoutineHistory(String date, RoutineModel rt) {
+  void addRoutineHistory(DateTime time, RoutineModel rt) {
     try {
+      String date = DateFormat('yyyy-MM-dd').format(time);
       routineHistory.putIfAbsent(date, () => <RoutineModel>[]).add(rt);
       if (!dates.contains(date)) dates.add(date);
     } catch (e) {

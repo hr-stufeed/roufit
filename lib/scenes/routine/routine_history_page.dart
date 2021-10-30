@@ -94,6 +94,7 @@ class _RoutineHistoryPageState extends State<RoutineHistoryPage> {
                                               days: rt.days,
                                               workoutModelList:
                                                   rt.workoutModelList,
+                                              finishedTime: rt.finishedTime,
                                             ))
                                         .toList(),
                                   ),

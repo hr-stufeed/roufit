@@ -4,12 +4,14 @@ import 'package:hr_app/provider/routine_provider.dart';
 import 'package:hr_app/provider/timer_provider.dart';
 import 'package:hr_app/models/workout_model.dart';
 import 'package:provider/provider.dart';
+import 'package:hr_app/provider/log_provider.dart';
 
 class Routine extends StatefulWidget {
   final String autoKey;
   final String name;
   final Color color;
   final List<String> days;
+  final int finishedTime;
   Set<String> tags;
 
   List<WorkoutModel> workoutModelList;
@@ -20,6 +22,7 @@ class Routine extends StatefulWidget {
     this.autoKey,
     this.name = '루틴 이름',
     this.color = Colors.lightBlueAccent,
+    this.finishedTime,
     this.type = RoutineType.onList,
     this.isSelected = false,
     this.days,
@@ -295,7 +298,7 @@ class HomePageRoutine extends StatelessWidget {
   }
 }
 
-//홈페이지에 루틴이 띄워질 때 리턴 값
+//루틴 기록에 루틴이 띄워질 때 리턴 값
 class HistoryRoutine extends StatelessWidget {
   const HistoryRoutine({
     Key key,
@@ -307,6 +310,7 @@ class HistoryRoutine extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
     return InkWell(
       onTap: !widget.isSelected
           ? () {
@@ -335,20 +339,15 @@ class HistoryRoutine extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  widget.name,
-                  style: kRoutineTitleStyle,
-                ),
-                widget._popup(context),
-              ],
+            Text(
+              widget.name,
+              style: kRoutineTitleStyle,
             ),
             SizedBox(
               height: 8.0,
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
                   children: widget.tags
@@ -366,21 +365,17 @@ class HistoryRoutine extends StatelessWidget {
                         style: kRoutineTagStyle,
                       )
                     : Text(''),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
                 Row(
-                  children: widget.days
-                      .map(
-                        (day) => Text(
-                          '$day ',
-                          style: kRoutineTagStyle,
-                        ),
-                      )
-                      .toList(),
+                  children: [
+                    Icon(
+                      Icons.access_alarm_outlined,
+                      color: Colors.white,
+                    ),
+                    Text(
+                      ' ${Duration(seconds: widget.finishedTime).toString().split('.').first.padLeft(8, "0")}',
+                      style: kRoutineTagStyle,
+                    )
+                  ],
                 ),
               ],
             ),

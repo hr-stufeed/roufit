@@ -20,14 +20,17 @@ class RoutineModel {
   List<String> days;
   @HiveField(6)
   int restTime;
+  @HiveField(7)
+  int finishedTime;
 
-  RoutineModel(
-      {this.key,
-      this.name,
-      this.color,
-      this.isListUp = true,
-      this.workoutModelList,
-      this.days,
-      this.restTime = 0,
-      });
+  RoutineModel({
+    this.key,
+    this.name,
+    this.color,
+    this.isListUp = true,
+    this.workoutModelList,
+    this.days,
+    this.restTime = 0,
+    this.finishedTime,
+  });
 }

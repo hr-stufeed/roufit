@@ -24,6 +24,7 @@ class RoutineModelAdapter extends TypeAdapter<RoutineModel> {
       workoutModelList: (fields[4] as List)?.cast<WorkoutModel>(),
       days: (fields[5] as List)?.cast<String>(),
       restTime: fields[6] as int,
+      finishedTime: fields[7] as int,
     );
   }
 
@@ -44,7 +45,9 @@ class RoutineModelAdapter extends TypeAdapter<RoutineModel> {
       ..writeByte(5)
       ..write(obj.days)
       ..writeByte(6)
-      ..write(obj.restTime);
+      ..write(obj.restTime)
+      ..writeByte(7)
+      ..write(obj.finishedTime);
   }
 
   @override
