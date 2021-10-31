@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
+import 'package:hr_app/models/log_model.dart';
 import 'package:hr_app/provider/user_provider.dart';
 import 'package:hr_app/widgets/routine.dart';
 import 'package:hr_app/models/routine_model.dart';
@@ -73,7 +74,7 @@ class _RoutineHistoryPageState extends State<RoutineHistoryPage> {
                                   "월 " +
                                   key.split('-')[2] +
                                   "일";
-
+                              LogModel logData;
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -86,15 +87,18 @@ class _RoutineHistoryPageState extends State<RoutineHistoryPage> {
                                   ),
                                   Column(
                                     children: routineHistory[key]
-                                        .map<Widget>((rt) => Routine(
-                                              autoKey: rt.key,
-                                              name: rt.name,
-                                              color: Color(rt.color),
+                                        .map<Widget>((log) => Routine(
+                                              autoKey: log.routineModel.key,
+                                              name: log.routineModel.name,
+                                              color:
+                                                  Color(log.routineModel.color),
                                               type: RoutineType.onHistory,
-                                              days: rt.days,
-                                              workoutModelList:
-                                                  rt.workoutModelList,
-                                              finishedTime: rt.finishedTime,
+                                              days: log.routineModel.days,
+                                              workoutModelList: log.routineModel
+                                                  .workoutModelList,
+                                              finishedTime:
+                                                  log.routineModel.finishedTime,
+                                              logData: log,
                                             ))
                                         .toList(),
                                   ),

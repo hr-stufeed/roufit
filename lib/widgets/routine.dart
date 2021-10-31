@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
+import 'package:hr_app/models/log_model.dart';
 import 'package:hr_app/provider/routine_provider.dart';
 import 'package:hr_app/provider/timer_provider.dart';
 import 'package:hr_app/models/workout_model.dart';
@@ -12,6 +13,7 @@ class Routine extends StatefulWidget {
   final Color color;
   final List<String> days;
   final int finishedTime;
+  final LogModel logData;
   Set<String> tags;
 
   List<WorkoutModel> workoutModelList;
@@ -28,6 +30,7 @@ class Routine extends StatefulWidget {
     this.days,
     this.workoutModelList,
     this.tags,
+    this.logData,
   });
 
   Widget _popup(BuildContext context) => PopupMenuButton<int>(
@@ -57,9 +60,6 @@ class Routine extends StatefulWidget {
       );
 
   void initTags(BuildContext context) {
-    // workoutModelList = Provider.of<RoutineProvider>(context, listen: false)
-    //     .find(autoKey)
-    //     .workoutModelList;
     tags = {};
     try {
       workoutModelList.forEach((workoutModel) {
@@ -316,7 +316,9 @@ class HistoryRoutine extends StatelessWidget {
           ? () {
               Provider.of<RoutineProvider>(context, listen: false)
                   .sel(widget.autoKey);
-              Navigator.pushNamed(context, 'Routine_workout_page');
+              Provider.of<LogProvider>(context, listen: false).selLog =
+                  widget.logData;
+              Navigator.pushNamed(context, 'Routine_finish_page');
             }
           : () => {},
       splashColor: Colors.transparent,

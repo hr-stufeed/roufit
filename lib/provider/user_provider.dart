@@ -36,7 +36,6 @@ class UserProvider with ChangeNotifier {
 
   // Hive 저장 변수
   var _routineHistoryBox;
-  List<String> dates = [];
   Map<dynamic, dynamic> routineHistory = {};
   String todayDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
   int thisWeekWorkoutCount = 0;
@@ -47,7 +46,6 @@ class UserProvider with ChangeNotifier {
     _initHive().then((value) {
       routineHistory =
           _routineHistoryBox.get('history').cast<dynamic, dynamic>();
-      dates = routineHistory.keys;
     });
     _init();
   }
@@ -171,7 +169,7 @@ class UserProvider with ChangeNotifier {
       final routineDB =
           _db.collection('users').doc(currentUser.uid).collection('routines');
 
-      await routineDB.doc('delete this').delete();
+      //await routineDB.doc('delete this').delete();
       //DB의 루틴 컬렉션을 스냅샷으로 얻는다
       QuerySnapshot routineSnapshot = await routineDB.get();
       LoadedData loadedData = LoadedData();
@@ -327,11 +325,11 @@ class UserProvider with ChangeNotifier {
     return thisWeekWorkoutWeight;
   }
 
-  void addRoutineHistory(DateTime time, RoutineModel rt) {
+  void addRoutineHistory(DateTime time, RoutineModel rt, LogModel _logData) {
     try {
       String date = DateFormat('yyyy-MM-dd').format(time);
-      routineHistory.putIfAbsent(date, () => <RoutineModel>[]).add(rt);
-      if (!dates.contains(date)) dates.add(date);
+      routineHistory.putIfAbsent(date, () => <LogModel>[]).add(_logData);
+      // setLog(_logData);
     } catch (e) {
       print(e);
     }

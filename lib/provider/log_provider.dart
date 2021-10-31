@@ -12,6 +12,7 @@ class LogProvider with ChangeNotifier {
   }
 
   LogModel get selLog => _selLog;
+  set selLog(LogModel _logData) => _selLog = _logData;
 
   void add(RoutineModel routineModel, int totalTime) async {
     var _box = await Hive.openBox<LogModel>('log');

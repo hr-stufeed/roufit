@@ -9,7 +9,6 @@ import 'package:hr_app/provider/timer_provider.dart';
 import 'package:hr_app/provider/workout_provider.dart';
 import 'package:hr_app/models/workout_set.dart';
 import 'package:hr_app/scenes/Firebase_Init.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:hr_app/scenes/log_in_page.dart';
 
 import 'package:hr_app/scenes/home_page.dart';

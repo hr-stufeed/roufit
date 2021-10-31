@@ -93,12 +93,12 @@ class _LoginWidgetState extends State<LoginWidget> {
 
     var _db = FirebaseFirestore.instance;
     //더미 루틴 데이터 생성
-    _db
-        .collection('users')
-        .doc(currentUser.uid)
-        .collection('routines')
-        .doc('delete this')
-        .set({});
+    // _db
+    //     .collection('users')
+    //     .doc(currentUser.uid)
+    //     .collection('routines')
+    //     .doc('delete this')
+    //     .set({});
 
     _db.collection('users').doc(user.uid).set({
       'email': user.email,

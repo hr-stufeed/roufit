@@ -164,7 +164,7 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
       Provider.of<UserProvider>(context, listen: false)
           .setWorkoutWeight(_totalWeight);
       Provider.of<UserProvider>(context, listen: false)
-          .addRoutineHistory(DateTime.now(), _selRoutine);
+          .addRoutineHistory(DateTime.now(), _selRoutine, _logData);
       Navigator.pushReplacementNamed(context, 'Routine_finish_page');
     }
   }
