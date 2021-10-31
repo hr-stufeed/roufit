@@ -53,6 +53,7 @@ dependencies:
   audioplayers: ^0.20.1
   shared_preferences: ^2.0.5
   fl_chart: ^0.40.0
+  table_calendar: ^3.0.3
 
 dev_dependencies:
   flutter_test:

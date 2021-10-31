@@ -10,7 +10,7 @@ import 'package:hr_app/provider/workout_provider.dart';
 import 'package:hr_app/models/workout_set.dart';
 import 'package:hr_app/scenes/Firebase_Init.dart';
 import 'package:hr_app/scenes/log_in_page.dart';
-
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:hr_app/scenes/home_page.dart';
 import 'package:hr_app/scenes/statistics.dart';
 import 'package:hr_app/scenes/profile_page.dart';
@@ -40,8 +40,7 @@ void main() async {
   Hive.registerAdapter(WorkoutTypeAdapter());
   Hive.registerAdapter(WorkoutSetAdapter());
   Hive.registerAdapter(LogModelAdapter());
-
-  runApp(MyApp());
+  initializeDateFormatting().then((value) => runApp(MyApp()));
 }
 
 class MyApp extends StatefulWidget {
