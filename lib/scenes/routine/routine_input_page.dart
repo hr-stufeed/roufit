@@ -114,7 +114,7 @@ class _RoutineInputPageState extends State<RoutineInputPage> {
                               day: day,
                               selectedDays: selectedDays,
                               onTap: roundCheckTap,
-                              //isModify: sortedSelectedDays.contains(day.day),
+                              isModify: sortedSelectedDays.contains(day.day),
                             ))
                         .toList(),
                   ),
