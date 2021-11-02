@@ -168,19 +168,16 @@ class _MyPageState extends State<MyPage> {
                 lastDay: DateTime.utc(2030, 3, 14),
                 focusedDay: _focusedDay,
                 eventLoader: (day) {
-                  List<Widget> count = [];
-                  routineHistory.values.toList()[0].forEach((element) {
-                    if (getHashCode(day) ==
-                        getHashCode(
-                            routineHistory.values.toList()[0][0].dateTime)) {
-                      count.add(SizedBox());
-                    }
-                  });
-                  print(count);
-                  print(getHashCode(
-                      routineHistory.values.toList()[0][0].dateTime));
-                  print(getHashCode(day));
-
+                  List count = [];
+                  if (routineHistory.isNotEmpty) {
+                    routineHistory.values.toList()[0].forEach((element) {
+                      if (getHashCode(day) ==
+                          getHashCode(
+                              routineHistory.values.toList()[0][0].dateTime)) {
+                        count.add('');
+                      }
+                    });
+                  }
                   return count;
                 },
                 selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
