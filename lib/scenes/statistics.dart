@@ -163,6 +163,21 @@ class _MyPageState extends State<MyPage> {
             Expanded(
               child: TableCalendar(
                 shouldFillViewport: true,
+                headerStyle: HeaderStyle(
+                  headerMargin:
+                      EdgeInsets.only(left: 40, top: 10, right: 40, bottom: 10),
+                  titleCentered: true,
+                  formatButtonVisible: false,
+                  leftChevronIcon: Icon(Icons.arrow_left),
+                  rightChevronIcon: Icon(Icons.arrow_right),
+                  titleTextStyle: const TextStyle(fontSize: 17.0),
+                ),
+                calendarStyle: CalendarStyle(
+                  outsideDaysVisible: true,
+                  weekendTextStyle: TextStyle().copyWith(color: Colors.red),
+                  holidayTextStyle:
+                      TextStyle().copyWith(color: Colors.blue[800]),
+                ),
                 locale: 'ko-KR',
                 firstDay: DateTime.utc(2010, 10, 16),
                 lastDay: DateTime.utc(2030, 3, 14),

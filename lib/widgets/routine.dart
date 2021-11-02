@@ -374,7 +374,7 @@ class HistoryRoutine extends StatelessWidget {
                       color: Colors.white,
                     ),
                     Text(
-                      ' ${Duration(seconds: widget.finishedTime).toString().split('.').first.padLeft(8, "0")}',
+                      ' ${Duration(seconds: widget.logData.totalTime).toString().split('.').first.padLeft(8, "0")}',
                       style: kRoutineTagStyle,
                     )
                   ],

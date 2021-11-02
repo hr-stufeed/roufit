@@ -329,7 +329,6 @@ class UserProvider with ChangeNotifier {
     try {
       String date = DateFormat('yyyy-MM-dd').format(time);
       routineHistory.putIfAbsent(date, () => <LogModel>[]).add(_logData);
-      // setLog(_logData);
     } catch (e) {
       print(e);
     }
@@ -404,15 +403,17 @@ class UserProvider with ChangeNotifier {
             ));
           }
           List<String> days = List<String>.from(rt.get('days'));
-
-          newHistory.putIfAbsent(date, () => <RoutineModel>[]).add(RoutineModel(
-                key: rt.get('key'),
-                name: rt.get('name'),
-                color: rt.get('color'),
-                days: days,
-                workoutModelList: workoutList,
-                finishedTime: rt.get('finishedTime'),
-              ));
+          RoutineModel rtModel = RoutineModel(
+            key: rt.get('key'),
+            name: rt.get('name'),
+            color: rt.get('color'),
+            days: days,
+            workoutModelList: workoutList,
+          );
+          newHistory.putIfAbsent(date, () => <LogModel>[]).add(LogModel(
+              dateTime: rt.get('dateTime').toDate(),
+              totalTime: rt.get('totalTime'),
+              routineModel: rtModel));
         }
         rawDate = rawDate.add(Duration(days: 1));
       }
@@ -425,26 +426,30 @@ class UserProvider with ChangeNotifier {
   }
 
   Future<bool> saveHistory(BuildContext context) async {
+    //Map<String,List<LogModel>>
     Map<dynamic, dynamic> history = routineHistory;
     var routineDB = _db.collection('users').doc(currentUser.uid);
 
-    history.forEach((key, value) async {
+    history.forEach((key, listLogModel) async {
       var dateKeys = await routineDB.collection(key).get();
       var date = routineDB.collection(key);
 
       for (QueryDocumentSnapshot doc in dateKeys.docs) {
         await doc.reference.delete();
       }
-      value.forEach((rt) {
-        var routine = date.doc(rt.name + ' ' + random().toString());
+
+      listLogModel.forEach((log) {
+        var routine =
+            date.doc(log.routineModel.name + ' ' + random().toString());
         routine.set({
-          'key': rt.key,
-          'name': rt.name,
-          'color': rt.color,
-          'days': rt.days,
-          'finishedTime': rt.finishedTime,
+          'key': log.routineModel.key,
+          'name': log.routineModel.name,
+          'color': log.routineModel.color,
+          'days': log.routineModel.days,
+          'totalTime': log.totalTime,
+          'dateTime': log.dateTime,
         });
-        rt.workoutModelList.forEach((workout) {
+        log.routineModel.workoutModelList.forEach((workout) {
           routine.collection('workoutList').doc(workout.name).set(
             {
               'key': workout.autoKey,
