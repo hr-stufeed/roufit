@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:hr_app/models/log_model.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:hr_app/provider/user_provider.dart';
@@ -16,6 +17,31 @@ class _MyPageState extends State<MyPage> {
     const Color(0xff23b6ed),
     const Color(0xff02d39a),
   ];
+
+  DateTime _focusedDay = DateTime.now();
+  DateTime _selectedDay;
+  Map routineHistory;
+
+  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+    print(selectedDay);
+    if (!isSameDay(_selectedDay, selectedDay)) {
+      setState(() {
+        _selectedDay = selectedDay;
+        _focusedDay = focusedDay;
+      });
+    }
+  }
+
+  int getHashCode(DateTime key) {
+    return key.day * 1000000 + key.month * 10000 + key.year;
+  }
+
+  @override
+  void initState() {
+    routineHistory =
+        Provider.of<UserProvider>(context, listen: false).getHistory();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +155,7 @@ class _MyPageState extends State<MyPage> {
                     padding: const EdgeInsets.all(4.0),
                     child: Text('전체보기',
                         style: kPageSubTitleStyle.copyWith(
-                            fontSize: 16, color: ThemeData().accentColor)),
+                            fontSize: 16, color: ThemeData().primaryColor)),
                   ),
                 ),
               ],
@@ -140,7 +166,25 @@ class _MyPageState extends State<MyPage> {
                 locale: 'ko-KR',
                 firstDay: DateTime.utc(2010, 10, 16),
                 lastDay: DateTime.utc(2030, 3, 14),
-                focusedDay: DateTime.now(),
+                focusedDay: _focusedDay,
+                eventLoader: (day) {
+                  List<Widget> count = [];
+                  routineHistory.values.toList()[0].forEach((element) {
+                    if (getHashCode(day) ==
+                        getHashCode(
+                            routineHistory.values.toList()[0][0].dateTime)) {
+                      count.add(SizedBox());
+                    }
+                  });
+                  print(count);
+                  print(getHashCode(
+                      routineHistory.values.toList()[0][0].dateTime));
+                  print(getHashCode(day));
+
+                  return count;
+                },
+                selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                onDaySelected: _onDaySelected,
               ),
             ),
             // Expanded(
