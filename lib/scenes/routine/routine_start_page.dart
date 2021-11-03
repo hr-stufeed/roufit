@@ -55,8 +55,6 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
   playLocal() async {
     final player = AudioCache();
     await player.play('sound/boop.wav');
-
-    // int result = await audioPlayer.play('assets/sound/boop.mp3', );
   }
 
   changeWorkout() {
@@ -109,17 +107,18 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
   }
 
   onComplete() {
-    playLocal();
+    if (_workoutCount == _selRoutine.workoutModelList.length - 1 &&
+        _setCount >= _selWorkout.setData.length.abs()) {
+      goFinishPage();
+    } else if (timeStatus == setRestTime) {
+      playLocal();
 
-    goFinishPage();
-
-    print('onComplete ${timeStatus}');
-
-    if (timeStatus == setRestTime) {
       print('set');
       timeStatus = setTime;
       changeWorkout();
     } else if (timeStatus == setTime) {
+      playLocal();
+
       print('rest');
       timeStatus = restTime;
       print('length');
@@ -141,36 +140,36 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
   }
 
   goFinishPage() {
-    if (_workoutCount == _selRoutine.workoutModelList.length - 1 &&
-        _setCount >= _selWorkout.setData.length.abs()) {
-      _workoutCount = _selRoutine.workoutModelList.length;
-      int totalTime = Provider.of<TimerProvider>(context, listen: false)
-          .routineTimer
-          .inSeconds;
-      Provider.of<LogProvider>(context, listen: false)
-          .add(_selRoutine, totalTime);
+    print('FinishPage');
+    _workoutCount = _selRoutine.workoutModelList.length;
+    int totalTime = Provider.of<TimerProvider>(context, listen: false)
+        .routineTimer
+        .inSeconds;
+    Provider.of<LogProvider>(context, listen: false)
+        .add(_selRoutine, totalTime);
 
-      LogModel _logData = LogModel(
-          dateTime: DateTime.now(),
-          totalTime: totalTime,
-          routineModel: _selRoutine);
-      _selRoutine.finishedTime = totalTime;
-      //루틴 종료
-      Provider.of<UserProvider>(context, listen: false).setLog(_logData);
-      Provider.of<UserProvider>(context, listen: false)
-          .setWorkoutCount(_workoutCount);
-      Provider.of<UserProvider>(context, listen: false)
-          .setWorkoutTime(totalTime);
-      Provider.of<UserProvider>(context, listen: false)
-          .setWorkoutWeight(_totalWeight);
-      Provider.of<UserProvider>(context, listen: false)
-          .addRoutineHistory(DateTime.now(), _selRoutine, _logData);
-      Navigator.pushReplacementNamed(context, 'Routine_finish_page');
-    }
+    LogModel _logData = LogModel(
+        dateTime: DateTime.now(),
+        totalTime: totalTime,
+        routineModel: _selRoutine);
+    _selRoutine.finishedTime = totalTime;
+    //루틴 종료
+    Provider.of<UserProvider>(context, listen: false).setLog(_logData);
+    Provider.of<UserProvider>(context, listen: false)
+        .setWorkoutCount(_workoutCount);
+    Provider.of<UserProvider>(context, listen: false).setWorkoutTime(totalTime);
+    Provider.of<UserProvider>(context, listen: false)
+        .setWorkoutWeight(_totalWeight);
+    Provider.of<UserProvider>(context, listen: false)
+        .addRoutineHistory(DateTime.now(), _selRoutine, _logData);
+    Navigator.pushReplacementNamed(context, 'Routine_finish_page');
   }
 
   restTimer() {
     setState(() {
+      print('restTimer');
+      print(_workoutCount);
+      print(_setCount);
       if (_workoutCount == _selRoutine.workoutModelList.length - 1 &&
           _setCount >= _selWorkout.setData.length.abs()) {
         goFinishPage();
@@ -199,7 +198,7 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
     if (type == WorkoutType.setWeight) {
       _countDownController.restart(duration: 250);
 
-      Future.delayed(Duration(milliseconds: 250), () {
+      Future.delayed(Duration(milliseconds: 260), () {
         if (_setCount == _selWorkout.setData.length.abs()) {
           _countDownController.reset(duration: _workoutSet.duration * 1000);
           timeStatus = setRestTime;

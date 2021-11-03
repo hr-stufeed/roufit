@@ -329,10 +329,11 @@ class UserProvider with ChangeNotifier {
     try {
       String date = DateFormat('yyyy-MM-dd').format(time);
       routineHistory.putIfAbsent(date, () => <LogModel>[]).add(_logData);
+      _routineHistoryBox.put('history', routineHistory);
     } catch (e) {
       print(e);
     }
-    _routineHistoryBox.put('history', routineHistory);
+
     notifyListeners();
   }
 
