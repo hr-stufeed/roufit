@@ -31,7 +31,7 @@ class RoutineModelAdapter extends TypeAdapter<RoutineModel> {
   @override
   void write(BinaryWriter writer, RoutineModel obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.key)
       ..writeByte(1)

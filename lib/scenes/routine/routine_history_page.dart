@@ -74,7 +74,6 @@ class _RoutineHistoryPageState extends State<RoutineHistoryPage> {
                                   "월 " +
                                   key.split('-')[2] +
                                   "일";
-                              LogModel logData;
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [

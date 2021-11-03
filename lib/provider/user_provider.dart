@@ -345,14 +345,14 @@ class UserProvider with ChangeNotifier {
       DocumentReference<Map<String, dynamic>> routineDB =
           _db.collection('users').doc(currentUser.uid);
       Map<dynamic, dynamic> newHistory = {};
-      //  var fromDate = DateFormat('yyyy-MM-dd')
-      //     .format(DateTime.now().subtract(Duration(days: 1)));
       DateTime rawDate = DateTime.now();
       rawDate = rawDate.subtract(Duration(days: 14));
+
       for (int i = 0; i < 15; i++) {
         String date = DateFormat('yyyy-MM-dd').format(rawDate);
         var snapshots = await routineDB.collection(date).get();
         var dateKey = routineDB.collection(date);
+
         for (QueryDocumentSnapshot rt in snapshots.docs) {
           var rtName;
           try {
@@ -415,6 +415,7 @@ class UserProvider with ChangeNotifier {
               totalTime: rt.get('totalTime'),
               routineModel: rtModel));
         }
+
         rawDate = rawDate.add(Duration(days: 1));
       }
 

@@ -13,9 +13,13 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
-  final List<Color> lineColors = [
+  final List<Color> todayColors = [
     const Color(0xff23b6ed),
     const Color(0xff02d39a),
+  ];
+  final List<Color> selectedColors = [
+    Colors.red,
+    Colors.blue,
   ];
 
   DateTime _focusedDay = DateTime.now();
@@ -173,22 +177,50 @@ class _MyPageState extends State<MyPage> {
                   titleTextStyle: const TextStyle(fontSize: 17.0),
                 ),
                 calendarStyle: CalendarStyle(
+                  todayDecoration: BoxDecoration(
+                      gradient: LinearGradient(colors: todayColors),
+                      shape: BoxShape.circle),
+                  selectedDecoration: BoxDecoration(
+                    color: ThemeData().primaryColor,
+                    shape: BoxShape.circle,
+                  ),
+                  markersMaxCount: 1,
+                  markersAlignment: Alignment.bottomRight,
                   outsideDaysVisible: true,
                   weekendTextStyle: TextStyle().copyWith(color: Colors.red),
                   holidayTextStyle:
                       TextStyle().copyWith(color: Colors.blue[800]),
                 ),
+                pageAnimationDuration: Duration(milliseconds: 500),
+                pageAnimationCurve: Curves.linearToEaseOut,
                 locale: 'ko-KR',
+                calendarBuilders: CalendarBuilders(
+                  markerBuilder: (BuildContext context, DateTime dateTime,
+                      List<dynamic> event) {
+                    String count = event.length.toString();
+                    return count != '0'
+                        ? Container(
+                            width: 16,
+                            height: 16,
+                            child: Center(
+                                child: Text(
+                              count,
+                              style: kOutlinedButtonTextStyle,
+                            )),
+                            decoration: BoxDecoration(
+                                gradient: LinearGradient(colors: todayColors),
+                                shape: BoxShape.circle))
+                        : SizedBox();
+                  },
+                ),
                 firstDay: DateTime.utc(2010, 10, 16),
                 lastDay: DateTime.utc(2030, 3, 14),
                 focusedDay: _focusedDay,
                 eventLoader: (day) {
                   List count = [];
                   if (routineHistory.isNotEmpty) {
-                    routineHistory.values.toList()[0].forEach((element) {
-                      if (getHashCode(day) ==
-                          getHashCode(
-                              routineHistory.values.toList()[0][0].dateTime)) {
+                    routineHistory.values.toList()[0].forEach((log) {
+                      if (getHashCode(day) == getHashCode(log.dateTime)) {
                         count.add('');
                       }
                     });
