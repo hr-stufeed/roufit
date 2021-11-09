@@ -67,9 +67,7 @@ class Routine extends StatefulWidget {
           tags.addAll(workoutModel.tags);
         }
       });
-    } catch (e) {
-      tags.add("운동을 추가해주세요");
-    }
+    } catch (e) {}
 
     if (tags.length == 0) {
       tags.add("운동을 추가해주세요");

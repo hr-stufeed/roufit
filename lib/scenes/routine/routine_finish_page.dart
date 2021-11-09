@@ -23,6 +23,7 @@ class _RoutineFinishPageState extends State<RoutineFinishPage> {
   int _totalTime = 0;
   Color _color;
   var today = DateTime.now();
+  var finishedDay;
 
   Set<String> _tags = {};
   List<Map<int, String>> routineList = [];
@@ -30,7 +31,8 @@ class _RoutineFinishPageState extends State<RoutineFinishPage> {
   @override
   void initState() {
     Provider.of<LogProvider>(context, listen: false).load();
-
+    finishedDay =
+        Provider.of<LogProvider>(context, listen: false).selLog.dateTime;
     _totalTime =
         Provider.of<LogProvider>(context, listen: false).selLog.totalTime;
     _selRoutine =
@@ -104,7 +106,7 @@ class _RoutineFinishPageState extends State<RoutineFinishPage> {
                               color: Colors.white,
                             ),
                             Text(
-                              ' ${today.month.toString()}월 ${today.day.toString()}일 ',
+                              ' ${finishedDay.month.toString()}월 ${finishedDay.day.toString()}일 ',
                               style: kRoutineTagStyle,
                             ),
                           ],
