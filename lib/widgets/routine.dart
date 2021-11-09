@@ -71,9 +71,9 @@ class Routine extends StatefulWidget {
       tags.add("운동을 추가해주세요");
     }
 
-    // if (tags.length == 0) {
-
-    // }
+    if (tags.length == 0) {
+      tags.add("운동을 추가해주세요");
+    }
   }
 
   @override
