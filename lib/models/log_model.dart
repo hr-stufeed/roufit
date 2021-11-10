@@ -11,10 +11,13 @@ class LogModel {
   int totalTime;
   @HiveField(2)
   RoutineModel routineModel;
+  @HiveField(3)
+  int totalWeight;
 
   LogModel({
     this.dateTime,
     this.totalTime,
     this.routineModel,
+    this.totalWeight = 0,
   });
 }

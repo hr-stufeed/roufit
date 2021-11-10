@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:hr_app/widgets/routine.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
@@ -145,23 +146,29 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
     int totalTime = Provider.of<TimerProvider>(context, listen: false)
         .routineTimer
         .inSeconds;
+
+    RoutineModel finishedRoutine = RoutineModel(
+      key: _selRoutine.key,
+      name: _selRoutine.name,
+      color: _selRoutine.color,
+      workoutModelList: _selRoutine.workoutModelList,
+      days: _selRoutine.days,
+      restTime: _selRoutine.restTime,
+      finishedTime: _selRoutine.finishedTime,
+    );
     Provider.of<LogProvider>(context, listen: false)
-        .add(_selRoutine, totalTime);
+        .add(finishedRoutine, totalTime);
 
     LogModel _logData = LogModel(
         dateTime: DateTime.now(),
         totalTime: totalTime,
-        routineModel: _selRoutine);
-    _selRoutine.finishedTime = totalTime;
+        routineModel: finishedRoutine,
+        totalWeight: _totalWeight);
     //루틴 종료
     Provider.of<UserProvider>(context, listen: false).setLog(_logData);
+
     Provider.of<UserProvider>(context, listen: false)
-        .setWorkoutCount(_workoutCount);
-    Provider.of<UserProvider>(context, listen: false).setWorkoutTime(totalTime);
-    Provider.of<UserProvider>(context, listen: false)
-        .setWorkoutWeight(_totalWeight);
-    Provider.of<UserProvider>(context, listen: false)
-        .addRoutineHistory(DateTime.now(), _selRoutine, _logData);
+        .addRoutineHistory(DateTime.now(), _logData);
     Navigator.pushReplacementNamed(context, 'Routine_finish_page');
   }
 
@@ -177,14 +184,11 @@ class _RoutineStartPageState extends State<RoutineStartPage> {
         playBtn = btnStop;
         type = WorkoutType.durationWeight;
         _countDownController.restart(duration: _selRoutine.restTime * 1000);
-
-        print('_workoutCount = ${_workoutCount}');
       }
     });
   }
 
   doneSet() {
-    print('doneSet');
     playLocal();
 
     setState(() {

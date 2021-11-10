@@ -299,7 +299,7 @@ class UserProvider with ChangeNotifier {
   }
 
   void setWorkoutCount(int n) {
-    thisWeekWorkoutCount += n;
+    thisWeekWorkoutCount = n;
     print("이번주 운동 카운트 : $thisWeekWorkoutCount");
   }
 
@@ -308,7 +308,7 @@ class UserProvider with ChangeNotifier {
   }
 
   void setWorkoutTime(int n) {
-    thisWeekWorkoutTime += n;
+    thisWeekWorkoutTime = n;
     print("이번 주 운동 시간 : $thisWeekWorkoutTime");
   }
 
@@ -317,7 +317,7 @@ class UserProvider with ChangeNotifier {
   }
 
   void setWorkoutWeight(int n) {
-    thisWeekWorkoutWeight += n;
+    thisWeekWorkoutWeight = n;
     print("이번 주 운동 무게 : $thisWeekWorkoutWeight");
   }
 
@@ -325,7 +325,7 @@ class UserProvider with ChangeNotifier {
     return thisWeekWorkoutWeight;
   }
 
-  void addRoutineHistory(DateTime time, RoutineModel rt, LogModel _logData) {
+  void addRoutineHistory(DateTime time, LogModel _logData) {
     try {
       String date = DateFormat('yyyy-MM-dd').format(time);
       routineHistory.putIfAbsent(date, () => <LogModel>[]).add(_logData);

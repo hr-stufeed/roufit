@@ -20,19 +20,22 @@ class LogModelAdapter extends TypeAdapter<LogModel> {
       dateTime: fields[0] as DateTime,
       totalTime: fields[1] as int,
       routineModel: fields[2] as RoutineModel,
+      totalWeight: fields[3] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, LogModel obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.dateTime)
       ..writeByte(1)
       ..write(obj.totalTime)
       ..writeByte(2)
-      ..write(obj.routineModel);
+      ..write(obj.routineModel)
+      ..writeByte(3)
+      ..write(obj.totalWeight);
   }
 
   @override
