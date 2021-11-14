@@ -49,6 +49,7 @@ class UserProvider with ChangeNotifier {
     });
     _init();
   }
+
   Future<void> _init() async {
     await Firebase.initializeApp();
     _db = FirebaseFirestore.instance;
@@ -58,11 +59,19 @@ class UserProvider with ChangeNotifier {
 
   Future<void> _initHive() async {
     _routineHistoryBox = await Hive.openBox<Map>('history');
+    print( _routineHistoryBox.get('history'));
+    routineHistory = _routineHistoryBox.get('history').cast<dynamic, dynamic>();
     notifyListeners();
   }
 
   Map<dynamic, dynamic> getHistory() {
-    if (routineHistory == null) clearHistory();
+    if (routineHistory == null) {
+      clearHistory();
+    } else {
+      _initHive();
+    }
+
+    // notifyListeners();
     return routineHistory;
   }
 
@@ -333,6 +342,7 @@ class UserProvider with ChangeNotifier {
       print(e);
     }
     _routineHistoryBox.put('history', routineHistory);
+    _routineHistoryBox.close();
     notifyListeners();
   }
 
@@ -481,6 +491,36 @@ class UserProvider with ChangeNotifier {
 
     return true;
   }
+
+  void loadWeeklyWorkouts(BuildContext context) async {
+    DateTime rawDate = DateTime.now();
+    rawDate = rawDate.subtract(Duration(days: 7));
+
+    int thisWeekWorkoutCount = 0;
+    int thisWeekWorkoutTime = 0;
+    int thisWeekWorkoutWeight = 0;
+
+    for (int i = 0; i < 8; i++) {
+      String date = DateFormat('yyyy-MM-dd').format(rawDate);
+      if (routineHistory[date] != null) {
+        routineHistory[date].forEach((log) {
+          thisWeekWorkoutCount++;
+          thisWeekWorkoutTime += log.totalTime;
+          thisWeekWorkoutWeight += log.totalWeight;
+
+          print(log.totalWeight);
+        });
+      }
+      rawDate = rawDate.add(Duration(days: 1));
+    }
+    Provider.of<UserProvider>(context, listen: false)
+        .setWorkoutCount(thisWeekWorkoutCount);
+    Provider.of<UserProvider>(context, listen: false)
+        .setWorkoutTime(thisWeekWorkoutTime);
+    Provider.of<UserProvider>(context, listen: false)
+        .setWorkoutWeight(thisWeekWorkoutWeight);
+    // notifyListeners();
+  }
 }
 
 class LoadedData {
@@ -489,6 +529,7 @@ class LoadedData {
   LoadedData() {
     routineModels = [];
   }
+
   Future<void> add(RoutineModel rm) async {
     routineModels.add(rm);
   }

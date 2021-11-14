@@ -49,36 +49,6 @@ class LogProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void loadWeeklyWorkouts(BuildContext context) async {
-    Map<dynamic, dynamic> _history =
-        Provider.of<UserProvider>(context, listen: false).getHistory();
-    DateTime rawDate = DateTime.now();
-    rawDate = rawDate.subtract(Duration(days: 7));
-
-    int thisWeekWorkoutCount = 0;
-    int thisWeekWorkoutTime = 0;
-    int thisWeekWorkoutWeight = 0;
-
-    for (int i = 0; i < 8; i++) {
-      String date = DateFormat('yyyy-MM-dd').format(rawDate);
-      if (_history[date] != null) {
-        _history[date].forEach((log) {
-          thisWeekWorkoutCount++;
-          thisWeekWorkoutTime += log.totalTime;
-          thisWeekWorkoutWeight += log.totalWeight;
-        });
-      }
-      rawDate = rawDate.add(Duration(days: 1));
-    }
-    Provider.of<UserProvider>(context, listen: false)
-        .setWorkoutCount(thisWeekWorkoutCount);
-    Provider.of<UserProvider>(context, listen: false)
-        .setWorkoutTime(thisWeekWorkoutTime);
-    Provider.of<UserProvider>(context, listen: false)
-        .setWorkoutWeight(thisWeekWorkoutWeight);
-    notifyListeners();
-  }
-
   void clear() async {
     await Hive.deleteBoxFromDisk('log');
     await Hive.deleteBoxFromDisk('logs');

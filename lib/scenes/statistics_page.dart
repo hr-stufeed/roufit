@@ -53,7 +53,7 @@ class _MyPageState extends State<MyPage> {
   void didChangeDependencies() {
     setState(() {
       var userData = Provider.of<UserProvider>(context, listen: false);
-      Provider.of<LogProvider>(context, listen: false)
+      Provider.of<UserProvider>(context, listen: false)
           .loadWeeklyWorkouts(context);
       workoutCount = userData.getWorkoutCount();
       workoutTime = userData.getWorkoutTime();
