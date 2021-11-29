@@ -59,8 +59,11 @@ class UserProvider with ChangeNotifier {
 
   Future<void> _initHive() async {
     _routineHistoryBox = await Hive.openBox<Map>('history');
-    print( _routineHistoryBox.get('history'));
-    routineHistory = _routineHistoryBox.get('history').cast<dynamic, dynamic>();
+    print(_routineHistoryBox.get('history'));
+    try {
+      routineHistory =
+          _routineHistoryBox.get('history').cast<dynamic, dynamic>();
+    } catch (e) {}
     notifyListeners();
   }
 

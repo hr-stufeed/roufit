@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hr_app/data/constants.dart';
 import 'package:hr_app/models/log_model.dart';
+import 'package:hr_app/models/workout_model.dart';
 import 'package:hr_app/provider/log_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:hr_app/provider/user_provider.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:hr_app/models/routine_model.dart';
 
 class MyPage extends StatefulWidget {
   @override
@@ -40,6 +42,16 @@ class _MyPageState extends State<MyPage> {
 
   int getHashCode(DateTime key) {
     return key.day * 1000000 + key.month * 10000 + key.year;
+  }
+
+  List<dynamic> _getEvents(DateTime dateTime) {
+    List<dynamic> events = [];
+    String date = DateFormat('yyyy-MM-dd').format(dateTime);
+    try {
+      events = routineHistory[date].toList();
+    } catch (e) {}
+
+    return events;
   }
 
   @override
@@ -84,6 +96,10 @@ class _MyPageState extends State<MyPage> {
                       workoutTime = 0;
                       workoutWeight = 0;
                     });
+                    // var _logData =
+                    //     Provider.of<LogProvider>(context, listen: false).selLog;
+                    // Provider.of<UserProvider>(context, listen: false)
+                    //     .addRoutineHistory(DateTime(2021, 11, 2), _logData);
                     Provider.of<UserProvider>(context, listen: false)
                         .clearHistory();
                   },
@@ -214,10 +230,11 @@ class _MyPageState extends State<MyPage> {
                             width: 16,
                             height: 16,
                             child: Center(
-                                child: Text(
-                              count,
-                              style: kOutlinedButtonTextStyle,
-                            )),
+                              child: Text(
+                                count,
+                                style: kOutlinedButtonTextStyle,
+                              ),
+                            ),
                             decoration: BoxDecoration(
                                 gradient: LinearGradient(colors: todayColors),
                                 shape: BoxShape.circle))
@@ -227,17 +244,7 @@ class _MyPageState extends State<MyPage> {
                 firstDay: DateTime.utc(2010, 10, 16),
                 lastDay: DateTime.utc(2030, 3, 14),
                 focusedDay: _focusedDay,
-                eventLoader: (day) {
-                  List count = [];
-                  if (routineHistory.isNotEmpty) {
-                    routineHistory.values.toList()[0].forEach((log) {
-                      if (getHashCode(day) == getHashCode(log.dateTime)) {
-                        count.add('');
-                      }
-                    });
-                  }
-                  return count;
-                },
+                eventLoader: _getEvents,
                 selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
                 onDaySelected: _onDaySelected,
               ),
